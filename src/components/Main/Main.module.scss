@@ -1,0 +1,76 @@
+@font-face {
+  font-family: 'Ferry Black';
+  src: url('../../assets/Ferry-Black.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.root {
+  margin: 0 40px;
+
+  .publicationSearchContainer {
+    display: flex;
+  }
+
+  .getDataByInnButton,
+  .seeDetailsButton,
+  .loginButton
+  {
+    background-color: rgba(89, 112, 255, 1);
+    color: white;
+    width: 335px;
+    height: 59px;
+    border: none;
+    border-radius: 5px;
+    font-size: 22px;
+    font-weight: 500;
+    margin-top: 50px;
+  }
+
+  .getDataByInnButton a {
+    color: white;
+  }
+
+  .seeDetailsButton {
+    width: 355px;
+    margin-left: 30px;
+    margin-top: 70px;
+  }
+
+  .loginButton {
+    width: 379px;
+    opacity: 50%;
+    margin-top: 35px;
+    margin-bottom: 15px;
+  }
+
+  .paragraph {
+    font-family: 'Ferry Black', sans-serif;
+    font-size: 60px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    margin-top: 100px;
+  }
+
+  .slider {
+    display: flex;
+    align-items: center;
+    margin-top: 70px;
+    margin-bottom: 60px;
+  }
+
+  .cardsContainer {
+    display: flex;
+    gap: 30px;
+    width: 1260px;
+    overflow: hidden;
+    padding: 10px 10px;
+  }
+
+  .tariffCardsContainer {
+    display: flex;
+    gap: 50px;
+  }
+}
+
