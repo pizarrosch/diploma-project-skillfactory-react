@@ -1,0 +1,50 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: 300px;
+  margin-right: 50px;
+
+  .navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 200px;
+  }
+
+  .navigation-list {
+    display: flex;
+    gap: 50px;
+    list-style: none;
+
+    .navigation-list__item {
+      cursor: pointer;
+      text-decoration: none;
+    }
+  }
+
+  .loginMenu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    .register {
+      color: darkgray;
+      cursor: pointer;
+    }
+
+    .separator {
+      color: rgba(2, 148, 145, 1);
+      font-weight: 500;
+      font-size: 20px;
+    }
+
+    .loginButton {
+      width: 65px;
+      height: 26px;
+      border-radius: 5px;
+      border: none;
+      font-weight: 500;
+      background-color: rgba(124, 227, 225, 1);
+      cursor: pointer;
+    }
+  }
+}
