@@ -1,5 +1,6 @@
 import React from 'react';
 import s from './Navigation.module.scss';
+import {Link} from "react-router-dom";
 
 export default function Navigation() {
     return (
@@ -7,9 +8,9 @@ export default function Navigation() {
             <nav className={s.navigation}>
                 <ul className={s['navigation-list']}>
                         <li className={s['navigation-list__item']}>
-                            <a href={'/'}>
+                            <Link to={'/dashboard'}>
                             Главная
-                            </a>
+                            </Link>
                         </li>
                     <li className={s['navigation-list__item']}>Тарифы</li>
                     <li className={s['navigation-list__item']}>FAQ</li>
@@ -19,9 +20,9 @@ export default function Navigation() {
                 <span className={s.register}>Зарегистрироваться</span>
                 <span className={s.separator}>|</span>
                 <button className={s.loginButton}>
-                    <a href={'/login'}>
+                    <Link to={'/login'}>
                         Войти
-                    </a>
+                    </Link>
                 </button>
             </div>
         </div>
