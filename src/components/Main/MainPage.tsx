@@ -8,6 +8,7 @@ import {ImgSource, TTariffCard} from "../../types";
 import TariffCard from "../TariffCard/TariffCard";
 import {cardContents, tariffCardContents} from '../../data';
 import React from 'react';
+import {Link} from "react-router-dom";
 
 export default function MainPage() {
     return (
@@ -21,9 +22,9 @@ export default function MainPage() {
                             PDF на электронную почту.</p>
                     </div>
                     <button className={s.getDataByInnButton}>
-                        <a href={'/searchForm'}>
+                        <Link to={'/searchForm'}>
                             Запросить данные
-                        </a>
+                        </Link>
                     </button>
                 </div>
                 <img src={bgImage1} alt='man pointing at the screen'/>

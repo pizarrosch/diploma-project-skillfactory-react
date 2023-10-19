@@ -45,7 +45,8 @@
 
 .getDataByInnButton,
 .seeDetailsButton,
-.loginButton
+.loginButton,
+.searchButton
 {
   background-color: rgba(89, 112, 255, 1);
   color: white;
@@ -73,6 +74,11 @@
   opacity: 50%;
   margin-top: 35px;
   margin-bottom: 15px;
+}
+
+.searchButton {
+  width: 305px;
+  opacity: 50%;
 }
 
 
