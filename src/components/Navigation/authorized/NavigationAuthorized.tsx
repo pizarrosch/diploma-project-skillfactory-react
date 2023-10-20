@@ -21,14 +21,14 @@ export default function NavigationAuthorized() {
                     <li className={s['navigation-list__item']}>FAQ</li>
                 </ul>
             </nav>
-            <div>
-                <div className={s['tariff-limit-display']}>
-                    <span>Использовано компаний</span>
-                    <span>34</span>
+            <div className={s.stats}>
+                <div className={s.statsWrapper}>
+                    <span className={s.usedCompanies}>Использовано компаний</span>
+                    <span className={s.usedCompaniesAmount}>34</span>
                 </div>
-                <div>
-                    <span>Лимит по компаниям</span>
-                    <span>100</span>
+                <div className={s.statsWrapper}>
+                    <span className={s.companiesLimit}>Лимит по компаниям</span>
+                    <span className={s.limitAmount}>100</span>
                 </div>
             </div>
             <div className={s.loginMenu}>
