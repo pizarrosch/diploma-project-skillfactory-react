@@ -35,6 +35,8 @@
   .stats {
     font-size: 30px;
     font-weight: 900;
+    text-transform: uppercase;
+    font-family: 'Ferry Black', sans-serif;
   }
 
   .foundItems {
@@ -101,6 +103,12 @@
   height: 124px;
   border: 1px solid rgba(148, 148, 148, 1);
   align-self: center;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 100px;
 }
 
 

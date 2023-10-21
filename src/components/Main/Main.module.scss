@@ -46,7 +46,9 @@
 .getDataByInnButton,
 .seeDetailsButton,
 .loginButton,
-.searchButton
+.searchButton,
+.showMoreButton,
+.readSourceButton
 {
   background-color: rgba(89, 112, 255, 1);
   color: white;
@@ -79,6 +81,19 @@
 .searchButton {
   width: 305px;
   opacity: 50%;
+}
+
+.showMoreButton {
+  width: 305px;
+  opacity: 100%;
+}
+
+.readSourceButton {
+  background-color: rgba(124, 227, 225, 1);
+  width: 223px;
+  height: 47px;
+  font-size: 16px;
+  color: black;
 }
 
 
