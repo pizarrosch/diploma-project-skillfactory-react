@@ -8,10 +8,12 @@ import LoginPage from "./components/LoginPage/LoginPage";
 import MainPage from './components/Main/MainPage';
 import SearchForm from "./components/SearchForm/SearchForm";
 import {useAppSelector} from "./hooks/hooks";
+import ResultsPage from "./components/ResultsPage/ResultsPage";
+import {RootState} from "./redux/store";
 
 function App() {
 
-    const authorized = useAppSelector((state) => state.authorization);
+    const authorized = useAppSelector((state: RootState) => state.authorization);
 
     return (
         <div className={s.root}>
@@ -29,6 +31,10 @@ function App() {
                 <Route
                     path='/searchForm'
                     element={<SearchForm />}
+                />
+                <Route
+                    path='/results'
+                    element={<ResultsPage />}
                 />
             </Routes>
             <Footer />

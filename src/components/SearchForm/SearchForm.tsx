@@ -5,6 +5,8 @@ import checkmark from '../../assets/checkmark.svg';
 import document from '../../assets/Document.svg';
 import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
+import {Link} from "react-router-dom";
+import {RootState} from "../../redux/store";
 
 export default function SearchForm() {
 
@@ -13,7 +15,7 @@ export default function SearchForm() {
     function handleCheck(e: React.MouseEvent) {
         const target = e.currentTarget as HTMLDivElement
         if (target.dataset.index === target.id) {
-           target.id && setIsChecked(prev => !prev)
+            target.id && setIsChecked(prev => !prev)
         } else return;
     }
 
@@ -41,21 +43,25 @@ export default function SearchForm() {
                             </div>
                             <div className={s['input-container']}>
                                 <label htmlFor='selectTon'>Тональность</label>
-                                <select style={{appearance: 'none', paddingLeft: '15px'}} className={s.input} id='selectTon'>
+                                <select style={{appearance: 'none', paddingLeft: '15px'}} className={s.input}
+                                        id='selectTon'>
                                     <option>Любая</option>
                                 </select>
                                 <div className={s['dropdown-arrow']}></div>
                             </div>
                             <div className={s['input-container']}>
                                 <label htmlFor='amount'>Количество документов в выдаче*</label>
-                                <input className={s.input} type="number" max={1000} id='amount' placeholder='От 1 до 1000'/>
+                                <input className={s.input} type="number" max={1000} id='amount'
+                                       placeholder='От 1 до 1000'/>
                             </div>
                             <div style={{marginTop: '14px'}} className={s['input-container']}>
                                 <label htmlFor='range'>Диапазон поиска*</label>
                                 <div className={s['date-range-container']}>
-                                    <input type='text' className={s['date-input']} placeholder='Дата начала' onFocus={focus}/>
+                                    <input type='text' className={s['date-input']} placeholder='Дата начала'
+                                           onFocus={focus}/>
                                     <div style={{right: '210px'}} className={s['dropdown-arrow']}></div>
-                                    <input type='text' className={s['date-input']} placeholder='Дата конца' onFocus={focus}/>
+                                    <input type='text' className={s['date-input']} placeholder='Дата конца'
+                                           onFocus={focus}/>
                                     <div style={{right: '8px'}} className={s['dropdown-arrow']}></div>
                                 </div>
                             </div>
@@ -65,13 +71,13 @@ export default function SearchForm() {
                         <div className={s['checkbox-options-container']}>
                             <div className={s['checkbox-options-container__option']}>
                                 <div className={s['checkbox-input']} id='1' data-index='1' onClick={handleCheck}>
-                                    {isChecked && <img className={s.checkmark} src={checkmark} alt='checkmark' />}
+                                    {isChecked && <img className={s.checkmark} src={checkmark} alt='checkmark'/>}
                                 </div>
                                 <span>Признак максимальной полноты</span>
                             </div>
                             <div className={s['checkbox-options-container__option']} onClick={handleCheck}>
                                 <div className={s['checkbox-input']} id='2'>
-                                    {isChecked && <img className={s.checkmark} src={checkmark} alt='checkmark' />}
+                                    {isChecked && <img className={s.checkmark} src={checkmark} alt='checkmark'/>}
                                 </div>
                                 <span>Упоминания в бизнес-контексте</span>
                             </div>
@@ -81,11 +87,13 @@ export default function SearchForm() {
                             </div>
                             <div className={s['checkbox-options-container__option']}>
                                 <div className={s['checkbox-input']} id='4'/>
-                                <label htmlFor='Публикации только с риск-факторами'>Публикации только с риск-факторами</label>
+                                <label htmlFor='Публикации только с риск-факторами'>Публикации только с
+                                    риск-факторами</label>
                             </div>
                             <div className={s['checkbox-options-container__option']}>
                                 <div className={s['checkbox-input']} id='5'/>
-                                <label htmlFor='Включать технические новости рынков'>Включать технические новости рынков</label>
+                                <label htmlFor='Включать технические новости рынков'>Включать технические новости
+                                    рынков</label>
                             </div>
                             <div className={s['checkbox-options-container__option']}>
                                 <div className={s['checkbox-input']} id='6'/>
@@ -97,16 +105,21 @@ export default function SearchForm() {
                             </div>
                         </div>
                         <div className={s['button-container']}>
-                            <button className={st.searchButton}>Поиск</button>
-                            <p style={{fontSize: '14px', color:'rgba(148, 148, 148, 1)'}}>* Обязательные к заполнению поля</p>
+                            <Link to={'/results'}>
+                                <button className={st.searchButton}>
+                                    Поиск
+                                </button>
+                            </Link>
+                            <p style={{fontSize: '14px', color: 'rgba(148, 148, 148, 1)'}}>* Обязательные к заполнению
+                                поля</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={s['image-container']}>
                 <div className={s['image-container__images-on-the-top']}>
-                    <img src={document} alt='document' />
-                    <img src={folders} alt='folders' />
+                    <img src={document} alt='document'/>
+                    <img src={folders} alt='folders'/>
                 </div>
                 <div style={{marginLeft: '60px'}}>
                     <img src={manLookingOut} alt='manLookingOut'/>

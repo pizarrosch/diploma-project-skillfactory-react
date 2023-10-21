@@ -9,8 +9,13 @@ import TariffCard from "../TariffCard/TariffCard";
 import {cardContents, tariffCardContents} from '../../data';
 import React from 'react';
 import {Link} from "react-router-dom";
+import {RootState} from "../../redux/store";
+import {useAppSelector} from "../../hooks/hooks";
 
 export default function MainPage() {
+
+    const authorized = useAppSelector((state: RootState) => state.authorization);
+
     return (
         <div className={s.root}>
             <div className={s.publicationSearchContainer}>
@@ -21,11 +26,13 @@ export default function MainPage() {
                         <p style={{fontSize: '20px'}}>Комплексный анализ публикаций, получение данных <br/> в формате
                             PDF на электронную почту.</p>
                     </div>
+                    { authorized &&
                     <button className={s.getDataByInnButton}>
                         <Link to={'/searchForm'}>
                             Запросить данные
                         </Link>
                     </button>
+                    }
                 </div>
                 <img src={bgImage1} alt='man pointing at the screen'/>
             </div>

@@ -71,3 +71,66 @@ export const tariffCardContents = [
         src: laptop
     }
 ]
+
+export const statData = [
+    {
+        range: '10.09.2021',
+        total: 5,
+        risks: 2
+    },
+    {
+        range: '11.09.2021',
+        total: 6,
+        risks: 0
+    },
+    {
+        range: '12.09.2021',
+        total: 4,
+        risks: 2
+    },
+    {
+        range: '13.09.2021',
+        total: 10,
+        risks: 7
+    },
+    {
+        range: '10.09.2021',
+        total: 5,
+        risks: 2
+    },
+    {
+        range: '11.09.2021',
+        total: 6,
+        risks: 0
+    },
+    {
+        range: '12.09.2021',
+        total: 4,
+        risks: 2
+    },
+    {
+        range: '13.09.2021',
+        total: 10,
+        risks: 7
+    },
+    {
+        range: '13.09.2021',
+        total: 10,
+        risks: 7
+    },
+    {
+        range: '12.09.2021',
+        total: 4,
+        risks: 2
+    },
+    {
+        range: '13.09.2021',
+        total: 10,
+        risks: 7
+    },
+    {
+        range: '13.09.2021',
+        total: 10,
+        risks: 7
+    }
+]

@@ -1,0 +1,107 @@
+@font-face {
+  font-family: 'Ferry Black';
+  src: url('../../assets/Ferry-Black.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.firstBlock {
+  display: flex;
+  gap: 200px;
+
+  .paragraphContainer {
+    margin: 0 40px;
+
+    .paragraph {
+      font-family: 'Ferry Black', sans-serif;
+      font-size: 40px;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-top: 70px;
+    }
+
+    .text {
+      font-size: 20px;
+    }
+  }
+}
+
+.statsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 40px;
+
+  .stats {
+    font-size: 30px;
+    font-weight: 900;
+  }
+
+  .foundItems {
+    font-size: 18px;
+    color: rgba(148, 148, 148, 1)
+  }
+}
+
+.slider {
+  display: flex;
+  align-items: center;
+  margin-top: 70px;
+  margin-bottom: 60px;
+
+  .leftArrow,
+  .rightArrow {
+    margin-top: -50px;
+    opacity: 30%;
+  }
+
+  .leftArrow {
+    margin-left: 30px;
+  }
+
+  .activeRightArrow {
+    margin-top: -50px;
+    opacity: 100%;
+  }
+}
+
+.cardsContainer {
+  display: flex;
+  gap: 23px;
+  width: 1260px;
+  overflow: hidden;
+  border: 2px solid rgba(2, 148, 145, 1);
+  border-radius: 10px;
+  margin-top: -50px;
+  margin-left: 5px;
+
+  .statNameContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    min-width: 133px;
+    height: 158px;
+    background-color: rgba(2, 148, 145, 1);
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.statsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  font-size: 18px;
+}
+
+.separator {
+  height: 124px;
+  border: 1px solid rgba(148, 148, 148, 1);
+  align-self: center;
+}
+
+
+

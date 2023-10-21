@@ -20,3 +20,9 @@ export type TTariffCard = {
     color?: string,
     src: string
 }
+
+export type TStatResults = {
+    range: string,
+    total: number,
+    risks: number
+}
