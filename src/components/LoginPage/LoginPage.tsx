@@ -5,20 +5,27 @@ import keyLock from '../../assets/key-lock.svg';
 import googleSign from '../../assets/google-sign.png';
 import facebookSign from '../../assets/facebook-sign.png';
 import yandexSign from '../../assets/yandex-sign.png';
-import React from "react";
-import {getToken, verifyRequisites} from "../../api/auth";
+import React, {useState} from "react";
+import {verifyRequisites} from "../../api/auth";
 
 export default function LoginPage() {
 
-    function getVerificationStatus() {
-        const status = verifyRequisites({login: 'sf_student8', password: '5QB0KM/'});
-        console.log(status);
-       getTokenInfo();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    function handleEmailInput(e: React.ChangeEvent) {
+        const target = e.target as HTMLInputElement;
+        setEmail(target.value);
     }
 
-    function getTokenInfo() {
-        const token = getToken();
-        console.log(token);
+    function handlePasswordInput(e: React.ChangeEvent) {
+        const target = e.target as HTMLInputElement;
+        setPassword(target.value);
+    }
+
+    function getVerificationStatus() {
+        const status = verifyRequisites({login: `${email}`, password: `${password}`});
+        console.log(status);
     }
 
     return (
@@ -40,11 +47,11 @@ export default function LoginPage() {
                     <form className={s['form-container__form']}>
                         <div className={s['form__email-input-container']}>
                             <label htmlFor='input'>Логин или номер телефона:</label>
-                            <input className={s['form__input']} type="email" id="input"/>
+                            <input className={s['form__input']} type="email" id="input" value={email} onChange={handleEmailInput}/>
                         </div>
                         <div className={s['form__password-input-container']}>
                             <label htmlFor='password'>Пароль</label>
-                            <input className={s['form__input']} type="password" id="password"/>
+                            <input className={s['form__input']} type="password" id="password" value={password} onChange={handlePasswordInput}/>
                         </div>
                     </form>
                 </div>

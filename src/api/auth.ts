@@ -5,16 +5,15 @@ export const API_URL = process.env.BASE_URL;
 
 export async function verifyRequisites(
     credentials: IAuthCredentials
-): Promise<boolean> {
+): Promise<void> {
     try {
-        const { status } = await axios.post(
+        await axios.post(
             `https://gateway.scan-interfax.ru/api/v1/account/login`,
             credentials
-        );
-
-        return status === 200;
+        )
+            .then(response => console.log(response))
     } catch (e) {
-        return false;
+       console.log(false);
     }
 }
 
