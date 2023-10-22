@@ -48,7 +48,8 @@
 .loginButton,
 .searchButton,
 .showMoreButton,
-.readSourceButton
+.readSourceButton,
+.activatedTariff
 {
   background-color: rgba(89, 112, 255, 1);
   color: white;
@@ -65,7 +66,9 @@
   color: white;
 }
 
-.seeDetailsButton {
+.seeDetailsButton,
+.activatedTariff
+{
   width: 355px;
   margin-left: 30px;
   margin-top: 70px;
@@ -96,4 +99,8 @@
   color: black;
 }
 
+.activatedTariff {
+  background-color: rgba(210, 210, 210, 1);
+  color: black;
+}
 

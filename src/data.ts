@@ -38,6 +38,7 @@ export const tariffCardContents = [
         },
         backgroundColor: 'rgba(255, 182, 79, 1)',
         color: '',
+        border: '2px solid rgba(255, 182, 79, 1)',
         src: lamp
     },
     {

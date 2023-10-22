@@ -68,6 +68,7 @@ export default function MainPage() {
                                     thirdOption: tariffCard.tariffOptions.thirdOption
                                 }}
                                 backgroundColor={tariffCard.backgroundColor}
+                                border={authorized ? tariffCard.border : ''}
                                 color={tariffCard.color}
                                 src={tariffCard.src}
                             />

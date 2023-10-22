@@ -18,6 +18,7 @@ export type TTariffCard = {
     tariffOptions: TTariffOptions
     backgroundColor: string,
     color?: string,
+    border?: string,
     src: string
 }
 
@@ -25,4 +26,14 @@ export type TStatResults = {
     range: string,
     total: number,
     risks: number
+}
+
+export interface IAuthCredentials {
+    login: string
+    password: string
+}
+
+export type TToken = {
+    accessToken: string,
+    expire: string
 }

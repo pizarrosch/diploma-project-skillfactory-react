@@ -3,6 +3,8 @@ import st from './Tariff.module.scss';
 import checkmark from '../../assets/checkmark.svg';
 import {TTariffCard} from "../../types";
 import React from 'react';
+import {useAppSelector} from "../../hooks/hooks";
+import {RootState} from "../../redux/store";
 
 export default function TariffCard(
     {
@@ -14,15 +16,19 @@ export default function TariffCard(
         tariffOptions,
         backgroundColor,
         color,
+        border,
         src
     }: TTariffCard
 ) {
+
+    const authorized = useAppSelector((state: RootState) => state.authorization);
+
     return (
-        <div className={st.root}>
+        <div style={{border: `${border}`}} className={st.root}>
             <div style={
                 {
                     backgroundColor: `${backgroundColor}`,
-                    color: `${color}`
+                    color: `${color}`,
                 }
             } className={st['tariff-title']}>
                 <div>
@@ -32,7 +38,7 @@ export default function TariffCard(
                 <img className={st['tariff-title__image']} src={src} alt='lamp'/>
             </div>
             <div className={st['tariff-details-container']}>
-                <div className={st['current-tariff-icon']}>Текущий тариф</div>
+                {authorized && border && <div className={st['current-tariff-icon']}>Текущий тариф</div>}
                 <div className={st['price-container']}>
                     <span className={st['price-container__actual-price']}>{actualPrice}</span>
                     <span className={st['price-container__old-price']}>{oldPrice}</span>
@@ -54,6 +60,8 @@ export default function TariffCard(
                     <span className={st['eighteen-px-text']}>{tariffOptions.thirdOption}</span>
                 </div>
             </div>
-            <button className={s.seeDetailsButton}>Перейти в личный кабинет</button>
+            <button className={authorized && border ? s.activatedTariff : s.seeDetailsButton}>
+                {authorized && border ? 'Перейти в личный кабинет' : 'Подробнее'}
+            </button>
         </div>)
 }

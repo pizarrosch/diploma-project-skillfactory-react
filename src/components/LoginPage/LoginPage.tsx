@@ -6,8 +6,20 @@ import googleSign from '../../assets/google-sign.png';
 import facebookSign from '../../assets/facebook-sign.png';
 import yandexSign from '../../assets/yandex-sign.png';
 import React from "react";
+import {getToken, verifyRequisites} from "../../api/auth";
 
 export default function LoginPage() {
+
+    function getVerificationStatus() {
+        const status = verifyRequisites({login: 'sf_student8', password: '5QB0KM/'});
+        console.log(status);
+       getTokenInfo();
+    }
+
+    function getTokenInfo() {
+        const token = getToken();
+        console.log(token);
+    }
 
     return (
         <div className={s.root}>
@@ -36,7 +48,7 @@ export default function LoginPage() {
                         </div>
                     </form>
                 </div>
-                <button type='submit' className={st.loginButton}>Войти</button>
+                <button type='submit' className={st.loginButton} onClick={getVerificationStatus}>Войти</button>
                 <span><a href='/login' style={
                     {
                         textDecoration: 'underline',
