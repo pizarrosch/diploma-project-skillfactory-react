@@ -1,10 +1,10 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {ActionCreator, ActionCreatorWithPayload, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export const authSlice = createSlice({
     name: 'authorization',
-    initialState: false,
+    initialState: '',
     reducers: {
-        authorize: (state: boolean, action: PayloadAction<boolean>) => {
+        authorize: (state: string, action: PayloadAction<string>) => {
             return action.payload;
         }
     }

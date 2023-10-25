@@ -5,13 +5,20 @@ import keyLock from '../../assets/key-lock.svg';
 import googleSign from '../../assets/google-sign.png';
 import facebookSign from '../../assets/facebook-sign.png';
 import yandexSign from '../../assets/yandex-sign.png';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {verifyRequisites} from "../../api/auth";
+import axios from "axios";
+import {useAppDispatch} from "../../hooks/hooks";
+import localStorage from "redux-persist/es/storage";
 
 export default function LoginPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const dispatch = useAppDispatch();
+    const token = localStorage.getItem('token');
+    console.log(token)
 
     function handleEmailInput(e: React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
@@ -23,9 +30,21 @@ export default function LoginPage() {
         setPassword(target.value);
     }
 
-    function getVerificationStatus() {
-        const status = verifyRequisites({login: `${email}`, password: `${password}`});
-        console.log(status);
+     function getInfo() {
+        const res =  axios.get("https://gateway.scan-interfax.ru/api/v1/account/info", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiO…0OCJ9.GZzUUnio8_ulXvAuk_js3oo7BJjaZrBW2jQ3BPQ1KIM'
+            },
+        });
+
+        console.log('result -->', res);
+    }
+
+    async function getVerificationStatus() {
+        await verifyRequisites({login: `${email}`, password: `${password}`});
+         getInfo();
     }
 
     return (

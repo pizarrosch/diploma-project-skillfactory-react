@@ -1,5 +1,6 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import {authSlice} from "./slices/authSlice";
+import {eventFiltersSlice} from "./slices/eventFiltersSlice";
 import {
     persistReducer,
     persistStore,
@@ -17,6 +18,8 @@ export type AppDispatch = typeof store.dispatch;
 
 const reducer = combineReducers({
     authorization: authSlice.reducer,
+    tariffLimits: eventFiltersSlice.reducer
+
 })
 
 const persistConfig = {

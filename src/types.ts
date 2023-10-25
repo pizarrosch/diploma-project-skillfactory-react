@@ -35,5 +35,10 @@ export interface IAuthCredentials {
 
 export type TToken = {
     accessToken: string,
-    expire: string
+    expire?: string
+}
+
+export type TEventFiltersInfo = {
+    "usedCompanyCount": number,
+    "companyLimit": number
 }

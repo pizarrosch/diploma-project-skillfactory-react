@@ -1,12 +1,8 @@
 import React from 'react';
 import s from '../Navigation.module.scss';
 import {Link} from "react-router-dom";
-import {authorize} from "../../../redux/slices/authSlice";
-import {useAppDispatch} from "../../../hooks/hooks";
 
 export default function Navigation() {
-
-    const dispatch = useAppDispatch();
 
     return (
         <div className={s.root}>
@@ -25,7 +21,7 @@ export default function Navigation() {
                 <span className={s.register}>Зарегистрироваться</span>
                 <span className={s.separator}>|</span>
                 <button className={s.loginButton}>
-                    <Link to={'/login'} onClick={() => dispatch(authorize(true))}>
+                    <Link to={'/login'}>
                         Войти
                     </Link>
                 </button>
