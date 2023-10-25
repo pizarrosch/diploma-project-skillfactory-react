@@ -8,8 +8,12 @@ import yandexSign from '../../assets/yandex-sign.png';
 import React, {useEffect, useState} from "react";
 import {verifyRequisites} from "../../api/auth";
 import axios from "axios";
-import {useAppDispatch} from "../../hooks/hooks";
+import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import localStorage from "redux-persist/es/storage";
+import {TEventFiltersInfo} from "../../types";
+import {getLimitInfo} from "../../redux/slices/eventFiltersSlice";
+import {authorize} from "../../redux/slices/authSlice";
+import {RootState} from "../../redux/store";
 
 export default function LoginPage() {
 
@@ -17,8 +21,8 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
 
     const dispatch = useAppDispatch();
+    const authorized = useAppSelector((state: RootState) => state.authorization);
     const token = localStorage.getItem('token');
-    console.log(token)
 
     function handleEmailInput(e: React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
@@ -30,21 +34,27 @@ export default function LoginPage() {
         setPassword(target.value);
     }
 
-     function getInfo() {
-        const res =  axios.get("https://gateway.scan-interfax.ru/api/v1/account/info", {
+      function getInfo() {
+          axios.get("https://gateway.scan-interfax.ru/api/v1/account/info", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiO…0OCJ9.GZzUUnio8_ulXvAuk_js3oo7BJjaZrBW2jQ3BPQ1KIM'
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIyNGFmMzBiMy1jZTgyLWVkMTEtODI3NS04NzJjODBhZjI3NTMiLCJuYmYiOjE2OTgyNjc1MTUsImV4cCI6MTY5ODM1MzkxNSwiaXNzIjoiU2NhbkdhdGV3YXkiLCJhdWQiOiJzZl9zdHVkZW50OCJ9.4SF1KHUcFJ5SXFGILFsg7avsHp7lAMKHTR5OX9i5ltQ'
             },
-        });
+        })
 
-        console.log('result -->', res);
+            .then((data: axios.AxiosResponse<TEventFiltersInfo>) => authorized && dispatch(getLimitInfo({
+                eventFiltersInfo: {
+                    usedCompanyCount: data.data.eventFiltersInfo.usedCompanyCount,
+                    companyLimit: data.data.eventFiltersInfo.companyLimit
+                }
+            })))
     }
 
-    async function getVerificationStatus() {
-        await verifyRequisites({login: `${email}`, password: `${password}`});
-         getInfo();
+     async function getVerificationStatus() {
+         await verifyRequisites({login: `${email}`, password: `${password}`})
+             dispatch(authorize('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIyNGFmMzBiMy1jZTgyLWVkMTEtODI3NS04NzJjODBhZjI3NTMiLCJuYmYiOjE2OTgyNjc1MTUsImV4cCI6MTY5ODM1MzkxNSwiaXNzIjoiU2NhbkdhdGV3YXkiLCJhdWQiOiJzZl9zdHVkZW50OCJ9.4SF1KHUcFJ5SXFGILFsg7avsHp7lAMKHTR5OX9i5ltQ'))
+             authorized && getInfo()
     }
 
     return (

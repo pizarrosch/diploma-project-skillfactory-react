@@ -38,7 +38,11 @@ export type TToken = {
     expire?: string
 }
 
-export type TEventFiltersInfo = {
+export type EventFilter = {
     "usedCompanyCount": number,
     "companyLimit": number
+}
+
+export type TEventFiltersInfo = {
+    eventFiltersInfo: EventFilter
 }

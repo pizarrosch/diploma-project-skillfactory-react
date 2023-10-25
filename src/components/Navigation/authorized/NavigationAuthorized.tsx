@@ -2,12 +2,16 @@ import React from 'react';
 import s from '../Navigation.module.scss';
 import {Link} from "react-router-dom";
 import {authorize} from "../../../redux/slices/authSlice";
-import {useAppDispatch} from "../../../hooks/hooks";
+import {useAppDispatch, useAppSelector} from "../../../hooks/hooks";
 import avatar from '../../../assets/avatar.png';
+import {RootState} from "../../../redux/store";
+import {EventFilter, TEventFiltersInfo} from "../../../types";
 
 export default function NavigationAuthorized() {
 
     const dispatch = useAppDispatch();
+    const authorized = useAppSelector((state: RootState) => state.authorization);
+    const tariffLimits: TEventFiltersInfo = useAppSelector((state: RootState) => state.tariffLimits)
 
     return (
         <div className={s.root}>
@@ -25,11 +29,11 @@ export default function NavigationAuthorized() {
             <div className={s.stats}>
                 <div className={s.usedCompaniesWrapper}>
                     <span className={s.usedCompanies}>Использовано компаний</span>
-                    <span className={s.usedCompaniesAmount}>34</span>
+                    <span className={s.usedCompaniesAmount}>{authorized && tariffLimits.eventFiltersInfo.usedCompanyCount}</span>
                 </div>
                 <div className={s.companiesLimitWrapper}>
                     <span className={s.companiesLimit}>Лимит по компаниям</span>
-                    <span className={s.limitAmount}>100</span>
+                    <span className={s.limitAmount}>{authorized && tariffLimits.eventFiltersInfo.companyLimit}</span>
                 </div>
             </div>
             <div className={s.loginMenu}>

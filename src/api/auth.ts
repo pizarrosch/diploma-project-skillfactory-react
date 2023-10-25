@@ -13,7 +13,7 @@ export async function verifyRequisites(
             `https://gateway.scan-interfax.ru/api/v1/account/login`,
             credentials
         )
-            .then((response: axios.AxiosResponse<TToken, string>) => localStorage.setItem('token', response.data.accessToken))
+            .then((response: axios.AxiosResponse<TToken>) => localStorage.setItem('token', response.data.accessToken))
     } catch (e) {
        console.log(false);
     }
