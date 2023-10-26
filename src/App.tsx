@@ -34,7 +34,7 @@ function App() {
 
     return (
         <div className={s.root}>
-            {authorized ? <HeaderAuthorized /> : <Header/>}
+            {authorized.accessToken ? <HeaderAuthorized /> : <Header/>}
             <Routes>
                 <Route path='/' element={<Navigate to='/dashboard' />} />
                 <Route

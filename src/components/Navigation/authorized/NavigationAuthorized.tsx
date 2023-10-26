@@ -39,7 +39,10 @@ export default function NavigationAuthorized() {
             <div className={s.loginMenu}>
                 <div className={s.userNameWrapper}>
                     <span className={s.userName}>Zaur S.</span>
-                    <span className={s.logOut} onClick={() => dispatch(authorize(''))}>Выйти</span>
+                    <span className={s.logOut} onClick={() => dispatch(authorize({
+                        accessToken: '',
+                        expire: ''
+                    }))}>Выйти</span>
                 </div>
                 <div>
                     <img src={avatar} alt='avatar' />

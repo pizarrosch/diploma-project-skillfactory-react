@@ -4,17 +4,39 @@ import rightArrow from '../../assets/arrow-right.svg';
 import sittingMan from '../../assets/sitting-man.svg';
 import s from './Main.module.scss';
 import Card from "../Card/Card";
-import {ImgSource, TTariffCard} from "../../types";
+import {ImgSource, TEventFiltersInfo, TTariffCard} from "../../types";
 import TariffCard from "../TariffCard/TariffCard";
 import {cardContents, tariffCardContents} from '../../data';
 import React from 'react';
 import {Link} from "react-router-dom";
 import {RootState} from "../../redux/store";
-import {useAppSelector} from "../../hooks/hooks";
+import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
+import axios from "axios";
+import {getLimitInfo} from "../../redux/slices/eventFiltersSlice";
+import localStorage from "redux-persist/es/storage";
 
 export default function MainPage() {
 
     const authorized = useAppSelector((state: RootState) => state.authorization);
+    const dispatch = useAppDispatch();
+
+    async function getInfo() {
+        const token = await localStorage.getItem('token');
+        axios.get("https://gateway.scan-interfax.ru/api/v1/account/info", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token!}`
+            },
+        })
+
+            .then((data: axios.AxiosResponse<TEventFiltersInfo>) => authorized && dispatch(getLimitInfo({
+                eventFiltersInfo: {
+                    usedCompanyCount: data.data.eventFiltersInfo.usedCompanyCount,
+                    companyLimit: data.data.eventFiltersInfo.companyLimit
+                }
+            })))
+    }
 
     return (
         <div className={s.root}>
@@ -28,7 +50,7 @@ export default function MainPage() {
                     </div>
                     { authorized &&
                     <button className={s.getDataByInnButton}>
-                        <Link to={'/searchForm'}>
+                        <Link to={'/searchForm'} onClick={authorized && getInfo}>
                             Запросить данные
                         </Link>
                     </button>

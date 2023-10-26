@@ -35,7 +35,7 @@ export interface IAuthCredentials {
 
 export type TToken = {
     accessToken: string,
-    expire?: string
+    expire: string
 }
 
 export type EventFilter = {

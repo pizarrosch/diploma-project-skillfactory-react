@@ -1,13 +1,20 @@
-import {ActionCreator, ActionCreatorWithPayload, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {TToken} from "../../types";
 
 export const authSlice = createSlice({
     name: 'authorization',
-    initialState: '',
+    initialState: {
+        accessToken: '',
+        expire: ''
+    } as TToken,
     reducers: {
-        authorize: (state: string, action: PayloadAction<string>) => {
+        authorize: (state: TToken, action: PayloadAction<TToken>) => {
+            return action.payload;
+        },
+        deleteToken: (state: TToken, action: PayloadAction<TToken>) => {
             return action.payload;
         }
     }
 })
 
-export const {authorize} = authSlice.actions;
+export const {authorize, deleteToken} = authSlice.actions;
