@@ -18,7 +18,7 @@ export async function verifyRequisites(
                 localStorage.setItem('expire', response.data.expire!);
             })
     } catch (e) {
-       console.log(false);
+       alert('You login or password are incorrect')
     }
 }
 

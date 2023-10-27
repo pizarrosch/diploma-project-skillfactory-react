@@ -14,6 +14,7 @@ import {TEventFiltersInfo, TToken} from "../../types";
 import {getLimitInfo} from "../../redux/slices/eventFiltersSlice";
 import {authorize, deleteToken} from "../../redux/slices/authSlice";
 import {RootState} from "../../redux/store";
+import {Link, redirect} from "react-router-dom";
 
 export default function LoginPage() {
 
@@ -36,18 +37,23 @@ export default function LoginPage() {
     }
 
      async function getVerificationStatus() {
-         await verifyRequisites({login: `${email}`, password: `${password}`});
-         const token = await localStorage.getItem('token');
-         const expirationDate = await localStorage.getItem('expire');
-         // dispatch(deleteToken({
-         //     accessToken: '',
-         //     expire: ''
-         // }));
-         dispatch(authorize({
+         if (email === 'sf_student8' && password === '5QB0KM/') {
+             await verifyRequisites({login: `${email}`, password: `${password}`});
+             const token = await localStorage.getItem('token');
+             const expirationDate = await localStorage.getItem('expire');
+             dispatch(deleteToken({
+                 accessToken: '',
+                 expire: ''
+             }));
+
+             dispatch(authorize({
                  accessToken: `Bearer ${token!}`,
-             // @ts-ignore
+                 // @ts-ignore
                  expire: expirationDate
              }))
+         } else {
+             alert('Your login or password are incorrect')
+         }
     }
 
     return (
@@ -77,7 +83,11 @@ export default function LoginPage() {
                         </div>
                     </form>
                 </div>
-                <button type='submit' className={st.loginButton} onClick={getVerificationStatus}>Войти</button>
+                <button type='submit' className={st.loginButton} onClick={getVerificationStatus}>
+                     <Link to={ authorized.accessToken ? '/dashboard' : '/login'}>
+                        Войти
+                    </Link>
+                    </button>
                 <span><a href='/login' style={
                     {
                         textDecoration: 'underline',

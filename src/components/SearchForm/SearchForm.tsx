@@ -6,17 +6,38 @@ import document from '../../assets/Document.svg';
 import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
 import {Link} from "react-router-dom";
-import {RootState} from "../../redux/store";
+import axios from "axios";
 
 export default function SearchForm() {
 
     const [isChecked, setIsChecked] = useState(false);
+    const [innValue, setInnValue] = useState('');
+    const [docsAmount, setDocsAmount] = useState('');
+
+
+    async function searchDocs() {
+        try {
+            await axios.post('https://gateway.scan-interfax.ru/api/v1/objectsearch/histograms', )
+        }
+    }
 
     function handleCheck(e: React.MouseEvent) {
         const target = e.currentTarget as HTMLDivElement
         if (target.dataset.index === target.id) {
             target.id && setIsChecked(prev => !prev)
         } else return;
+    }
+
+    function handleInnValue(e: React.ChangeEvent) {
+        const target = e.target as HTMLInputElement;
+        setInnValue(target.value);
+        console.log(innValue);
+    }
+
+    function handleDocsAmount(e: React.ChangeEvent) {
+        const target = e.target as HTMLInputElement;
+        setDocsAmount(target.value);
+        console.log(docsAmount);
     }
 
     function focus(e: React.FocusEvent) {
@@ -39,7 +60,14 @@ export default function SearchForm() {
                         <form className={s['form-container']}>
                             <div className={s['input-container']}>
                                 <label htmlFor='inn'>ИНН компании*</label>
-                                <input className={s.input} type='number' placeholder='10 цифр' maxLength={10} id='inn'/>
+                                <input
+                                    className={s.input}
+                                    type='number'
+                                    placeholder='10 цифр'
+                                    maxLength={10} id='inn'
+                                    value={innValue}
+                                    onChange={handleInnValue}
+                                />
                             </div>
                             <div className={s['input-container']}>
                                 <label htmlFor='selectTon'>Тональность</label>
@@ -51,8 +79,14 @@ export default function SearchForm() {
                             </div>
                             <div className={s['input-container']}>
                                 <label htmlFor='amount'>Количество документов в выдаче*</label>
-                                <input className={s.input} type="number" max={1000} id='amount'
-                                       placeholder='От 1 до 1000'/>
+                                <input
+                                    className={s.input}
+                                    type="number" max={1000}
+                                    id='amount'
+                                    placeholder='От 1 до 1000'
+                                    value={docsAmount}
+                                    onChange={handleDocsAmount}
+                                />
                             </div>
                             <div style={{marginTop: '14px'}} className={s['input-container']}>
                                 <label htmlFor='range'>Диапазон поиска*</label>

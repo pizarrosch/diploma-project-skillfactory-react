@@ -10,27 +10,37 @@ import SearchForm from "./components/SearchForm/SearchForm";
 import {useAppDispatch, useAppSelector} from "./hooks/hooks";
 import ResultsPage from "./components/ResultsPage/ResultsPage";
 import {RootState} from "./redux/store";
+import localStorage from "redux-persist/es/storage";
+import axios from "axios";
+import {TEventFiltersInfo} from "./types";
+import {getLimitInfo} from "./redux/slices/eventFiltersSlice";
 
 function App() {
 
     const authorized = useAppSelector((state: RootState) => state.authorization);
     const dispatch = useAppDispatch();
 
-   // useEffect(() => {
-   //      // const headers = { Authorization: `Bearer ${token}`};
-   //      token && fetch('https://gateway.scan-interfax.ru/api/v1/account/info', {
-   //          headers: {
-   //              Authorization: `Bearer ${token}`
-   //          }
-   //      })
-   //          .then((response) => response.json())
-   //          .then(data => dispatch(getLimitInfo({
-   //              companyLimit: data.companyLimit,
-   //              usedCompanyCount: data.usedCompanyCount
-   //          })))
-   //  }, [dispatch, token]);
+    async function getInfo() {
+        const token = await localStorage.getItem('token');
+        axios.get("https://gateway.scan-interfax.ru/api/v1/account/info", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token!}`
+            },
+        })
 
+            .then((data: axios.AxiosResponse<TEventFiltersInfo>) => authorized && dispatch(getLimitInfo({
+                eventFiltersInfo: {
+                    usedCompanyCount: data.data.eventFiltersInfo.usedCompanyCount,
+                    companyLimit: data.data.eventFiltersInfo.companyLimit
+                }
+            })))
+    }
 
+    useEffect(() => {
+        authorized.accessToken && getInfo();
+    }, [authorized.accessToken]);
 
     return (
         <div className={s.root}>

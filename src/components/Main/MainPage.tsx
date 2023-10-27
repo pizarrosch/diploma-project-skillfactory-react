@@ -20,24 +20,6 @@ export default function MainPage() {
     const authorized = useAppSelector((state: RootState) => state.authorization);
     const dispatch = useAppDispatch();
 
-    async function getInfo() {
-        const token = await localStorage.getItem('token');
-        axios.get("https://gateway.scan-interfax.ru/api/v1/account/info", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token!}`
-            },
-        })
-
-            .then((data: axios.AxiosResponse<TEventFiltersInfo>) => authorized && dispatch(getLimitInfo({
-                eventFiltersInfo: {
-                    usedCompanyCount: data.data.eventFiltersInfo.usedCompanyCount,
-                    companyLimit: data.data.eventFiltersInfo.companyLimit
-                }
-            })))
-    }
-
     return (
         <div className={s.root}>
             <div className={s.publicationSearchContainer}>
@@ -48,9 +30,9 @@ export default function MainPage() {
                         <p style={{fontSize: '20px'}}>Комплексный анализ публикаций, получение данных <br/> в формате
                             PDF на электронную почту.</p>
                     </div>
-                    { authorized &&
+                    { authorized.accessToken &&
                     <button className={s.getDataByInnButton}>
-                        <Link to={'/searchForm'} onClick={authorized && getInfo}>
+                        <Link to={'/searchForm'}>
                             Запросить данные
                         </Link>
                     </button>

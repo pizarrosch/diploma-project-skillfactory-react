@@ -5,7 +5,8 @@ import {authorize} from "../../../redux/slices/authSlice";
 import {useAppDispatch, useAppSelector} from "../../../hooks/hooks";
 import avatar from '../../../assets/avatar.png';
 import {RootState} from "../../../redux/store";
-import {EventFilter, TEventFiltersInfo} from "../../../types";
+import {TEventFiltersInfo} from "../../../types";
+import {getLimitInfo} from "../../../redux/slices/eventFiltersSlice";
 
 export default function NavigationAuthorized() {
 
@@ -39,10 +40,19 @@ export default function NavigationAuthorized() {
             <div className={s.loginMenu}>
                 <div className={s.userNameWrapper}>
                     <span className={s.userName}>Zaur S.</span>
-                    <span className={s.logOut} onClick={() => dispatch(authorize({
-                        accessToken: '',
-                        expire: ''
-                    }))}>Выйти</span>
+                    <span className={s.logOut} onClick={() => {
+                        dispatch(authorize({
+                            accessToken: '',
+                            expire: ''
+                        }));
+
+                        dispatch(getLimitInfo({
+                            eventFiltersInfo: {
+                                usedCompanyCount: 0,
+                                companyLimit: 0
+                            }
+                        }))
+                    }}>Выйти</span>
                 </div>
                 <div>
                     <img src={avatar} alt='avatar' />
