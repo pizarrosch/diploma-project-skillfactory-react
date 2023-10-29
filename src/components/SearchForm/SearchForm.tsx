@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {ChangeEvent, useState} from "react";
 import s from './SearchForm.module.scss';
 import st from '../Main/Main.module.scss';
 import checkmark from '../../assets/checkmark.svg';
@@ -7,18 +7,79 @@ import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
 import {Link} from "react-router-dom";
 import axios from "axios";
+import {TSearchData, TSearchResults, TTotalDocsResultArray} from "../../types";
+import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
+import {RootState} from "../../redux/store";
+import {check} from "../../redux/slices/checkboxSlice";
+import localStorage from "redux-persist/es/storage";
 
 export default function SearchForm() {
 
     const [isChecked, setIsChecked] = useState(false);
     const [innValue, setInnValue] = useState('');
     const [docsAmount, setDocsAmount] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
+    const checkboxStatus = useAppSelector((state: RootState) => state.checkbox);
+    const dispatch = useAppDispatch();
 
-    async function searchDocs() {
+    async function searchDocs(searchData: TSearchData): Promise<void> {
+        const token = await localStorage.getItem('token');
         try {
-            await axios.post('https://gateway.scan-interfax.ru/api/v1/objectsearch/histograms', )
+            await axios.post('https://gateway.scan-interfax.ru/api/v1/objectsearch/histograms',
+               searchData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+                )
+                .then(response => console.log(response.data.data.map((resultData: TSearchResults[]) => resultData)));
+        } catch (err: any) {
+            alert (err.message)
         }
+    }
+
+    async function sendData() {
+
+        const date = new Date(startDate);
+
+        await searchDocs({
+            intervalType: 'month',
+            attributeFilters: {
+                excludeTechNews: checkboxStatus.excludeTechNews,
+                excludeDigests: checkboxStatus.excludeDigests,
+                excludeAnnouncements: checkboxStatus.excludeAnnouncements
+            },
+            histogramTypes: [
+                'totalDocuments',
+                'riskFactors'
+            ],
+            limit: Number(docsAmount),
+            similarMode: 'none',
+            searchContext: {
+                targetSearchEntitiesContext: {
+                    targetSearchEntities: [
+                        {
+                            inn: Number(innValue),
+                            type: 'company',
+                            inBusinessNews: checkboxStatus.inBusinessNews,
+                            maxFullness: checkboxStatus.maxFullness
+                        }
+                    ]
+                },
+                onlyMainRole: checkboxStatus.onlyMainRole,
+                tonality: "any",
+                onlyWithRiskFactors: checkboxStatus.onlyWithRiskFactors,
+            },
+            sortDirectionType: "asc",
+            sortType: "issueDate",
+            issueDateInterval: {
+                startDate: startDate && date.toISOString().slice(0, -5) + '+03:00',
+                endDate: endDate && date.toISOString().slice(0, -5) + '+03:00'
+            }
+        })
     }
 
     function handleCheck(e: React.MouseEvent) {
@@ -31,13 +92,22 @@ export default function SearchForm() {
     function handleInnValue(e: React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
         setInnValue(target.value);
-        console.log(innValue);
     }
 
     function handleDocsAmount(e: React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
         setDocsAmount(target.value);
-        console.log(docsAmount);
+    }
+
+    function getStartDate(e: ChangeEvent) {
+        const target = e.target as HTMLInputElement;
+        setStartDate(target.value);
+        console.log(startDate)
+    }
+
+    function getEndDate(e: ChangeEvent) {
+        const target = e.target as HTMLInputElement;
+        setEndDate(target.value);
     }
 
     function focus(e: React.FocusEvent) {
@@ -92,10 +162,10 @@ export default function SearchForm() {
                                 <label htmlFor='range'>Диапазон поиска*</label>
                                 <div className={s['date-range-container']}>
                                     <input type='text' className={s['date-input']} placeholder='Дата начала'
-                                           onFocus={focus}/>
+                                           onFocus={focus} onChange={getStartDate}/>
                                     <div style={{right: '210px'}} className={s['dropdown-arrow']}></div>
                                     <input type='text' className={s['date-input']} placeholder='Дата конца'
-                                           onFocus={focus}/>
+                                           onFocus={focus} onChange={getEndDate}/>
                                     <div style={{right: '8px'}} className={s['dropdown-arrow']}></div>
                                 </div>
                             </div>
@@ -140,7 +210,7 @@ export default function SearchForm() {
                         </div>
                         <div className={s['button-container']}>
                             <Link to={'/results'}>
-                                <button className={st.searchButton}>
+                                <button className={st.searchButton} onClick={sendData}>
                                     Поиск
                                 </button>
                             </Link>

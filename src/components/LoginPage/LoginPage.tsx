@@ -7,14 +7,11 @@ import facebookSign from '../../assets/facebook-sign.png';
 import yandexSign from '../../assets/yandex-sign.png';
 import React, {useEffect, useState} from "react";
 import {verifyRequisites} from "../../api/auth";
-import axios from "axios";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import localStorage from "redux-persist/es/storage";
-import {TEventFiltersInfo, TToken} from "../../types";
-import {getLimitInfo} from "../../redux/slices/eventFiltersSlice";
 import {authorize, deleteToken} from "../../redux/slices/authSlice";
 import {RootState} from "../../redux/store";
-import {Link, redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 export default function LoginPage() {
 
@@ -23,17 +20,17 @@ export default function LoginPage() {
 
     const dispatch = useAppDispatch();
     const authorized = useAppSelector((state: RootState) => state.authorization);
-    const token = localStorage.getItem('token');
-    const expirationDate = localStorage.getItem('expire');
 
     function handleEmailInput(e: React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
         setEmail(target.value);
+        console.log(email)
     }
 
     function handlePasswordInput(e: React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
         setPassword(target.value);
+        console.log(password)
     }
 
      async function getVerificationStatus() {

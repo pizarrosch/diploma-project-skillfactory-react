@@ -18,7 +18,6 @@ import localStorage from "redux-persist/es/storage";
 export default function MainPage() {
 
     const authorized = useAppSelector((state: RootState) => state.authorization);
-    const dispatch = useAppDispatch();
 
     return (
         <div className={s.root}>

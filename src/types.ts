@@ -47,14 +47,16 @@ export type TEventFiltersInfo = {
     eventFiltersInfo: EventFilter
 }
 
-type TIssueDateInterval = {
+export type TIssueDateInterval = {
     startDate: string,
     endDate: string
 }
 
 type TSearchEntities = {
     type: string,
-    inn: number
+    inn: number,
+    maxFullness: boolean,
+    inBusinessNews: boolean
 }
 
 type TTargetSearchEntities = {
@@ -62,25 +64,13 @@ type TTargetSearchEntities = {
 }
 
 type TTargetSearchEntitiesContext = {
-    targetSearchEntitiesContext: TTargetSearchEntities
+    targetSearchEntitiesContext: TTargetSearchEntities,
+    onlyMainRole: boolean,
+    tonality: "any",
+    onlyWithRiskFactors: boolean
 }
 
-type TSimilarMode = {
-    none: string,
-    duplicates: string
-}
-
-type TSortType = {
-    issueDate: string,
-    sourceInfluence: string
-}
-
-type TSortDirectionType = {
-    asc: string,
-    desc: string
-}
-
-type TAttributeFilters = {
+export type TAttributeFilters = {
     excludeTechNews: boolean,
     excludeAnnouncements: boolean,
     excludeDigests: boolean
@@ -91,12 +81,30 @@ export type TSearchData = {
     issueDateInterval: TIssueDateInterval,
     searchContext: TTargetSearchEntitiesContext,
     histogramTypes: [totalDocuments: string, riskFactors: string],
-    similarMode: TSimilarMode,
+    similarMode: "none" | "duplicates",
     limit: number,
-    sortType: TSortType,
-    sortDirectionType: TSortDirectionType,
+    sortType: "issueDate" | "sourceInfluence",
+    sortDirectionType: "asc" | "desc",
     attributeFilters: TAttributeFilters,
-    tonality: "any",
-    maxFullness: boolean,
-    onlyMainRole: true
 }
+
+type TTotalDocsResult = {
+    date: string,
+    value: number
+}
+
+export type TTotalDocsResultArray = {
+    data: TTotalDocsResult[]
+};
+
+type TTotalDocuments = {
+    data: TTotalDocsResultArray,
+    histogramType: 'totalDocuments'
+}
+
+type TRiskFactors = {
+    data: TTotalDocsResultArray,
+    histogramType: 'riskFactors'
+}
+
+export type TSearchResults = TTotalDocuments & TRiskFactors
