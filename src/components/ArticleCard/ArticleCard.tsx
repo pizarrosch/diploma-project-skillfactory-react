@@ -3,6 +3,7 @@ import s from './ArticleCard.module.scss';
 import st from '../Main/Main.module.scss';
 import articleImage1 from '../../assets/article-card-img-1.png';
 import {TArticle} from "../../types";
+import {unescape} from "querystring";
 
 export default function ArticleCard({ok}: TArticle) {
 
@@ -10,18 +11,22 @@ export default function ArticleCard({ok}: TArticle) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlString, 'text/xml');
 
+    const date = new Date (ok.issueDate);
+
     let paragraph = '';
     const paragraphTags = doc.getElementsByTagName('sentence');
 
     for (let i = 0; i < paragraphTags.length; i++) {
-        paragraph += paragraphTags[i].childNodes[0].nodeValue + '</br>'
+        const newText = paragraphTags[i].childNodes[0].textContent!.replace('&lt;', '<')
+        paragraph += newText
+        // paragraph.replace(/&gt;/g, '<')
     }
 
     return (
         <div className={s.root}>
             <div className={s.sourceContainer}>
-                <span>21.10.2023</span>
-                <span className={s.source}>Комсомольская правда KP.RU</span>
+                <span>{date.toLocaleDateString('ru-Ru')}</span>
+                <span className={s.source}>{ok.source.name}</span>
             </div>
             <h2 className={s.title}>{ok.title.text}</h2>
             <div className={s.categoryContainer}>
@@ -37,7 +42,7 @@ export default function ArticleCard({ok}: TArticle) {
             <p className={s.paragraph}>{paragraph}</p>
             <div className={s.cardFooter}>
                 <button className={st.readSourceButton}>Читать в источнике</button>
-                <span className={s.paragraph}>{ok.attributes.wordCount} слов</span>
+                <span className={s.wordCount}>{ok.attributes.wordCount} слов</span>
             </div>
         </div>
     )

@@ -62,7 +62,8 @@ export default function ResultsPage() {
                     </div>
                     {
                         stats.length === 0 ? 'В данном промежутке времени информация отсутствует' : stats && stats[0].data.map((stat: TTotalDocsResult) => {
-                            return <StatsCard range={stat.date} total={stat.value} risks={stat.value}/>
+                            const date = new Date(stat.date);
+                            return <StatsCard range={date.toLocaleDateString('ru-Ru')} total={stat.value} risks={stat.value}/>
                         })
                     }
                 </div>
@@ -71,11 +72,13 @@ export default function ResultsPage() {
             <div className={s.statsContainer}>
                 <span className={s.stats}>Список документов</span>
             </div>
-            {
-                articles.map(article => {
-                    return <ArticleCard ok={article.ok} />
-                })
-            }
+            <div className={s.articleCardWrapper}>
+                {
+                    articles.map(article => {
+                        return <ArticleCard ok={article.ok} />
+                    })
+                }
+            </div>
             <div className={s.buttonContainer}>
                 <button className={st.showMoreButton}>Показать больше</button>
             </div>

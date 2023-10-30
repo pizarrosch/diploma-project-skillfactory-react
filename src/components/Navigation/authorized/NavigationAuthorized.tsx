@@ -7,6 +7,7 @@ import avatar from '../../../assets/avatar.png';
 import {RootState} from "../../../redux/store";
 import {TEventFiltersInfo} from "../../../types";
 import {getLimitInfo} from "../../../redux/slices/eventFiltersSlice";
+import {ThreeDots} from "react-loader-spinner";
 
 export default function NavigationAuthorized() {
 
@@ -28,14 +29,31 @@ export default function NavigationAuthorized() {
                 </ul>
             </nav>
             <div className={s.stats}>
-                <div className={s.usedCompaniesWrapper}>
-                    <span className={s.usedCompanies}>Использовано компаний</span>
-                    <span className={s.usedCompaniesAmount}>{authorized && tariffLimits.eventFiltersInfo.usedCompanyCount}</span>
+                {tariffLimits ?
+                    <>
+                        <div className={s.usedCompaniesWrapper}>
+                            <span className={s.usedCompanies}>Использовано компаний</span>
+                            <span className={s.usedCompaniesAmount}>{authorized && tariffLimits.eventFiltersInfo.usedCompanyCount}</span>
+                        </div>
+                        <div className={s.companiesLimitWrapper}>
+                            <span className={s.companiesLimit}>Лимит по компаниям</span>
+                            <span className={s.limitAmount}>{authorized && tariffLimits.eventFiltersInfo.companyLimit}</span>
+                        </div>
+                    </>
+              :
+                <div style={{display: 'flex', margin: '0 auto'}}>
+                    <ThreeDots
+                        height="50"
+                        width="50"
+                        radius="9"
+                        color="#4fa94d"
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                    />
                 </div>
-                <div className={s.companiesLimitWrapper}>
-                    <span className={s.companiesLimit}>Лимит по компаниям</span>
-                    <span className={s.limitAmount}>{authorized && tariffLimits.eventFiltersInfo.companyLimit}</span>
-                </div>
+                 }
             </div>
             <div className={s.loginMenu}>
                 <div className={s.userNameWrapper}>
