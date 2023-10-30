@@ -2,30 +2,42 @@ import React from "react";
 import s from './ArticleCard.module.scss';
 import st from '../Main/Main.module.scss';
 import articleImage1 from '../../assets/article-card-img-1.png';
+import {TArticle} from "../../types";
 
-export default function ArticleCard() {
+export default function ArticleCard({ok}: TArticle) {
+
+    const xmlString = ok.content.markup;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlString, 'text/xml');
+
+    let paragraph = '';
+    const paragraphTags = doc.getElementsByTagName('sentence');
+
+    for (let i = 0; i < paragraphTags.length; i++) {
+        paragraph += paragraphTags[i].childNodes[0].nodeValue + '</br>'
+    }
+
     return (
         <div className={s.root}>
             <div className={s.sourceContainer}>
                 <span>21.10.2023</span>
                 <span className={s.source}>Комсомольская правда KP.RU</span>
             </div>
-            <h2 className={s.title}>Скиллфэктори - лучшая онлайн-школа <br/> для будущих айтишников</h2>
+            <h2 className={s.title}>{ok.title.text}</h2>
             <div className={s.categoryContainer}>
-                <span className={s.category}>Технические новости</span>
+                            <span className={s.category}>
+                                {ok.attributes.isTechNews ? 'Технические новости' :
+                                    ok.attributes.isDigest ? 'Анонс' :
+                                        ok.attributes.isAnnouncement ? 'Сводка новостей' :
+                                            'Разное'
+                                }
+                            </span>
             </div>
-            <img className={s.articleImage} src={articleImage1} alt=''/>
-            <p className={s.paragraph}>SkillFactory — школа для всех, кто хочет изменить свою карьеру и жизнь. С 2016
-                года обучение прошли 20 000+ человек из 40 стран с 4 континентов, самому взрослому студенту сейчас 86
-                лет. Выпускники работают в Сбере, Cisco, Bayer, Nvidia, МТС, Ростелекоме, Mail.ru, Яндексе, Ozon и
-                других топовых компаниях.</p>
-            <p className={s.paragraph}>Принципы SkillFactory: акцент на практике, забота о студентах и ориентир на
-                трудоустройство. 80% обучения — выполнение <br/> упражнений и реальных проектов. Каждого студента поддерживают
-                менторы, 2 саппорт-линии и комьюнити курса. А карьерный центр помогает составить резюме, подготовиться к
-                собеседованиям и познакомиться с IT-рекрутерами.</p>
+            <img className={s.articleImage} src={ok.url} alt=''/>
+            <p className={s.paragraph}>{paragraph}</p>
             <div className={s.cardFooter}>
                 <button className={st.readSourceButton}>Читать в источнике</button>
-                <span className={s.paragraph}>2 543 слова</span>
+                <span className={s.paragraph}>{ok.attributes.wordCount} слов</span>
             </div>
         </div>
     )

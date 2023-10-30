@@ -88,23 +88,80 @@ export type TSearchData = {
     attributeFilters: TAttributeFilters,
 }
 
-type TTotalDocsResult = {
+export type TTotalDocsResult = {
     date: string,
     value: number
 }
 
 export type TTotalDocsResultArray = {
     data: TTotalDocsResult[]
+    histogramType: string
 };
 
-type TTotalDocuments = {
-    data: TTotalDocsResultArray,
-    histogramType: 'totalDocuments'
+export type TTotalDocuments = {
+    data: TTotalDocsResult,
+    histogramType: string
 }
 
-type TRiskFactors = {
-    data: TTotalDocsResultArray,
-    histogramType: 'riskFactors'
+// type TRiskFactors = {
+//     data: TTotalDocsResultArray,
+//     histogramType: string
+// }
+
+export type TSearchResults = TTotalDocsResultArray[]
+
+//types for object search
+
+type TEncodedIdObject = {
+    encodedId: string,
+    influence: number,
+    similarCount: number
 }
 
-export type TSearchResults = TTotalDocuments & TRiskFactors
+type TMappingsObject = {
+    inn: string,
+    entityIds: number[]
+}
+
+export type TObjectItems = {
+    items: TEncodedIdObject[],
+    mappings: TMappingsObject[]
+}
+
+export type TEncodedIds = {
+    ids: string[]
+}
+
+//types for articles search by ids
+
+type TAttributes = {
+    isAnnouncement: boolean,
+    isDigest: boolean,
+    isTechNews: boolean,
+    wordCount: number
+}
+
+type TContent = {
+    markup: string
+}
+
+type TSource = {
+    name: string
+}
+
+type TTitle = {
+    text: string
+}
+
+type TOk = {
+    attributes: TAttributes,
+    issueDate: string,
+    source: TSource,
+    title: TTitle,
+    content: TContent,
+    url: string
+}
+
+export type TArticle = {
+    ok: TOk
+}

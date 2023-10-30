@@ -5,10 +5,20 @@ import woman from '../../assets/woman-with-magnifying-glass.svg';
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/arrow-right.svg";
 import {statData} from "../../data";
-import {TStatResults} from "../../types";
+import {
+    TArticle,
+    TSearchResults,
+    TStatResults,
+    TTotalDocsResult,
+    TTotalDocsResultArray,
+    TTotalDocuments
+} from "../../types";
 import ArticleCard from "../ArticleCard/ArticleCard";
+import {useAppSelector} from "../../hooks/hooks";
+import {RootState} from "../../redux/store";
 
 function StatsCard({range, total, risks}: TStatResults) {
+
     return (
         <>
             <div className={s.statsWrapper}>
@@ -23,6 +33,10 @@ function StatsCard({range, total, risks}: TStatResults) {
 
 
 export default function ResultsPage() {
+
+    const stats: TSearchResults = useAppSelector((state: RootState) => state.stats);
+    const articles: TArticle[] = useAppSelector((state: RootState) => state.articles);
+
     return (
         <div>
             <div className={s.firstBlock}>
@@ -47,8 +61,8 @@ export default function ResultsPage() {
                         <span>Риски</span>
                     </div>
                     {
-                        statData.map((stat) => {
-                            return <StatsCard range={stat.range} total={stat.total} risks={stat.risks}/>
+                        stats.length === 0 ? 'В данном промежутке времени информация отсутствует' : stats && stats[0].data.map((stat: TTotalDocsResult) => {
+                            return <StatsCard range={stat.date} total={stat.value} risks={stat.value}/>
                         })
                     }
                 </div>
@@ -57,7 +71,11 @@ export default function ResultsPage() {
             <div className={s.statsContainer}>
                 <span className={s.stats}>Список документов</span>
             </div>
-            <ArticleCard />
+            {
+                articles.map(article => {
+                    return <ArticleCard ok={article.ok} />
+                })
+            }
             <div className={s.buttonContainer}>
                 <button className={st.showMoreButton}>Показать больше</button>
             </div>

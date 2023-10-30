@@ -13,6 +13,9 @@ import {
     REGISTER
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import {statsSlice} from "./slices/statsSlice";
+import {objectsSlice} from "./slices/objectsSlice";
+import {articlesSlice} from "./slices/articlesSlice";
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -20,7 +23,10 @@ export type AppDispatch = typeof store.dispatch;
 const reducer = combineReducers({
     authorization: authSlice.reducer,
     tariffLimits: eventFiltersSlice.reducer,
-    checkbox: checkboxSlice.reducer
+    checkbox: checkboxSlice.reducer,
+    stats: statsSlice.reducer,
+    objects: objectsSlice.reducer,
+    articles: articlesSlice.reducer
 })
 
 const persistConfig = {

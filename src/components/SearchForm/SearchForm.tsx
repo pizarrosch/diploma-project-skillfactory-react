@@ -7,11 +7,14 @@ import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
 import {Link} from "react-router-dom";
 import axios from "axios";
-import {TSearchData, TSearchResults, TTotalDocsResultArray} from "../../types";
+import {TArticle, TEncodedIds, TSearchData, TSearchResults} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import {RootState} from "../../redux/store";
-import {check} from "../../redux/slices/checkboxSlice";
 import localStorage from "redux-persist/es/storage";
+import {getStats} from "../../redux/slices/statsSlice";
+import {getItems} from "../../redux/slices/objectsSlice";
+import {Root} from "react-dom/client";
+import {getArticles} from "../../redux/slices/articlesSlice";
 
 export default function SearchForm() {
 
@@ -22,7 +25,46 @@ export default function SearchForm() {
     const [endDate, setEndDate] = useState('');
 
     const checkboxStatus = useAppSelector((state: RootState) => state.checkbox);
+    const objectsArr = useAppSelector((state: RootState) => state.objects.items);
+
+    const encodedIds = objectsArr.map((item) => item.encodedId)
     const dispatch = useAppDispatch();
+
+    const SEARCH_DATA: TSearchData = {
+        intervalType: 'month',
+        attributeFilters: {
+            excludeTechNews: checkboxStatus.excludeTechNews,
+            excludeDigests: checkboxStatus.excludeDigests,
+            excludeAnnouncements: checkboxStatus.excludeAnnouncements
+        },
+        histogramTypes: [
+            'totalDocuments',
+            'riskFactors'
+        ],
+        limit: Number(docsAmount),
+        similarMode: 'none',
+        searchContext: {
+            targetSearchEntitiesContext: {
+                targetSearchEntities: [
+                    {
+                        inn: Number(innValue),
+                        type: 'company',
+                        inBusinessNews: checkboxStatus.inBusinessNews,
+                        maxFullness: checkboxStatus.maxFullness
+                    }
+                ]
+            },
+            onlyMainRole: checkboxStatus.onlyMainRole,
+            tonality: "any",
+            onlyWithRiskFactors: checkboxStatus.onlyWithRiskFactors,
+        },
+        sortDirectionType: "asc",
+        sortType: "issueDate",
+        issueDateInterval: {
+            startDate: startDate, //&& date.toISOString().slice(0, -5) + '+03:00'
+            endDate: endDate //&& date.toISOString().slice(0, -5) + '+03:00'
+        }
+    }
 
     async function searchDocs(searchData: TSearchData): Promise<void> {
         const token = await localStorage.getItem('token');
@@ -35,7 +77,41 @@ export default function SearchForm() {
                     }
                 }
                 )
-                .then(response => console.log(response.data.data.map((resultData: TSearchResults[]) => resultData)));
+                .then(response => dispatch(getStats(response.data.data.map((resultData: TSearchResults[]) => resultData))));
+        } catch (err: any) {
+            alert (err.message)
+        }
+    }
+
+    async function searchObjects(searchData: TSearchData): Promise<void> {
+        const token = await localStorage.getItem('token');
+        try {
+            await axios.post('https://gateway.scan-interfax.ru/api/v1/objectsearch',
+                searchData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+                .then(response => dispatch(getItems(response.data)));
+        } catch (err: any) {
+            alert (err.message)
+        }
+    }
+
+    async function getDocs(ids: TEncodedIds): Promise<void> {
+        const token = await localStorage.getItem('token');
+        try {
+            await axios.post('https://gateway.scan-interfax.ru/api/v1/documents',
+                ids,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+                .then(response => dispatch(getArticles(response.data)));
         } catch (err: any) {
             alert (err.message)
         }
@@ -43,43 +119,9 @@ export default function SearchForm() {
 
     async function sendData() {
 
-        const date = new Date(startDate);
-
-        await searchDocs({
-            intervalType: 'month',
-            attributeFilters: {
-                excludeTechNews: checkboxStatus.excludeTechNews,
-                excludeDigests: checkboxStatus.excludeDigests,
-                excludeAnnouncements: checkboxStatus.excludeAnnouncements
-            },
-            histogramTypes: [
-                'totalDocuments',
-                'riskFactors'
-            ],
-            limit: Number(docsAmount),
-            similarMode: 'none',
-            searchContext: {
-                targetSearchEntitiesContext: {
-                    targetSearchEntities: [
-                        {
-                            inn: Number(innValue),
-                            type: 'company',
-                            inBusinessNews: checkboxStatus.inBusinessNews,
-                            maxFullness: checkboxStatus.maxFullness
-                        }
-                    ]
-                },
-                onlyMainRole: checkboxStatus.onlyMainRole,
-                tonality: "any",
-                onlyWithRiskFactors: checkboxStatus.onlyWithRiskFactors,
-            },
-            sortDirectionType: "asc",
-            sortType: "issueDate",
-            issueDateInterval: {
-                startDate: startDate && date.toISOString().slice(0, -5) + '+03:00',
-                endDate: endDate && date.toISOString().slice(0, -5) + '+03:00'
-            }
-        })
+        await searchDocs(SEARCH_DATA);
+        await searchObjects(SEARCH_DATA);
+        await getDocs({ids: encodedIds});
     }
 
     function handleCheck(e: React.MouseEvent) {
@@ -102,7 +144,6 @@ export default function SearchForm() {
     function getStartDate(e: ChangeEvent) {
         const target = e.target as HTMLInputElement;
         setStartDate(target.value);
-        console.log(startDate)
     }
 
     function getEndDate(e: ChangeEvent) {
