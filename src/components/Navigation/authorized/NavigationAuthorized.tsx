@@ -29,31 +29,29 @@ export default function NavigationAuthorized() {
                 </ul>
             </nav>
             <div className={s.stats}>
-                {tariffLimits ?
-                    <>
                         <div className={s.usedCompaniesWrapper}>
                             <span className={s.usedCompanies}>Использовано компаний</span>
-                            <span className={s.usedCompaniesAmount}>{authorized && tariffLimits.eventFiltersInfo.usedCompanyCount}</span>
+                            <span className={s.usedCompaniesAmount}>{authorized.accessToken && tariffLimits.eventFiltersInfo.usedCompanyCount}</span>
                         </div>
                         <div className={s.companiesLimitWrapper}>
                             <span className={s.companiesLimit}>Лимит по компаниям</span>
-                            <span className={s.limitAmount}>{authorized && tariffLimits.eventFiltersInfo.companyLimit}</span>
+                            <span className={s.limitAmount}>
+                                 { tariffLimits.eventFiltersInfo.companyLimit ||
+                                   <div className={s.loading}>
+                                     <ThreeDots
+                                       height="15"
+                                       width="15"
+                                       radius="9"
+                                       color="#4fa94d"
+                                       ariaLabel="three-dots-loading"
+                                       wrapperStyle={{}}
+                                       wrapperClass=""
+                                       visible={true}
+                                     />
+                                   </div>
+                                 }
+                            </span>
                         </div>
-                    </>
-              :
-                <div style={{display: 'flex', margin: '0 auto'}}>
-                    <ThreeDots
-                        height="50"
-                        width="50"
-                        radius="9"
-                        color="#4fa94d"
-                        ariaLabel="three-dots-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                        visible={true}
-                    />
-                </div>
-                 }
             </div>
             <div className={s.loginMenu}>
                 <div className={s.userNameWrapper}>

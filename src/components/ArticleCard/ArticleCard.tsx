@@ -1,9 +1,8 @@
 import React from "react";
 import s from './ArticleCard.module.scss';
 import st from '../Main/Main.module.scss';
-import articleImage1 from '../../assets/article-card-img-1.png';
 import {TArticle} from "../../types";
-import {unescape} from "querystring";
+import {Link} from 'react-router-dom';
 
 export default function ArticleCard({ok}: TArticle) {
 
@@ -11,7 +10,7 @@ export default function ArticleCard({ok}: TArticle) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlString, 'text/xml');
 
-    const date = new Date (ok.issueDate);
+    const date = new Date(ok.issueDate);
 
     let paragraph = '';
     const paragraphTags = doc.getElementsByTagName('sentence');
@@ -41,7 +40,11 @@ export default function ArticleCard({ok}: TArticle) {
             <img className={s.articleImage} src={ok.url} alt=''/>
             <p className={s.paragraph}>{paragraph}</p>
             <div className={s.cardFooter}>
-                <button className={st.readSourceButton}>Читать в источнике</button>
+                <button className={st.readSourceButton}>
+                    <Link to={ok.url}>
+                        Читать в источнике
+                    </Link>
+                </button>
                 <span className={s.wordCount}>{ok.attributes.wordCount} слов</span>
             </div>
         </div>

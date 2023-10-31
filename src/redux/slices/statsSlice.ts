@@ -8,7 +8,7 @@ export const statsSlice = createSlice({
     reducers: {
         getStats: (state: TSearchResults, action: PayloadAction<TSearchResults>) => {
             return action.payload;
-        },
+        }
     }
 })
 

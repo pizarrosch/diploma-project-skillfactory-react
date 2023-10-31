@@ -28,20 +28,41 @@
     margin-bottom: 60px;
   }
 
-  .cardsContainer {
-    display: flex;
-    gap: 30px;
-    width: 1260px;
-    overflow: hidden;
-    padding: 10px 10px;
-  }
-
   .tariffCardsContainer {
     display: flex;
     gap: 50px;
   }
 }
 
+.sliderContainerWrapper {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+
+  .rightArrow {
+    position: absolute;
+    background-color: green;
+    right: -25px;
+    z-index: 1;
+  }
+
+  .sliderContainer {
+    display: flex;
+    //gap: 25px;
+    align-items: center;
+
+    .cardsContainer {
+      display: flex;
+      gap: 30px;
+      width: 1260px;
+      padding: 10px 10px;
+    }
+  }
+
+  .sliderContainer::after {
+    content: selector-append('.rightArrow');
+  }
+}
 
 .getDataByInnButton,
 .seeDetailsButton,
@@ -107,4 +128,6 @@
   background-color: rgba(210, 210, 210, 1);
   color: black;
 }
+
+
 

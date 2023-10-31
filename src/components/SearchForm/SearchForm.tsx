@@ -1,20 +1,21 @@
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useRef, useState} from "react";
 import s from './SearchForm.module.scss';
 import st from '../Main/Main.module.scss';
-import checkmark from '../../assets/checkmark.svg';
 import document from '../../assets/Document.svg';
 import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
 import {Link} from "react-router-dom";
 import axios from "axios";
-import {TArticle, TEncodedIds, TSearchData, TSearchResults} from "../../types";
+import {TEncodedIds, TSearchData, TSearchResults} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import {RootState} from "../../redux/store";
 import localStorage from "redux-persist/es/storage";
 import {getStats} from "../../redux/slices/statsSlice";
 import {getItems} from "../../redux/slices/objectsSlice";
-import {Root} from "react-dom/client";
 import {getArticles} from "../../redux/slices/articlesSlice";
+import {count} from "../../redux/slices/eventFiltersSlice";
+import {checkboxData} from "../../data";
+import Checkbox from "../Checkbox/Checkbox";
 
 export default function SearchForm() {
 
@@ -26,6 +27,7 @@ export default function SearchForm() {
 
     const checkboxStatus = useAppSelector((state: RootState) => state.checkbox);
     const objectsArr = useAppSelector((state: RootState) => state.objects.items);
+    const usedLimit = useAppSelector((state: RootState) => state.tariffLimits.eventFiltersInfo.usedCompanyCount);
 
     const encodedIds = objectsArr.map((item) => item.encodedId)
     const dispatch = useAppDispatch();
@@ -77,7 +79,10 @@ export default function SearchForm() {
                     }
                 }
                 )
-                .then(response => dispatch(getStats(response.data.data.map((resultData: TSearchResults[]) => resultData))));
+                .then(response => {
+                    dispatch(getStats(response.data.data.map((resultData: TSearchResults[]) => resultData)));
+                    dispatch(count())
+                });
         } catch (err: any) {
             alert (err.message)
         }
@@ -118,17 +123,19 @@ export default function SearchForm() {
     }
 
     async function sendData() {
-
         await searchDocs(SEARCH_DATA);
         await searchObjects(SEARCH_DATA);
         await getDocs({ids: encodedIds});
     }
 
-    function handleCheck(e: React.MouseEvent) {
+    function handleCheck(e: React.ChangeEvent, i: number) {
         const target = e.currentTarget as HTMLDivElement
-        if (target.dataset.index === target.id) {
-            target.id && setIsChecked(prev => !prev)
-        } else return;
+        // const defaultValue = target.getAttribute('defaultValue') as string;
+        if (Number(target.id) === i) {
+            setIsChecked(true);
+        } else {
+            setIsChecked(false);
+        }
     }
 
     function handleInnValue(e: React.ChangeEvent) {
@@ -214,40 +221,9 @@ export default function SearchForm() {
                     </div>
                     <div className={s['checkbox-button-container']}>
                         <div className={s['checkbox-options-container']}>
-                            <div className={s['checkbox-options-container__option']}>
-                                <div className={s['checkbox-input']} id='1' data-index='1' onClick={handleCheck}>
-                                    {isChecked && <img className={s.checkmark} src={checkmark} alt='checkmark'/>}
-                                </div>
-                                <span>Признак максимальной полноты</span>
-                            </div>
-                            <div className={s['checkbox-options-container__option']} onClick={handleCheck}>
-                                <div className={s['checkbox-input']} id='2'>
-                                    {isChecked && <img className={s.checkmark} src={checkmark} alt='checkmark'/>}
-                                </div>
-                                <span>Упоминания в бизнес-контексте</span>
-                            </div>
-                            <div className={s['checkbox-options-container__option']}>
-                                <div className={s['checkbox-input']} id='3'/>
-                                <label htmlFor='Главная роль в публикации'>Главная роль в публикации</label>
-                            </div>
-                            <div className={s['checkbox-options-container__option']}>
-                                <div className={s['checkbox-input']} id='4'/>
-                                <label htmlFor='Публикации только с риск-факторами'>Публикации только с
-                                    риск-факторами</label>
-                            </div>
-                            <div className={s['checkbox-options-container__option']}>
-                                <div className={s['checkbox-input']} id='5'/>
-                                <label htmlFor='Включать технические новости рынков'>Включать технические новости
-                                    рынков</label>
-                            </div>
-                            <div className={s['checkbox-options-container__option']}>
-                                <div className={s['checkbox-input']} id='6'/>
-                                <label htmlFor='Включать анонсы и календари'>Включать анонсы и календари</label>
-                            </div>
-                            <div className={s['checkbox-options-container__option']}>
-                                <div className={s['checkbox-input']} id='7'/>
-                                <label htmlFor='Включать сводки новостей'>Включать сводки новостей</label>
-                            </div>
+                            {checkboxData.map((item, id) => {
+                                return <Checkbox children={item.russian}/>
+                            })}
                         </div>
                         <div className={s['button-container']}>
                             <Link to={'/results'}>

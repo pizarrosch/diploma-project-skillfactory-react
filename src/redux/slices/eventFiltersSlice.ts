@@ -12,8 +12,11 @@ export const eventFiltersSlice = createSlice({
     reducers: {
         getLimitInfo: (state: TEventFiltersInfo, action: PayloadAction<TEventFiltersInfo>) => {
             return action.payload;
+        },
+        count: (state: TEventFiltersInfo, action: PayloadAction) => {
+            state.eventFiltersInfo.usedCompanyCount += 1;
         }
     }
 })
 
-export const {getLimitInfo} = eventFiltersSlice.actions;
+export const {getLimitInfo, count} = eventFiltersSlice.actions;

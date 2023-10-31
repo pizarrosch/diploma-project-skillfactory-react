@@ -8,19 +8,16 @@ type TCheckBoxFilter = {
     inBusinessNews: boolean,
 } & TAttributeFilters
 
+type TCheckboxStatus = {
+    active: boolean,
+    id: number
+} & TCheckBoxFilter
+
 export const checkboxSlice = createSlice({
     name: 'checkbox',
-    initialState:  {
-        inBusinessNews: false,
-        onlyWithRiskFactors: false,
-        maxFullness: false,
-        onlyMainRole: false,
-        excludeAnnouncements: false,
-        excludeDigests: false,
-        excludeTechNews: false,
-    } as TCheckBoxFilter,
+    initialState:  {} as TCheckboxStatus,
     reducers: {
-        check: (state: TCheckBoxFilter, action: PayloadAction<TCheckBoxFilter>) => {
+        check: (state: TCheckboxStatus, action: PayloadAction<TCheckboxStatus>) => {
             return action.payload;
         }
     }

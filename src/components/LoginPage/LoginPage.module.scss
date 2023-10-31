@@ -104,15 +104,26 @@
       .form__password-input-container {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        //gap: 10px;
 
-        .form__input {
+        .errorMessage {
+          font-size: 14px;
+          color: rgba(255, 89, 89, 1);
+        }
+
+        .form__input,
+        .form__input_error
+        {
           width: 379px;
           max-width: 379px;
           height: 43px;
           border: 1px solid rgba(199, 199, 199, 1);
           border-radius: 5px;
           outline: none;
+        }
+
+        .form__input_error {
+          border: 1px solid rgba(255, 89, 89, 1);
         }
       }
     }

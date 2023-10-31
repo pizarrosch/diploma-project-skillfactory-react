@@ -4,20 +4,35 @@ import rightArrow from '../../assets/arrow-right.svg';
 import sittingMan from '../../assets/sitting-man.svg';
 import s from './Main.module.scss';
 import Card from "../Card/Card";
-import {ImgSource, TEventFiltersInfo, TTariffCard} from "../../types";
+import {ImgSource, TTariffCard} from "../../types";
 import TariffCard from "../TariffCard/TariffCard";
 import {cardContents, tariffCardContents} from '../../data';
 import React from 'react';
 import {Link} from "react-router-dom";
 import {RootState} from "../../redux/store";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
-import axios from "axios";
-import {getLimitInfo} from "../../redux/slices/eventFiltersSlice";
-import localStorage from "redux-persist/es/storage";
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
+import {check} from "../../redux/slices/checkboxSlice";
+
+// @ts-ignore
+function LeftArrow({onClick, ...rest}) {
+    return (
+        <img onClick={() => onClick()} className={s.leftArrow} src={leftArrow} alt='right'/>
+    )
+}
+
+// @ts-ignore
+function RightArrow({onClick, ...rest}) {
+    return (
+        <img onClick={() => onClick()} className={s.rightArrow} src={rightArrow} alt='right'/>
+    )
+}
 
 export default function MainPage() {
 
     const authorized = useAppSelector((state: RootState) => state.authorization);
+    const dispatch = useAppDispatch();
 
     return (
         <div className={s.root}>
@@ -29,28 +44,92 @@ export default function MainPage() {
                         <p style={{fontSize: '20px'}}>Комплексный анализ публикаций, получение данных <br/> в формате
                             PDF на электронную почту.</p>
                     </div>
-                    { authorized.accessToken &&
-                    <button className={s.getDataByInnButton}>
+                    {authorized.accessToken &&
+                      <button
+                        className={s.getDataByInnButton}
+                        onClick={() => dispatch(check({
+                            active: false,
+                            id: 0,
+                            inBusinessNews: false,
+                            onlyWithRiskFactors: false,
+                            maxFullness: false,
+                            onlyMainRole: false,
+                            excludeAnnouncements: true,
+                            excludeDigests: true,
+                            excludeTechNews: true
+                        }))}
+                      >
                         <Link to={'/searchForm'}>
-                            Запросить данные
+                          Запросить данные
                         </Link>
-                    </button>
+                      </button>
                     }
                 </div>
                 <img src={bgImage1} alt='man pointing at the screen'/>
             </div>
-            <div>
+            <div className={s.sliderContainerWrapper}>
                 <p style={{fontSize: '45px'}} className={s.paragraph}>Почему именно мы</p>
-                <div className={s.slider}>
-                    <img src={leftArrow} alt='left'/>
-                    <div className={s.cardsContainer}>
-                        {
-                            cardContents.map((cardContent: ImgSource) => {
-                                return <Card src={cardContent.src} text={cardContent.text}/>
-                            })
-                        }
-                    </div>
-                    <img src={rightArrow} alt='right'/>
+                <div className={s.sliderContainer}>
+                    <Carousel
+                        additionalTransfrom={0}
+                        arrows={true}
+                        customLeftArrow={<LeftArrow onClick={undefined}/>}
+                        customRightArrow={<RightArrow onClick={undefined}/>}
+                        autoPlaySpeed={5000}
+                        autoPlay={false}
+                        centerMode={false}
+                        className={s.cardsContainer}
+                        containerClass=''
+                        dotListClass=""
+                        draggable
+                        focusOnSelect={false}
+                        infinite={false}
+                        itemClass=""
+                        keyBoardControl
+                        minimumTouchDrag={80}
+                        pauseOnHover
+                        renderArrowsWhenDisabled={true}
+                        renderButtonGroupOutside={false}
+                        renderDotsOutside={false}
+                        responsive={{
+                            desktop: {
+                                breakpoint: {
+                                    max: 3000,
+                                    min: 1024
+                                },
+                                items: 3,
+                                partialVisibilityGutter: 40
+                            },
+                            mobile: {
+                                breakpoint: {
+                                    max: 464,
+                                    min: 0
+                                },
+                                items: 1,
+                                partialVisibilityGutter: 30
+                            },
+                            tablet: {
+                                breakpoint: {
+                                    max: 1024,
+                                    min: 464
+                                },
+                                items: 2,
+                                partialVisibilityGutter: 30
+                            }
+                        }}
+                        rewind={false}
+                        rewindWithAnimation={false}
+                        rtl={false}
+                        shouldResetAutoplay
+                        showDots={false}
+                        sliderClass=""
+                        slidesToSlide={3}
+                        swipeable
+                    >
+                        {cardContents.map((cardContent: ImgSource) => {
+                            return <Card src={cardContent.src} text={cardContent.text}/>
+                        })}
+                    </Carousel>
                 </div>
             </div>
             <img src={sittingMan} alt='sittingMan'/>
@@ -71,7 +150,7 @@ export default function MainPage() {
                                     thirdOption: tariffCard.tariffOptions.thirdOption
                                 }}
                                 backgroundColor={tariffCard.backgroundColor}
-                                border={authorized ? tariffCard.border : ''}
+                                border={authorized.accessToken ? tariffCard.border : ''}
                                 color={tariffCard.color}
                                 src={tariffCard.src}
                             />

@@ -38,7 +38,7 @@ export default function TariffCard(
                 <img className={st['tariff-title__image']} src={src} alt='lamp'/>
             </div>
             <div className={st['tariff-details-container']}>
-                {authorized && border && <div className={st['current-tariff-icon']}>Текущий тариф</div>}
+                {authorized.accessToken && border && <div className={st['current-tariff-icon']}>Текущий тариф</div>}
                 <div className={st['price-container']}>
                     <span className={st['price-container__actual-price']}>{actualPrice}</span>
                     <span className={st['price-container__old-price']}>{oldPrice}</span>
@@ -61,7 +61,7 @@ export default function TariffCard(
                 </div>
             </div>
             <button className={authorized && border ? s.activatedTariff : s.seeDetailsButton}>
-                {authorized && border ? 'Перейти в личный кабинет' : 'Подробнее'}
+                {authorized.accessToken && border ? 'Перейти в личный кабинет' : 'Подробнее'}
             </button>
         </div>)
 }

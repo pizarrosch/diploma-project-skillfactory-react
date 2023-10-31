@@ -12,45 +12,51 @@ import localStorage from "redux-persist/es/storage";
 import {authorize, deleteToken} from "../../redux/slices/authSlice";
 import {RootState} from "../../redux/store";
 import {Link} from "react-router-dom";
+import {count} from "../../redux/slices/eventFiltersSlice";
+
+const LOGIN = process.env.USER_LOGIN as string;
+const PASSWORD = process.env.USER_PASSWORD as string;
+console.log(LOGIN, PASSWORD)
 
 export default function LoginPage() {
 
-    const [email, setEmail] = useState('');
+    const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoginValid, setIsLoginValid] = useState(true);
+    const [isPasswordValid, setIsPasswordValid] = useState(true);
 
     const dispatch = useAppDispatch();
     const authorized = useAppSelector((state: RootState) => state.authorization);
 
     function handleEmailInput(e: React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
-        setEmail(target.value);
-        console.log(email)
+        setLogin(target.value);
     }
 
     function handlePasswordInput(e: React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
         setPassword(target.value);
-        console.log(password)
+        !password && setIsPasswordValid(false);
     }
 
-     async function getVerificationStatus() {
-         if (email === 'sf_student8' && password === '5QB0KM/') {
-             await verifyRequisites({login: `${email}`, password: `${password}`});
-             const token = await localStorage.getItem('token');
-             const expirationDate = await localStorage.getItem('expire');
-             dispatch(deleteToken({
-                 accessToken: '',
-                 expire: ''
-             }));
+    useEffect(() => {
+        !login && setIsLoginValid(false);
+    }, [login]);
 
-             dispatch(authorize({
-                 accessToken: `Bearer ${token!}`,
-                 // @ts-ignore
-                 expire: expirationDate
-             }))
-         } else {
-             alert('Your login or password are incorrect')
-         }
+    async function getVerificationStatus() {
+        if (login === 'sf_student9' && password === 'DTdEwAn') {
+            await verifyRequisites({login: `${login}`, password: `${password}`});
+            const token = await localStorage.getItem('token');
+            const expirationDate = await localStorage.getItem('expire');
+
+            dispatch(authorize({
+                accessToken: `Bearer ${token!}`,
+                // @ts-ignore
+                expire: expirationDate
+            }))
+        } else {
+            alert('Your login or password are incorrect')
+        }
     }
 
     return (
@@ -72,19 +78,23 @@ export default function LoginPage() {
                     <form className={s['form-container__form']}>
                         <div className={s['form__email-input-container']}>
                             <label htmlFor='input'>Логин или номер телефона:</label>
-                            <input className={s['form__input']} type="email" id="input" value={email} onChange={handleEmailInput}/>
+                            <input className={isPasswordValid ? s['form__input'] : s['form__input_error']} type="email" id="input" value={login}
+                                   onChange={handleEmailInput}/>
+                            {!isLoginValid && <span className={s.errorMessage}>Пожалуйста, введите правильный логин</span>}
                         </div>
                         <div className={s['form__password-input-container']}>
                             <label htmlFor='password'>Пароль</label>
-                            <input className={s['form__input']} type="password" id="password" value={password} onChange={handlePasswordInput}/>
+                            <input className={isPasswordValid ? s['form__input'] : s['form__input_error']} type="password" id="password" value={password}
+                                   onChange={handlePasswordInput}/>
+                            {!isPasswordValid && <span className={s.errorMessage}>Пожалуйста, введите правильный пароль</span>}
                         </div>
                     </form>
                 </div>
-                <button type='submit' className={st.loginButton} onClick={getVerificationStatus}>
-                     <Link to={ authorized.accessToken ? '/dashboard' : '/login'}>
+                <Link to={authorized.accessToken ? '/dashboard' : '/login'}>
+                    <button type='submit' className={st.loginButton} onClick={getVerificationStatus}>
                         Войти
-                    </Link>
                     </button>
+                </Link>
                 <span><a href='/login' style={
                     {
                         textDecoration: 'underline',

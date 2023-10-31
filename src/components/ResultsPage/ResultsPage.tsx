@@ -10,8 +10,6 @@ import {
     TSearchResults,
     TStatResults,
     TTotalDocsResult,
-    TTotalDocsResultArray,
-    TTotalDocuments
 } from "../../types";
 import ArticleCard from "../ArticleCard/ArticleCard";
 import {useAppSelector} from "../../hooks/hooks";

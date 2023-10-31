@@ -11,8 +11,16 @@ export const cardContents = [
         text: 'Высокая и оперативная скорость \n обработки заявки'
     },
     {
+        src: stopWatch,
+        text: 'Молниеносное нахождение нужной \n компании'
+    },
+    {
         src: magnifyingGlass,
         text: 'Огромная комплексная база \n данных, обеспечивающая\n объективный ответ на запрос'
+    },
+    {
+        src: magnifyingGlass,
+        text: 'Нахождение компаний по всей \n России и округам'
     },
     {
         src: shield,
@@ -70,6 +78,37 @@ export const tariffCardContents = [
         backgroundColor: 'rgba(0, 0, 0, 1)',
         color: 'white',
         src: laptop
+    }
+]
+
+export const checkboxData = [
+    {
+        russian: 'Признак максимальной полноты',
+        english: 'maxFullness'
+    },
+    {
+        russian: 'Упоминания в бизнес-контексте',
+        english: 'inBusinessNews'
+    },
+    {
+        russian: 'Главная роль в публикации',
+        english: 'onlyMainRole'
+    },
+    {
+        russian: 'Публикации только с риск-факторами',
+        english: 'onlyWithRiskFactors'
+    },
+    {
+        russian: 'Включать технические новости рынков',
+        english: 'excludeTechNews'
+    },
+    {
+        russian: 'Включать анонсы и календари',
+        english: 'excludeAnnouncements'
+    },
+    {
+        russian: 'Включать сводки новостей',
+        english: 'excludeDigests'
     }
 ]
 
