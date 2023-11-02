@@ -62,6 +62,7 @@ export default function NavigationAuthorized() {
                             expire: ''
                         }));
 
+                        // Временно обнуляющая функция. Будет обнулятсья позже по истечении срока действия токена
                         dispatch(getLimitInfo({
                             eventFiltersInfo: {
                                 usedCompanyCount: 0,

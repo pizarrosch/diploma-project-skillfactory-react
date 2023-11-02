@@ -21,16 +21,15 @@ import checkmark from "../../assets/checkmark.svg";
 
 export default function SearchForm() {
 
-    const [isChecked, setIsChecked] = useState(false);
     const [innValue, setInnValue] = useState('');
     const [docsAmount, setDocsAmount] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [isDisabled, setIsDisabled] = useState(true);
 
     const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
     const objectsArr = useAppSelector((state: RootState) => state.objects.items);
-    const usedLimit = useAppSelector((state: RootState) => state.tariffLimits.eventFiltersInfo.usedCompanyCount);
 
     const encodedIds = objectsArr.map((item) => item.encodedId)
     const dispatch = useAppDispatch();
@@ -84,7 +83,6 @@ export default function SearchForm() {
                 )
                 .then(response => {
                     dispatch(getStats(response.data.data.map((resultData: TSearchResults[]) => resultData)));
-                    dispatch(count())
                 });
         } catch (err: any) {
             alert (err.message)
@@ -125,10 +123,15 @@ export default function SearchForm() {
         }
     }
 
+    useEffect(() => {
+        innValue && docsAmount && startDate && endDate && setIsDisabled(false);
+    }, [innValue, docsAmount, startDate, endDate]);
+
     async function sendData() {
-        await searchDocs(SEARCH_DATA);
+        await searchDocs(SEARCH_DATA)
         await searchObjects(SEARCH_DATA);
         await getDocs({ids: encodedIds});
+        dispatch(count());
     }
 
     function handleCheck(e: React.MouseEvent) {
@@ -183,17 +186,12 @@ export default function SearchForm() {
        })
     }
 
-    function handleInnValue(e: React.ChangeEvent, ) {
+    function handleInnValue(e: React.FormEvent ) {
         const target = e.target as HTMLInputElement;
         setInnValue(target.value);
     }
 
-    function pasteInn(e:React.ClipboardEvent) {
-        const target = e.target as HTMLInputElement;
-        setInnValue(target.value);
-    }
-
-    function handleDocsAmount(e: React.ChangeEvent) {
+    function handleDocsAmount(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
         setDocsAmount(target.value);
     }
@@ -234,8 +232,7 @@ export default function SearchForm() {
                                     placeholder='10 цифр'
                                     maxLength={10} id='inn'
                                     value={innValue}
-                                    onChange={handleInnValue}
-                                    onPaste={pasteInn}
+                                    onInput={handleInnValue}
                                 />
                             </div>
                             <div className={s['input-container']}>
@@ -254,7 +251,7 @@ export default function SearchForm() {
                                     id='amount'
                                     placeholder='От 1 до 1000'
                                     value={docsAmount}
-                                    onChange={handleDocsAmount}
+                                    onInput={handleDocsAmount}
                                 />
                             </div>
                             <div style={{marginTop: '14px'}} className={s['input-container']}>
@@ -282,7 +279,7 @@ export default function SearchForm() {
                         </div>
                         <div className={s['button-container']}>
                             <Link to={'/results'}>
-                                <button className={st.searchButton} onClick={sendData}>
+                                <button className={isDisabled ? st.searchButton : st.searchButtonActive} onClick={sendData} disabled={isDisabled}>
                                     Поиск
                                 </button>
                             </Link>

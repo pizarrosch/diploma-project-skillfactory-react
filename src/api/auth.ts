@@ -21,15 +21,3 @@ export async function verifyRequisites(
        alert('You login or password are incorrect')
     }
 }
-
-export async function getToken(
-): Promise<TToken | boolean> {
-    try {
-        const {request} = await axios.get<TToken>(
-            `https://gateway.scan-interfax.ru/api/v1/account/info`
-        );
-        return request.token
-    } catch (e) {
-        return false;
-    }
-}

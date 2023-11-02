@@ -70,7 +70,8 @@
 .searchButton,
 .showMoreButton,
 .readSourceButton,
-.activatedTariff
+.activatedTariff,
+.searchButtonActive
 {
   background-color: rgba(89, 112, 255, 1);
   color: white;
@@ -109,6 +110,10 @@
 .searchButton {
   width: 305px;
   opacity: 50%;
+}
+
+.searchButtonActive {
+  opacity: 100%;
 }
 
 .showMoreButton {

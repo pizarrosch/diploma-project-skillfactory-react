@@ -12,7 +12,9 @@ import localStorage from "redux-persist/es/storage";
 import {authorize, deleteToken} from "../../redux/slices/authSlice";
 import {RootState} from "../../redux/store";
 import {Link} from "react-router-dom";
-import {count} from "../../redux/slices/eventFiltersSlice";
+import {count, getLimitInfo} from "../../redux/slices/eventFiltersSlice";
+import axios from "axios";
+import {TEventFiltersInfo} from "../../types";
 
 const LOGIN = process.env.USER_LOGIN as string;
 const PASSWORD = process.env.USER_PASSWORD as string;
@@ -27,6 +29,24 @@ export default function LoginPage() {
 
     const dispatch = useAppDispatch();
     const authorized = useAppSelector((state: RootState) => state.authorization);
+
+    async function getInfo() {
+        const token = await localStorage.getItem('token');
+        axios.get("https://gateway.scan-interfax.ru/api/v1/account/info", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token!}`
+            },
+        })
+
+            .then((data: axios.AxiosResponse<TEventFiltersInfo>) => authorized && dispatch(getLimitInfo({
+                eventFiltersInfo: {
+                    usedCompanyCount: data.data.eventFiltersInfo.usedCompanyCount,
+                    companyLimit: data.data.eventFiltersInfo.companyLimit
+                }
+            })))
+    }
 
     function handleEmailInput(e: React.ChangeEvent) {
         const target = e.target as HTMLInputElement;
@@ -54,6 +74,8 @@ export default function LoginPage() {
                 // @ts-ignore
                 expire: expirationDate
             }))
+
+            getInfo();
         } else {
             alert('Your login or password are incorrect')
         }
