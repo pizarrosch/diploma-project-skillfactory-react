@@ -13,7 +13,7 @@ import {RootState} from "../../redux/store";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import {checkOptions, checkStatus, initializeStatus} from "../../redux/slices/checkboxSlice";
+import {checkOptions, checkStatus, initializeOptions, initializeStatus} from "../../redux/slices/checkboxSlice";
 
 // @ts-ignore
 function LeftArrow({onClick, ...rest}) {
@@ -39,8 +39,14 @@ export default function MainPage() {
             dispatch(initializeStatus({
                 active: false,
                 id: status.id
+            }));
+
+            dispatch(initializeOptions({
+                id: status.id,
+                option: status.english,
+                status: status.status
             }))
-        })
+        });
     }
 
     return (
@@ -58,15 +64,6 @@ export default function MainPage() {
                         className={s.getDataByInnButton}
                         onClick={() => {
                             addDefaultStatus();
-                            dispatch(checkOptions({
-                                inBusinessNews: false,
-                                onlyWithRiskFactors: false,
-                                maxFullness: false,
-                                onlyMainRole: false,
-                                excludeAnnouncements: true,
-                                excludeDigests: true,
-                                excludeTechNews: true
-                            }))
                         }
                       }
                       >

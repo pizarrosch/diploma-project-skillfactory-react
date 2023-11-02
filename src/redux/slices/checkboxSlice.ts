@@ -13,6 +13,12 @@ type TCheckboxStatus = {
     id: number
 }
 
+type TCheckboxoption = {
+    option: string,
+    status: boolean,
+    id: number
+}
+
 export const checkboxStatusSlice = createSlice({
     name: 'checkboxStatus',
     initialState: [] as TCheckboxStatus[],
@@ -39,21 +45,21 @@ export const checkboxStatusSlice = createSlice({
 
 export const checkboxOptionsSlice = createSlice({
     name: 'checkboxOptions',
-    initialState:  {
-        maxFullness: false,
-        onlyMainRole: false,
-        onlyWithRiskFactors: false,
-        inBusinessNews: false,
-        excludeAnnouncements: false,
-        excludeDigests: false,
-        excludeTechNews: false
-    } as TCheckBoxFilter,
+    initialState: [] as TCheckboxoption[],
     reducers: {
-        checkOptions: (state: TCheckBoxFilter, action: PayloadAction<TCheckBoxFilter>) => {
-            return action.payload;
+        initializeOptions: (state: TCheckboxoption[], action: PayloadAction<TCheckboxoption>) => {
+            state.push(action.payload);
+        },
+        checkOptions: (state: TCheckboxoption[], action: PayloadAction<TCheckboxoption>) => {
+            let itemIndex = state.findIndex((item: TCheckboxoption) => item.id === action.payload.id);
+            state.splice(itemIndex, 1, {
+                option: action.payload.option,
+                id: action.payload.id,
+                status: action.payload.status
+            });
         }
     }
 })
 
 export const {initializeStatus, checkStatus, deleteStatus   } = checkboxStatusSlice.actions;
-export const {checkOptions} = checkboxOptionsSlice.actions;
+export const {initializeOptions, checkOptions} = checkboxOptionsSlice.actions;

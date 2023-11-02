@@ -16,7 +16,7 @@ import {getArticles} from "../../redux/slices/articlesSlice";
 import {count} from "../../redux/slices/eventFiltersSlice";
 import {checkboxData} from "../../data";
 import Checkbox from "../Checkbox/Checkbox";
-import {checkStatus, deleteStatus} from "../../redux/slices/checkboxSlice";
+import {checkOptions, checkStatus, deleteStatus} from "../../redux/slices/checkboxSlice";
 import checkmark from "../../assets/checkmark.svg";
 
 export default function SearchForm() {
@@ -38,9 +38,9 @@ export default function SearchForm() {
     const SEARCH_DATA: TSearchData = {
         intervalType: 'month',
         attributeFilters: {
-            excludeTechNews: checkboxOptions.excludeTechNews,
-            excludeDigests: checkboxOptions.excludeDigests,
-            excludeAnnouncements: checkboxOptions.excludeAnnouncements
+            excludeTechNews: checkboxOptions[4].status,
+            excludeDigests: checkboxOptions[6].status,
+            excludeAnnouncements: checkboxOptions[5].status
         },
         histogramTypes: [
             'totalDocuments',
@@ -54,14 +54,14 @@ export default function SearchForm() {
                     {
                         inn: Number(innValue),
                         type: 'company',
-                        inBusinessNews: checkboxOptions.inBusinessNews,
-                        maxFullness: checkboxOptions.maxFullness
+                        inBusinessNews: checkboxOptions[1].status,
+                        maxFullness: checkboxOptions[0].status
                     }
                 ]
             },
-            onlyMainRole: checkboxOptions.onlyMainRole,
+            onlyMainRole: checkboxOptions[2].status,
             tonality: "any",
-            onlyWithRiskFactors: checkboxOptions.onlyWithRiskFactors,
+            onlyWithRiskFactors: checkboxOptions[3].status,
         },
         sortDirectionType: "asc",
         sortType: "issueDate",
@@ -135,18 +135,50 @@ export default function SearchForm() {
         const target = e.currentTarget as HTMLDivElement;
        checkboxStatus.map((checkbox, id) => {
            const statusIndex = checkboxStatus.findIndex(status => status.id === checkbox.id);
-           if (Number(target.id) === statusIndex && !checkbox.active) {
+           if (Number(target.id) === statusIndex && !checkbox.active && !checkboxOptions[id].status) {
                 dispatch(checkStatus({
                    active: true,
                    id: id
                }));
-                setIsChecked(checkbox.active)
-           } else if (Number(target.id) === statusIndex && checkbox.active) {
+
+                dispatch(checkOptions({
+                    status: true,
+                    id: id,
+                    option: checkboxData[id].english
+                }))
+           } else if (Number(target.id) === statusIndex && checkbox.active && checkboxOptions[id].status) {
                dispatch(checkStatus({
                    active: false,
                    id: id
                }));
-               setIsChecked(checkbox.active)
+
+               dispatch(checkOptions({
+                   status: false,
+                   id: id,
+                   option: checkboxData[id].english
+               }))
+           } else if (Number(target.id) === statusIndex && !checkbox.active && checkboxOptions[id].status) {
+               dispatch(checkOptions({
+                   status: false,
+                   id: id,
+                   option: checkboxData[id].english
+               }))
+
+               dispatch(checkStatus({
+                   active: true,
+                   id: id
+               }));
+           } else if (Number(target.id) === statusIndex && checkbox.active && !checkboxOptions[id].status) {
+               dispatch(checkOptions({
+                   status: true,
+                   id: id,
+                   option: checkboxData[id].english
+               }))
+
+               dispatch(checkStatus({
+                   active: false,
+                   id: id
+               }));
            }
        })
     }

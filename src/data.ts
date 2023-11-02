@@ -109,19 +109,19 @@ export const checkboxData = [
     {
         russian: 'Включать технические новости рынков',
         english: 'excludeTechNews',
-        status: false,
+        status: true,
         id: 4
     },
     {
         russian: 'Включать анонсы и календари',
         english: 'excludeAnnouncements',
-        status: false,
+        status: true,
         id: 5
     },
     {
         russian: 'Включать сводки новостей',
         english: 'excludeDigests',
-        status: false,
+        status: true,
         id: 6
     }
 ]
