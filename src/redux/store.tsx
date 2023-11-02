@@ -1,7 +1,7 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import {authSlice} from "./slices/authSlice";
 import {eventFiltersSlice} from "./slices/eventFiltersSlice";
-import {checkboxSlice} from "./slices/checkboxSlice";
+import {checkboxStatusSlice, checkboxOptionsSlice} from "./slices/checkboxSlice";
 import {
     persistReducer,
     persistStore,
@@ -23,7 +23,8 @@ export type AppDispatch = typeof store.dispatch;
 const reducer = combineReducers({
     authorization: authSlice.reducer,
     tariffLimits: eventFiltersSlice.reducer,
-    checkbox: checkboxSlice.reducer,
+    checkboxStatus: checkboxStatusSlice.reducer,
+    checkboxOptions: checkboxOptionsSlice.reducer,
     stats: statsSlice.reducer,
     objects: objectsSlice.reducer,
     articles: articlesSlice.reducer

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import s from './SearchForm.module.scss';
 import st from '../Main/Main.module.scss';
 import document from '../../assets/Document.svg';
@@ -16,6 +16,8 @@ import {getArticles} from "../../redux/slices/articlesSlice";
 import {count} from "../../redux/slices/eventFiltersSlice";
 import {checkboxData} from "../../data";
 import Checkbox from "../Checkbox/Checkbox";
+import {checkStatus, deleteStatus} from "../../redux/slices/checkboxSlice";
+import checkmark from "../../assets/checkmark.svg";
 
 export default function SearchForm() {
 
@@ -25,7 +27,8 @@ export default function SearchForm() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
-    const checkboxStatus = useAppSelector((state: RootState) => state.checkbox);
+    const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
+    const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
     const objectsArr = useAppSelector((state: RootState) => state.objects.items);
     const usedLimit = useAppSelector((state: RootState) => state.tariffLimits.eventFiltersInfo.usedCompanyCount);
 
@@ -35,9 +38,9 @@ export default function SearchForm() {
     const SEARCH_DATA: TSearchData = {
         intervalType: 'month',
         attributeFilters: {
-            excludeTechNews: checkboxStatus.excludeTechNews,
-            excludeDigests: checkboxStatus.excludeDigests,
-            excludeAnnouncements: checkboxStatus.excludeAnnouncements
+            excludeTechNews: checkboxOptions.excludeTechNews,
+            excludeDigests: checkboxOptions.excludeDigests,
+            excludeAnnouncements: checkboxOptions.excludeAnnouncements
         },
         histogramTypes: [
             'totalDocuments',
@@ -51,14 +54,14 @@ export default function SearchForm() {
                     {
                         inn: Number(innValue),
                         type: 'company',
-                        inBusinessNews: checkboxStatus.inBusinessNews,
-                        maxFullness: checkboxStatus.maxFullness
+                        inBusinessNews: checkboxOptions.inBusinessNews,
+                        maxFullness: checkboxOptions.maxFullness
                     }
                 ]
             },
-            onlyMainRole: checkboxStatus.onlyMainRole,
+            onlyMainRole: checkboxOptions.onlyMainRole,
             tonality: "any",
-            onlyWithRiskFactors: checkboxStatus.onlyWithRiskFactors,
+            onlyWithRiskFactors: checkboxOptions.onlyWithRiskFactors,
         },
         sortDirectionType: "asc",
         sortType: "issueDate",
@@ -128,17 +131,32 @@ export default function SearchForm() {
         await getDocs({ids: encodedIds});
     }
 
-    function handleCheck(e: React.ChangeEvent, i: number) {
-        const target = e.currentTarget as HTMLDivElement
-        // const defaultValue = target.getAttribute('defaultValue') as string;
-        if (Number(target.id) === i) {
-            setIsChecked(true);
-        } else {
-            setIsChecked(false);
-        }
+    function handleCheck(e: React.MouseEvent) {
+        const target = e.currentTarget as HTMLDivElement;
+       checkboxStatus.map((checkbox, id) => {
+           const statusIndex = checkboxStatus.findIndex(status => status.id === checkbox.id);
+           if (Number(target.id) === statusIndex && !checkbox.active) {
+                dispatch(checkStatus({
+                   active: true,
+                   id: id
+               }));
+                setIsChecked(checkbox.active)
+           } else if (Number(target.id) === statusIndex && checkbox.active) {
+               dispatch(checkStatus({
+                   active: false,
+                   id: id
+               }));
+               setIsChecked(checkbox.active)
+           }
+       })
     }
 
-    function handleInnValue(e: React.ChangeEvent) {
+    function handleInnValue(e: React.ChangeEvent, ) {
+        const target = e.target as HTMLInputElement;
+        setInnValue(target.value);
+    }
+
+    function pasteInn(e:React.ClipboardEvent) {
         const target = e.target as HTMLInputElement;
         setInnValue(target.value);
     }
@@ -185,6 +203,7 @@ export default function SearchForm() {
                                     maxLength={10} id='inn'
                                     value={innValue}
                                     onChange={handleInnValue}
+                                    onPaste={pasteInn}
                                 />
                             </div>
                             <div className={s['input-container']}>
@@ -222,8 +241,12 @@ export default function SearchForm() {
                     <div className={s['checkbox-button-container']}>
                         <div className={s['checkbox-options-container']}>
                             {checkboxData.map((item, id) => {
-                                return <Checkbox children={item.russian}/>
-                            })}
+                                return (
+                                    <>
+                                        <Checkbox children={item.russian} id={id} onClick={handleCheck} isChecked={checkboxStatus[id].active}/>
+                                    </>
+                                    )
+                                })}
                         </div>
                         <div className={s['button-container']}>
                             <Link to={'/results'}>

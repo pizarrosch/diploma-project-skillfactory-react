@@ -6,14 +6,14 @@ import s from './Main.module.scss';
 import Card from "../Card/Card";
 import {ImgSource, TTariffCard} from "../../types";
 import TariffCard from "../TariffCard/TariffCard";
-import {cardContents, tariffCardContents} from '../../data';
-import React from 'react';
+import {cardContents, checkboxData, tariffCardContents} from '../../data';
+import React, {useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {RootState} from "../../redux/store";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import {check} from "../../redux/slices/checkboxSlice";
+import {checkOptions, checkStatus, initializeStatus} from "../../redux/slices/checkboxSlice";
 
 // @ts-ignore
 function LeftArrow({onClick, ...rest}) {
@@ -34,6 +34,15 @@ export default function MainPage() {
     const authorized = useAppSelector((state: RootState) => state.authorization);
     const dispatch = useAppDispatch();
 
+       function addDefaultStatus() {
+         checkboxData.map(status => {
+            dispatch(initializeStatus({
+                active: false,
+                id: status.id
+            }))
+        })
+    }
+
     return (
         <div className={s.root}>
             <div className={s.publicationSearchContainer}>
@@ -47,17 +56,19 @@ export default function MainPage() {
                     {authorized.accessToken &&
                       <button
                         className={s.getDataByInnButton}
-                        onClick={() => dispatch(check({
-                            active: false,
-                            id: 0,
-                            inBusinessNews: false,
-                            onlyWithRiskFactors: false,
-                            maxFullness: false,
-                            onlyMainRole: false,
-                            excludeAnnouncements: true,
-                            excludeDigests: true,
-                            excludeTechNews: true
-                        }))}
+                        onClick={() => {
+                            addDefaultStatus();
+                            dispatch(checkOptions({
+                                inBusinessNews: false,
+                                onlyWithRiskFactors: false,
+                                maxFullness: false,
+                                onlyMainRole: false,
+                                excludeAnnouncements: true,
+                                excludeDigests: true,
+                                excludeTechNews: true
+                            }))
+                        }
+                      }
                       >
                         <Link to={'/searchForm'}>
                           Запросить данные
