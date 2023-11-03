@@ -27,6 +27,8 @@ export default function SearchForm() {
     const [isDisabled, setIsDisabled] = useState(true);
     const [innIsValid, setInnIsValid] = useState(false);
     const [amountIsValid, setAmountIsValid] = useState(false);
+    const [startDateIsValid, setStartDateIsValid] = useState(false);
+    const [endDateIsValid, setEndDateIsValid] = useState(false);
 
     const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
@@ -132,6 +134,7 @@ export default function SearchForm() {
         innValue && docsAmount && startDate && endDate && setIsDisabled(false);
         validateInn(innValue);
         validateAmount();
+        validateDate();
     }, [innValue, docsAmount, startDate, endDate, tariffInfo.usedCompanyCount, tariffInfo.companyLimit]);
 
     async function sendData() {
@@ -231,6 +234,21 @@ export default function SearchForm() {
         }
     }
 
+    function validateDate() {
+        const date = new Date(endDate);
+        if (startDate > endDate) {
+            setStartDateIsValid(false);
+        } else {
+            setStartDateIsValid(true);
+        }
+
+        if(date > new Date()) {
+            setEndDateIsValid(false)
+        } else {
+            setEndDateIsValid(true);
+        }
+    }
+
     function handleDocsAmount(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
         setDocsAmount(target.value);
@@ -305,6 +323,16 @@ export default function SearchForm() {
                                     <input type='text' className={s['date-input']} placeholder='Дата конца'
                                            onFocus={focus} onChange={getEndDate}/>
                                     <div style={{right: '8px'}} className={s['dropdown-arrow']}></div>
+                                    {
+                                        !startDateIsValid && <span className={s.innError}>
+                                      Начальная дата не может быть позже конечной!
+                                    </span>
+                                    }
+                                    {
+                                        !endDateIsValid && <span className={s.innError}>
+                                      Дата не может быть позже актуальной
+                                    </span>
+                                    }
                                 </div>
                             </div>
                         </form>
