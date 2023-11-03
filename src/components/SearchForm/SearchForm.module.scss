@@ -35,11 +35,26 @@
       font-size: 18px;
       margin: 0 10px 0 40px;
 
+      .errorMessage,
+      .innError,
+      .submitError
+      {
+        display: flex;
+        position: absolute;
+        font-size: 14px;
+        color: rgba(255, 89, 89, 1);
+      }
+
       .input-container {
         position: relative;
         display: flex;
         flex-direction: column;
         gap: 20px;
+
+        .innError {
+          position: absolute;
+          bottom: -20px;
+        }
 
         .dropdown-arrow {
           position: absolute;
@@ -53,13 +68,21 @@
         }
       }
 
-      .input, .date-input {
+      .input,
+      .date-input,
+      .inputError
+      {
         width: 242px;
         height: 43px;
         border-radius: 5px;
         border: 1px solid rgba(199, 199, 199, 1);
         outline: none;
         background-color: transparent;
+      }
+
+      .inputError {
+        border: 1px solid rgba(255, 89, 89, 1);
+        color: rgba(255, 89, 89, 1);;
       }
 
       .input::placeholder {
@@ -118,11 +141,8 @@
         margin-bottom: 20px;
         margin-right: -15px;
 
-        .errorMessage {
-          display: flex;
-          position: absolute;
-          font-size: 14px;
-          color: rgba(255, 89, 89, 1);
+        .submitError,
+        {
           top: 0;
           text-align: center;
         }

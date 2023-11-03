@@ -16,8 +16,7 @@ import {getArticles} from "../../redux/slices/articlesSlice";
 import {count} from "../../redux/slices/eventFiltersSlice";
 import {checkboxData} from "../../data";
 import Checkbox from "../Checkbox/Checkbox";
-import {checkOptions, checkStatus, deleteStatus} from "../../redux/slices/checkboxSlice";
-import checkmark from "../../assets/checkmark.svg";
+import {checkOptions, checkStatus} from "../../redux/slices/checkboxSlice";
 
 export default function SearchForm() {
 
@@ -26,6 +25,7 @@ export default function SearchForm() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [isDisabled, setIsDisabled] = useState(true);
+    const [isValid, setIsValid] = useState(false);
 
     const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
@@ -127,6 +127,7 @@ export default function SearchForm() {
     useEffect(() => {
         if (tariffInfo.usedCompanyCount === tariffInfo.companyLimit) return;
         innValue && docsAmount && startDate && endDate && setIsDisabled(false);
+        validateInn(innValue);
     }, [innValue, docsAmount, startDate, endDate, tariffInfo.usedCompanyCount, tariffInfo.companyLimit]);
 
     async function sendData() {
@@ -193,6 +194,31 @@ export default function SearchForm() {
         setInnValue(target.value);
     }
 
+    function validateInn(inn: string) {
+        const innString = inn.toString();
+        if (!innString.length) {
+            setIsValid(false);
+        } else if (/[^0-9]/.test(innString)) {
+            setIsValid(false);
+        } else if ([10].indexOf(innString.length) === -1) {
+            setIsValid(false);
+        } else {
+            let checkDigit = function (inn: string, coefficients: number[]) {
+                let n = 0;
+                for (let i = 0; i < coefficients.length; i++) {
+                    n += coefficients[i] * Number(inn[i]);
+                }
+                return parseInt(String(n % 11 % 10));
+            };
+            if (innString.length === 10) {
+                    let n10 = checkDigit(innString, [2, 4, 10, 3, 5, 9, 4, 6, 8]);
+                    if (n10 === parseInt(innString[9])) {
+                        setIsValid(true)
+                    }
+            }
+        }
+    }
+
     function handleDocsAmount(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
         setDocsAmount(target.value);
@@ -229,13 +255,14 @@ export default function SearchForm() {
                             <div className={s['input-container']}>
                                 <label htmlFor='inn'>ИНН компании*</label>
                                 <input
-                                    className={s.input}
+                                    className={isValid ? s.input : s.inputError}
                                     type='number'
                                     placeholder='10 цифр'
                                     maxLength={10} id='inn'
                                     value={innValue}
                                     onInput={handleInnValue}
                                 />
+                                {!isValid && <span className={s.innError}>Введите корректный ИНН</span>}
                             </div>
                             <div className={s['input-container']}>
                                 <label htmlFor='selectTon'>Тональность</label>
