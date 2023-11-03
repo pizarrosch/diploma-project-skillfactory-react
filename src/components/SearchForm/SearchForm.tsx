@@ -21,12 +21,16 @@ import {checkOptions, checkStatus} from "../../redux/slices/checkboxSlice";
 export default function SearchForm() {
 
     const [innValue, setInnValue] = useState('');
+    const [innIsValid, setInnIsValid] = useState(true);
+    const [innIsEmpty, setInnIsEmpty] = useState(true);
+
     const [docsAmount, setDocsAmount] = useState('');
+    const [amountIsValid, setAmountIsValid] = useState(false);
+    const [amountIsEmpty, setAmountIsEmpty] = useState(true);
+
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [isDisabled, setIsDisabled] = useState(true);
-    const [innIsValid, setInnIsValid] = useState(false);
-    const [amountIsValid, setAmountIsValid] = useState(false);
     const [startDateIsValid, setStartDateIsValid] = useState(false);
     const [endDateIsValid, setEndDateIsValid] = useState(false);
 
@@ -203,12 +207,16 @@ export default function SearchForm() {
 
     function validateInn(inn: string) {
         const innString = inn.toString();
+
         if (!innString.length) {
-            setInnIsValid(false);
+            setInnIsEmpty(true);
+            setInnIsValid(true);
         } else if (/[^0-9]/.test(innString)) {
             setInnIsValid(false);
+            setInnIsEmpty(false);
         } else if ([10].indexOf(innString.length) === -1) {
             setInnIsValid(false);
+            setInnIsEmpty(false);
         } else {
             let checkDigit = function (inn: string, coefficients: number[]) {
                 let n = 0;
@@ -218,35 +226,48 @@ export default function SearchForm() {
                 return parseInt(String(n % 11 % 10));
             };
             if (innString.length === 10) {
-                    let n10 = checkDigit(innString, [2, 4, 10, 3, 5, 9, 4, 6, 8]);
-                    if (n10 === parseInt(innString[9])) {
-                        setInnIsValid(true)
-                    }
+                let n10 = checkDigit(innString, [2, 4, 10, 3, 5, 9, 4, 6, 8]);
+                if (n10 === parseInt(innString[9])) {
+                    setInnIsValid(true);
+                    setInnIsEmpty(false);
+                }
             }
         }
     }
 
     function validateAmount() {
-        if (Number(docsAmount) < 1 || Number(docsAmount) > 1000 || docsAmount === '') {
+        if (Number(docsAmount) < 1 || Number(docsAmount) > 1000) {
             setAmountIsValid(false)
+            setAmountIsEmpty(false);
         } else {
+            setAmountIsValid(true);
+            setAmountIsEmpty(false);
+        }
+
+        if (docsAmount.length === 0) {
+            setAmountIsEmpty(true);
             setAmountIsValid(true);
         }
     }
 
     function validateDate() {
         const date = new Date(endDate);
-        if (startDate > endDate) {
+        const UTCHours = date.setUTCHours(-1);
+        const adjustedDate = new Date(UTCHours);
+
+        if (startDate > endDate && endDate ) {
             setStartDateIsValid(false);
         } else {
             setStartDateIsValid(true);
         }
 
-        if(date > new Date()) {
+        if(adjustedDate > new Date()) {
             setEndDateIsValid(false)
         } else {
             setEndDateIsValid(true);
         }
+
+        console.log('myDate -->',adjustedDate, 'realDate -->', new Date())
     }
 
     function handleDocsAmount(e: React.FormEvent) {
@@ -293,6 +314,7 @@ export default function SearchForm() {
                                     onInput={handleInnValue}
                                 />
                                 {!innIsValid && <span className={s.innError}>Введите корректный ИНН</span>}
+                                {innIsEmpty && <span className={s.innError}>Обязательное поле!</span>}
                             </div>
                             <div className={s['input-container']}>
                                 <label htmlFor='selectTon'>Тональность</label>
@@ -313,6 +335,7 @@ export default function SearchForm() {
                                     onInput={handleDocsAmount}
                                 />
                                 {!amountIsValid && <span className={s.innError}>Введите корректные данные</span>}
+                                {amountIsEmpty && <span className={s.innError}>Обязательное поле!</span>}
                             </div>
                             <div style={{marginTop: '14px'}} className={s['input-container']}>
                                 <label htmlFor='range'>Диапазон поиска*</label>
