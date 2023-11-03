@@ -25,7 +25,8 @@ export default function SearchForm() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [isDisabled, setIsDisabled] = useState(true);
-    const [isValid, setIsValid] = useState(false);
+    const [innIsValid, setInnIsValid] = useState(false);
+    const [amountIsValid, setAmountIsValid] = useState(false);
 
     const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
@@ -118,7 +119,9 @@ export default function SearchForm() {
                     }
                 }
             )
-                .then(response => dispatch(getArticles(response.data)));
+                .then(response => {
+                    dispatch(getArticles(response.data))
+                });
         } catch (err: any) {
             alert (err.message)
         }
@@ -128,12 +131,13 @@ export default function SearchForm() {
         if (tariffInfo.usedCompanyCount === tariffInfo.companyLimit) return;
         innValue && docsAmount && startDate && endDate && setIsDisabled(false);
         validateInn(innValue);
+        validateAmount();
     }, [innValue, docsAmount, startDate, endDate, tariffInfo.usedCompanyCount, tariffInfo.companyLimit]);
 
     async function sendData() {
         await searchDocs(SEARCH_DATA)
         await searchObjects(SEARCH_DATA);
-        await getDocs({ids: encodedIds});
+        await getDocs({ids: encodedIds})
         dispatch(count());
     }
 
@@ -197,11 +201,11 @@ export default function SearchForm() {
     function validateInn(inn: string) {
         const innString = inn.toString();
         if (!innString.length) {
-            setIsValid(false);
+            setInnIsValid(false);
         } else if (/[^0-9]/.test(innString)) {
-            setIsValid(false);
+            setInnIsValid(false);
         } else if ([10].indexOf(innString.length) === -1) {
-            setIsValid(false);
+            setInnIsValid(false);
         } else {
             let checkDigit = function (inn: string, coefficients: number[]) {
                 let n = 0;
@@ -213,9 +217,17 @@ export default function SearchForm() {
             if (innString.length === 10) {
                     let n10 = checkDigit(innString, [2, 4, 10, 3, 5, 9, 4, 6, 8]);
                     if (n10 === parseInt(innString[9])) {
-                        setIsValid(true)
+                        setInnIsValid(true)
                     }
             }
+        }
+    }
+
+    function validateAmount() {
+        if (Number(docsAmount) < 1 || Number(docsAmount) > 1000 || docsAmount === '') {
+            setAmountIsValid(false)
+        } else {
+            setAmountIsValid(true);
         }
     }
 
@@ -255,14 +267,14 @@ export default function SearchForm() {
                             <div className={s['input-container']}>
                                 <label htmlFor='inn'>ИНН компании*</label>
                                 <input
-                                    className={isValid ? s.input : s.inputError}
+                                    className={innIsValid ? s.input : s.inputError}
                                     type='number'
                                     placeholder='10 цифр'
                                     maxLength={10} id='inn'
                                     value={innValue}
                                     onInput={handleInnValue}
                                 />
-                                {!isValid && <span className={s.innError}>Введите корректный ИНН</span>}
+                                {!innIsValid && <span className={s.innError}>Введите корректный ИНН</span>}
                             </div>
                             <div className={s['input-container']}>
                                 <label htmlFor='selectTon'>Тональность</label>
@@ -275,13 +287,14 @@ export default function SearchForm() {
                             <div className={s['input-container']}>
                                 <label htmlFor='amount'>Количество документов в выдаче*</label>
                                 <input
-                                    className={s.input}
+                                    className={amountIsValid ? s.input : s.inputError}
                                     type="number" max={1000}
                                     id='amount'
                                     placeholder='От 1 до 1000'
                                     value={docsAmount}
                                     onInput={handleDocsAmount}
                                 />
+                                {!amountIsValid && <span className={s.innError}>Введите корректные данные</span>}
                             </div>
                             <div style={{marginTop: '14px'}} className={s['input-container']}>
                                 <label htmlFor='range'>Диапазон поиска*</label>
@@ -313,7 +326,7 @@ export default function SearchForm() {
                                 </button>
                             </Link>
                             {tariffInfo.usedCompanyCount === tariffInfo.companyLimit &&
-                              <span className={s.errorMessage}>Ваш дневной лимит исчерпан. Возвращайтесь завтра.</span>}
+                              <span className={s.submitError}>Ваш дневной лимит исчерпан. Возвращайтесь завтра.</span>}
                             <p style={{fontSize: '14px', color: 'rgba(148, 148, 148, 1)'}}>* Обязательные к заполнению
                                 поля</p>
                         </div>

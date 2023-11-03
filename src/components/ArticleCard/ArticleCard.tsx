@@ -3,23 +3,25 @@ import s from './ArticleCard.module.scss';
 import st from '../Main/Main.module.scss';
 import {TArticle} from "../../types";
 import {Link} from 'react-router-dom';
+import {escape} from "querystring";
 
 export default function ArticleCard({ok}: TArticle) {
 
     const xmlString = ok.content.markup;
     const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlString, 'text/xml');
+    const doc = parser.parseFromString(xmlString, 'text/html');
 
     const date = new Date(ok.issueDate);
 
     let paragraph = '';
-    const paragraphTags = doc.getElementsByTagName('sentence');
+    const paragraphTags = doc!.documentElement!.textContent!.split("\n");
 
     for (let i = 0; i < paragraphTags.length; i++) {
-        const newText = paragraphTags[i].childNodes[0].textContent;
+        const newText = paragraphTags[i]
         paragraph += newText
-        // paragraph.replace(/&gt;/g, '<')
     }
+
+    const clearText = paragraph.replace(/<\/?[^>]+(>|$)/g, "");
 
     return (
         <div className={s.root}>
@@ -38,7 +40,7 @@ export default function ArticleCard({ok}: TArticle) {
                             </span>
             </div>
             <img className={s.articleImage} src={ok.url} alt=''/>
-            <p className={s.paragraph}>{paragraph}</p>
+            <p className={s.paragraph}>{clearText}</p>
             <div className={s.cardFooter}>
                 <button className={st.readSourceButton}>
                     <Link to={ok.url}>

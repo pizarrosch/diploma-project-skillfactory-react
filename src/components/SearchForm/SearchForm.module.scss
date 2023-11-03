@@ -37,7 +37,6 @@
 
       .errorMessage,
       .innError,
-      .submitError
       {
         display: flex;
         position: absolute;
@@ -143,6 +142,10 @@
 
         .submitError,
         {
+          display: flex;
+          position: absolute;
+          font-size: 14px;
+          color: rgba(255, 89, 89, 1);
           top: 0;
           text-align: center;
         }
