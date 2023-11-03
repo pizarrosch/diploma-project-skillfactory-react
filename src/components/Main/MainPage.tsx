@@ -32,16 +32,18 @@ function RightArrow({onClick, ...rest}) {
 export default function MainPage() {
 
     const authorized = useAppSelector((state: RootState) => state.authorization);
+    const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions)
+    const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus)
     const dispatch = useAppDispatch();
 
        function addDefaultStatus() {
          checkboxData.map(status => {
-            dispatch(initializeStatus({
+           checkboxStatus.length === 0 && dispatch(initializeStatus({
                 active: false,
                 id: status.id
             }));
 
-            dispatch(initializeOptions({
+             checkboxOptions.length === 0 && dispatch(initializeOptions({
                 id: status.id,
                 option: status.english,
                 status: status.status

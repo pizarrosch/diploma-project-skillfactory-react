@@ -9,10 +9,10 @@ import React, {useEffect, useState} from "react";
 import {verifyRequisites} from "../../api/auth";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import localStorage from "redux-persist/es/storage";
-import {authorize, deleteToken} from "../../redux/slices/authSlice";
+import {authorize} from "../../redux/slices/authSlice";
 import {RootState} from "../../redux/store";
 import {Link} from "react-router-dom";
-import {count, getLimitInfo} from "../../redux/slices/eventFiltersSlice";
+import {getLimitInfo} from "../../redux/slices/eventFiltersSlice";
 import axios from "axios";
 import {TEventFiltersInfo} from "../../types";
 
@@ -31,6 +31,7 @@ export default function LoginPage() {
     const authorized = useAppSelector((state: RootState) => state.authorization);
 
     async function getInfo() {
+        await getVerificationStatus();
         const token = await localStorage.getItem('token');
         axios.get("https://gateway.scan-interfax.ru/api/v1/account/info", {
             method: "GET",
@@ -40,7 +41,7 @@ export default function LoginPage() {
             },
         })
 
-            .then((data: axios.AxiosResponse<TEventFiltersInfo>) => authorized && dispatch(getLimitInfo({
+            .then((data: axios.AxiosResponse<TEventFiltersInfo>) => dispatch(getLimitInfo({
                 eventFiltersInfo: {
                     usedCompanyCount: data.data.eventFiltersInfo.usedCompanyCount,
                     companyLimit: data.data.eventFiltersInfo.companyLimit
@@ -74,8 +75,7 @@ export default function LoginPage() {
                 // @ts-ignore
                 expire: expirationDate
             }))
-
-            getInfo();
+            // await getInfo();
         } else {
             alert('Your login or password are incorrect')
         }
@@ -112,8 +112,8 @@ export default function LoginPage() {
                         </div>
                     </form>
                 </div>
-                <Link to={authorized.accessToken ? '/dashboard' : '/login'}>
-                    <button type='submit' className={st.loginButton} onClick={getVerificationStatus}>
+                <Link to={login ? '/dashboard' : '/login'}>
+                    <button type='submit' className={st.loginButton} onClick={getInfo}>
                         Войти
                     </button>
                 </Link>

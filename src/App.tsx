@@ -10,11 +10,24 @@ import SearchForm from "./components/SearchForm/SearchForm";
 import {useAppDispatch, useAppSelector} from "./hooks/hooks";
 import ResultsPage from "./components/ResultsPage/ResultsPage";
 import {RootState} from "./redux/store";
+import {authorize} from "./redux/slices/authSlice";
 
 function App() {
 
     const authorized = useAppSelector((state: RootState) => state.authorization);
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        const date = new Date();
+        if (date.toISOString() === authorized.expire) {
+            dispatch(authorize(
+                {
+                    accessToken: '',
+                    expire: ''
+                }
+            ))
+        }
+    }, [authorized.expire]);
 
     return (
         <div className={s.root}>

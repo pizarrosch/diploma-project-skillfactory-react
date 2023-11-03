@@ -16,7 +16,7 @@ export default function ArticleCard({ok}: TArticle) {
     const paragraphTags = doc.getElementsByTagName('sentence');
 
     for (let i = 0; i < paragraphTags.length; i++) {
-        const newText = paragraphTags[i].childNodes[0].textContent!.replace('&lt;', '<')
+        const newText = paragraphTags[i].childNodes[0].textContent;
         paragraph += newText
         // paragraph.replace(/&gt;/g, '<')
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import s from '../Navigation.module.scss';
 import {Link} from "react-router-dom";
 import {authorize} from "../../../redux/slices/authSlice";
@@ -14,29 +14,51 @@ export default function NavigationAuthorized() {
     const dispatch = useAppDispatch();
     const authorized = useAppSelector((state: RootState) => state.authorization);
     const tariffLimits: TEventFiltersInfo = useAppSelector((state: RootState) => state.tariffLimits)
+    const [usedLimit, setUsedLimit] = useState(0);
+    const [companyLimit, setCompanyLimit] = useState(0);
+
+
+    // useEffect(() => {
+    //      setTimeout(() => setUsedLimit(tariffLimits.eventFiltersInfo.usedCompanyCount), 2000) ;
+    // }, [tariffLimits.eventFiltersInfo.usedCompanyCount]);
 
     return (
         <div className={s.root}>
             <nav className={s.navigation}>
                 <ul className={s['navigation-list']}>
-                        <li className={s['navigation-list__item']}>
-                            <Link to={'/dashboard'}>
+                    <li className={s['navigation-list__item']}>
+                        <Link to={'/dashboard'}>
                             Главная
-                            </Link>
-                        </li>
+                        </Link>
+                    </li>
                     <li className={s['navigation-list__item']}>Тарифы</li>
                     <li className={s['navigation-list__item']}>FAQ</li>
                 </ul>
             </nav>
             <div className={s.stats}>
-                        <div className={s.usedCompaniesWrapper}>
-                            <span className={s.usedCompanies}>Использовано компаний</span>
-                            <span className={s.usedCompaniesAmount}>{authorized.accessToken && tariffLimits.eventFiltersInfo.usedCompanyCount}</span>
-                        </div>
-                        <div className={s.companiesLimitWrapper}>
-                            <span className={s.companiesLimit}>Лимит по компаниям</span>
-                            <span className={s.limitAmount}>
-                                 { tariffLimits.eventFiltersInfo.companyLimit ||
+                <div className={s.usedCompaniesWrapper}>
+                    <span className={s.usedCompanies}>Использовано компаний</span>
+                    <span className={s.usedCompaniesAmount}>
+                                {(tariffLimits?.eventFiltersInfo?.usedCompanyCount ? tariffLimits?.eventFiltersInfo?.usedCompanyCount : '0') ||
+                                  <div className={s.loading}>
+                                    <ThreeDots
+                                      height="15"
+                                      width="15"
+                                      radius="9"
+                                      color="black"
+                                      ariaLabel="three-dots-loading"
+                                      wrapperStyle={{}}
+                                      wrapperClass=""
+                                      visible={true}
+                                    />
+                                  </div>
+                                }
+                            </span>
+                </div>
+                <div className={s.companiesLimitWrapper}>
+                    <span className={s.companiesLimit}>Лимит по компаниям</span>
+                    <span className={s.limitAmount}>
+                                 {tariffLimits?.eventFiltersInfo?.companyLimit ||
                                    <div className={s.loading}>
                                      <ThreeDots
                                        height="15"
@@ -51,7 +73,7 @@ export default function NavigationAuthorized() {
                                    </div>
                                  }
                             </span>
-                        </div>
+                </div>
             </div>
             <div className={s.loginMenu}>
                 <div className={s.userNameWrapper}>
@@ -72,7 +94,7 @@ export default function NavigationAuthorized() {
                     }}>Выйти</span>
                 </div>
                 <div>
-                    <img src={avatar} alt='avatar' />
+                    <img src={avatar} alt='avatar'/>
                 </div>
             </div>
         </div>

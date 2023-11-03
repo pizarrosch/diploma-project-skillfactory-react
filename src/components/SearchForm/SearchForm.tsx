@@ -30,6 +30,7 @@ export default function SearchForm() {
     const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
     const objectsArr = useAppSelector((state: RootState) => state.objects.items);
+    const tariffInfo = useAppSelector((state: RootState) => state.tariffLimits.eventFiltersInfo);
 
     const encodedIds = objectsArr.map((item) => item.encodedId)
     const dispatch = useAppDispatch();
@@ -124,8 +125,9 @@ export default function SearchForm() {
     }
 
     useEffect(() => {
+        if (tariffInfo.usedCompanyCount === tariffInfo.companyLimit) return;
         innValue && docsAmount && startDate && endDate && setIsDisabled(false);
-    }, [innValue, docsAmount, startDate, endDate]);
+    }, [innValue, docsAmount, startDate, endDate, tariffInfo.usedCompanyCount, tariffInfo.companyLimit]);
 
     async function sendData() {
         await searchDocs(SEARCH_DATA)
@@ -283,6 +285,8 @@ export default function SearchForm() {
                                     Поиск
                                 </button>
                             </Link>
+                            {tariffInfo.usedCompanyCount === tariffInfo.companyLimit &&
+                              <span className={s.errorMessage}>Ваш дневной лимит исчерпан. Возвращайтесь завтра.</span>}
                             <p style={{fontSize: '14px', color: 'rgba(148, 148, 148, 1)'}}>* Обязательные к заполнению
                                 поля</p>
                         </div>

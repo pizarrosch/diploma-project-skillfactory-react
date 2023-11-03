@@ -71,7 +71,7 @@
 .showMoreButton,
 .readSourceButton,
 .activatedTariff,
-.searchButtonActive
+.searchButtonActive,
 {
   background-color: rgba(89, 112, 255, 1);
   color: white;
@@ -82,6 +82,7 @@
   font-size: 22px;
   font-weight: 500;
   margin-top: 50px;
+  cursor: pointer;
 }
 
 .getDataByInnButton a {
@@ -107,9 +108,16 @@
   }
 }
 
-.searchButton {
+.searchButton,
+.searchButtonActive,
+.blockedButton
+{
   width: 305px;
   opacity: 50%;
+}
+
+.searchButton {
+  cursor: not-allowed;
 }
 
 .searchButtonActive {
