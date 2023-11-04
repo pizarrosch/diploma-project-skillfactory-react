@@ -3,7 +3,6 @@ import s from './ArticleCard.module.scss';
 import st from '../Main/Main.module.scss';
 import {TArticle} from "../../types";
 import {Link} from 'react-router-dom';
-import {escape} from "querystring";
 
 export default function ArticleCard({ok}: TArticle) {
 

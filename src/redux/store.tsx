@@ -14,7 +14,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {statsSlice} from "./slices/statsSlice";
-import {objectsSlice} from "./slices/objectsSlice";
+import {idsSlice} from "./slices/idsSlice";
 import {articlesSlice} from "./slices/articlesSlice";
 
 export type RootState = ReturnType<typeof store.getState>;
@@ -26,7 +26,7 @@ const reducer = combineReducers({
     checkboxStatus: checkboxStatusSlice.reducer,
     checkboxOptions: checkboxOptionsSlice.reducer,
     stats: statsSlice.reducer,
-    objects: objectsSlice.reducer,
+    objects: idsSlice.reducer,
     articles: articlesSlice.reducer
 })
 

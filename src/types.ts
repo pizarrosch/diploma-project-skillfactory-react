@@ -112,7 +112,7 @@ export type TSearchResults = TTotalDocsResultArray[]
 
 //types for object search
 
-type TEncodedIdObject = {
+export type TEncodedIdObject = {
     encodedId: string,
     influence: number,
     similarCount: number
@@ -153,7 +153,7 @@ type TTitle = {
     text: string
 }
 
-type TOk = {
+export type TOk = {
     attributes: TAttributes,
     issueDate: string,
     source: TSource,

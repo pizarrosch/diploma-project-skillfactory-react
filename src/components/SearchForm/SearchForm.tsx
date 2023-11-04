@@ -6,12 +6,12 @@ import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
 import {Link} from "react-router-dom";
 import axios from "axios";
-import {TEncodedIds, TSearchData, TSearchResults} from "../../types";
+import {TArticle, TEncodedIdObject, TEncodedIds, TObjectItems, TSearchData, TSearchResults} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import {RootState} from "../../redux/store";
 import localStorage from "redux-persist/es/storage";
 import {getStats} from "../../redux/slices/statsSlice";
-import {getItems} from "../../redux/slices/objectsSlice";
+import {getItems} from "../../redux/slices/idsSlice";
 import {getArticles} from "../../redux/slices/articlesSlice";
 import {count} from "../../redux/slices/eventFiltersSlice";
 import {checkboxData} from "../../data";
@@ -36,10 +36,8 @@ export default function SearchForm() {
 
     const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
-    const objectsArr = useAppSelector((state: RootState) => state.objects.items);
     const tariffInfo = useAppSelector((state: RootState) => state.tariffLimits.eventFiltersInfo);
 
-    const encodedIds = objectsArr.map((item) => item.encodedId)
     const dispatch = useAppDispatch();
 
     const SEARCH_DATA: TSearchData = {
@@ -70,7 +68,7 @@ export default function SearchForm() {
             tonality: "any",
             onlyWithRiskFactors: checkboxOptions[3].status,
         },
-        sortDirectionType: "asc",
+        sortDirectionType: "desc",
         sortType: "issueDate",
         issueDateInterval: {
             startDate: startDate, //&& date.toISOString().slice(0, -5) + '+03:00'
@@ -78,29 +76,10 @@ export default function SearchForm() {
         }
     }
 
-    async function searchDocs(searchData: TSearchData): Promise<void> {
+    async function searchDocs(searchData: TSearchData) {
         const token = await localStorage.getItem('token');
         try {
             await axios.post('https://gateway.scan-interfax.ru/api/v1/objectsearch/histograms',
-               searchData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-                )
-                .then(response => {
-                    dispatch(getStats(response.data.data.map((resultData: TSearchResults[]) => resultData)));
-                });
-        } catch (err: any) {
-            alert (err.message)
-        }
-    }
-
-    async function searchObjects(searchData: TSearchData): Promise<void> {
-        const token = await localStorage.getItem('token');
-        try {
-            await axios.post('https://gateway.scan-interfax.ru/api/v1/objectsearch',
                 searchData,
                 {
                     headers: {
@@ -108,16 +87,37 @@ export default function SearchForm() {
                     }
                 }
             )
-                .then(response => dispatch(getItems(response.data)));
+                .then(response => {
+                    dispatch(getStats(response.data.data.map((resultData: TSearchResults[]) => resultData)));
+                });
         } catch (err: any) {
-            alert (err.message)
+            alert(err.message)
         }
     }
 
-    async function getDocs(ids: TEncodedIds): Promise<void> {
+    async function searchObjects(searchData: TSearchData) {
         const token = await localStorage.getItem('token');
         try {
-            await axios.post('https://gateway.scan-interfax.ru/api/v1/documents',
+            const response = await axios.post('https://gateway.scan-interfax.ru/api/v1/objectsearch',
+                searchData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            const encodedIdsArr = response.data.items.map((ids: TEncodedIdObject) => ids.encodedId)
+            dispatch(getItems(encodedIdsArr));
+            return encodedIdsArr;
+        } catch (err: any) {
+            alert(err.message)
+        }
+    }
+
+    async function getDocs(ids: TEncodedIds) {
+        const token = await localStorage.getItem('token');
+        try {
+            const response = await axios.post('https://gateway.scan-interfax.ru/api/v1/documents',
                 ids,
                 {
                     headers: {
@@ -125,11 +125,10 @@ export default function SearchForm() {
                     }
                 }
             )
-                .then(response => {
-                    dispatch(getArticles(response.data))
-                });
+            console.log(response.data)
+            return response.data;
         } catch (err: any) {
-            alert (err.message)
+            alert(err.message)
         }
     }
 
@@ -143,64 +142,65 @@ export default function SearchForm() {
 
     async function sendData() {
         await searchDocs(SEARCH_DATA)
-        await searchObjects(SEARCH_DATA);
-        await getDocs({ids: encodedIds})
+        const responseIds = await searchObjects(SEARCH_DATA) as string[];
+        const responseArticles = await getDocs({ids: responseIds}) as TArticle[];
+        dispatch(getArticles(responseArticles));
         dispatch(count());
     }
 
     function handleCheck(e: React.MouseEvent) {
         const target = e.currentTarget as HTMLDivElement;
-       checkboxStatus.map((checkbox, id) => {
-           const statusIndex = checkboxStatus.findIndex(status => status.id === checkbox.id);
-           if (Number(target.id) === statusIndex && !checkbox.active && !checkboxOptions[id].status) {
+        checkboxStatus.map((checkbox, id) => {
+            const statusIndex = checkboxStatus.findIndex(status => status.id === checkbox.id);
+            if (Number(target.id) === statusIndex && !checkbox.active && !checkboxOptions[id].status) {
                 dispatch(checkStatus({
-                   active: true,
-                   id: id
-               }));
+                    active: true,
+                    id: id
+                }));
 
                 dispatch(checkOptions({
                     status: true,
                     id: id,
                     option: checkboxData[id].english
                 }))
-           } else if (Number(target.id) === statusIndex && checkbox.active && checkboxOptions[id].status) {
-               dispatch(checkStatus({
-                   active: false,
-                   id: id
-               }));
+            } else if (Number(target.id) === statusIndex && checkbox.active && checkboxOptions[id].status) {
+                dispatch(checkStatus({
+                    active: false,
+                    id: id
+                }));
 
-               dispatch(checkOptions({
-                   status: false,
-                   id: id,
-                   option: checkboxData[id].english
-               }))
-           } else if (Number(target.id) === statusIndex && !checkbox.active && checkboxOptions[id].status) {
-               dispatch(checkOptions({
-                   status: false,
-                   id: id,
-                   option: checkboxData[id].english
-               }))
+                dispatch(checkOptions({
+                    status: false,
+                    id: id,
+                    option: checkboxData[id].english
+                }))
+            } else if (Number(target.id) === statusIndex && !checkbox.active && checkboxOptions[id].status) {
+                dispatch(checkOptions({
+                    status: false,
+                    id: id,
+                    option: checkboxData[id].english
+                }))
 
-               dispatch(checkStatus({
-                   active: true,
-                   id: id
-               }));
-           } else if (Number(target.id) === statusIndex && checkbox.active && !checkboxOptions[id].status) {
-               dispatch(checkOptions({
-                   status: true,
-                   id: id,
-                   option: checkboxData[id].english
-               }))
+                dispatch(checkStatus({
+                    active: true,
+                    id: id
+                }));
+            } else if (Number(target.id) === statusIndex && checkbox.active && !checkboxOptions[id].status) {
+                dispatch(checkOptions({
+                    status: true,
+                    id: id,
+                    option: checkboxData[id].english
+                }))
 
-               dispatch(checkStatus({
-                   active: false,
-                   id: id
-               }));
-           }
-       })
+                dispatch(checkStatus({
+                    active: false,
+                    id: id
+                }));
+            }
+        })
     }
 
-    function handleInnValue(e: React.FormEvent ) {
+    function handleInnValue(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
         setInnValue(target.value);
     }
@@ -255,19 +255,17 @@ export default function SearchForm() {
         const UTCHours = date.setUTCHours(-1);
         const adjustedDate = new Date(UTCHours);
 
-        if (startDate > endDate && endDate ) {
+        if (startDate > endDate && endDate) {
             setStartDateIsValid(false);
         } else {
             setStartDateIsValid(true);
         }
 
-        if(adjustedDate > new Date()) {
+        if (adjustedDate > new Date()) {
             setEndDateIsValid(false)
         } else {
             setEndDateIsValid(true);
         }
-
-        console.log('myDate -->',adjustedDate, 'realDate -->', new Date())
     }
 
     function handleDocsAmount(e: React.FormEvent) {
@@ -365,14 +363,16 @@ export default function SearchForm() {
                             {checkboxData.map((item, id) => {
                                 return (
                                     <>
-                                        <Checkbox children={item.russian} id={id} onClick={handleCheck} isChecked={checkboxStatus[id].active}/>
+                                        <Checkbox children={item.russian} id={id} onClick={handleCheck}
+                                                  isChecked={checkboxStatus[id].active}/>
                                     </>
-                                    )
-                                })}
+                                )
+                            })}
                         </div>
                         <div className={s['button-container']}>
                             <Link to={'/results'}>
-                                <button className={isDisabled ? st.searchButton : st.searchButtonActive} onClick={sendData} disabled={isDisabled}>
+                                <button className={isDisabled ? st.searchButton : st.searchButtonActive}
+                                        onClick={sendData} disabled={isDisabled}>
                                     Поиск
                                 </button>
                             </Link>

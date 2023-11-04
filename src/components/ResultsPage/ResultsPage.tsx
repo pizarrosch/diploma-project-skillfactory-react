@@ -1,12 +1,12 @@
 import s from "../ResultsPage/ResultsPage.module.scss";
 import st from '../Main/Main.module.scss';
-import React from "react";
+import React, {useEffect} from "react";
 import woman from '../../assets/woman-with-magnifying-glass.svg';
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/arrow-right.svg";
 import {statData} from "../../data";
 import {
-    TArticle,
+    TArticle, TEncodedIdObject, TEncodedIds, TSearchData,
     TSearchResults,
     TStatResults,
     TTotalDocsResult,
@@ -14,6 +14,7 @@ import {
 import ArticleCard from "../ArticleCard/ArticleCard";
 import {useAppSelector} from "../../hooks/hooks";
 import {RootState} from "../../redux/store";
+import {ThreeDots} from "react-loader-spinner";
 
 function StatsCard({range, total, risks}: TStatResults) {
 
@@ -29,11 +30,11 @@ function StatsCard({range, total, risks}: TStatResults) {
     )
 }
 
-
 export default function ResultsPage() {
 
     const stats: TSearchResults = useAppSelector((state: RootState) => state.stats);
     const articles: TArticle[] = useAppSelector((state: RootState) => state.articles);
+    console.log(articles)
 
     return (
         <div>
@@ -48,7 +49,7 @@ export default function ResultsPage() {
             </div>
             <div className={s.statsContainer}>
                 <span className={s.stats}>Общая сводка</span>
-                <span className={s.foundItems}>Найдено 4 221 вариантов</span>
+                <span className={s.foundItems}>Найдено {stats[0]?.data?.length} вариантов</span>
             </div>
             <div className={s.slider}>
                 <img className={s.leftArrow} src={leftArrow} alt='left'/>
@@ -59,10 +60,22 @@ export default function ResultsPage() {
                         <span>Риски</span>
                     </div>
                     {
-                        stats.length === 0 ? 'В данном промежутке времени информация отсутствует' : stats && stats[0].data.map((stat: TTotalDocsResult) => {
-                            const date = new Date(stat.date);
-                            return <StatsCard range={date.toLocaleDateString('ru-Ru')} total={stat.value} risks={stat.value}/>
-                        })
+                        stats.length === 0 ? 'В данном промежутке времени информация отсутствует' : stats ? stats[0].data?.map((stat: TTotalDocsResult, id) => {
+                                const date = new Date(stat.date);
+                                return <StatsCard range={date.toLocaleDateString('ru-Ru')} total={stats[0].data[id]?.value!} risks={stats[1].data[id]?.value!}/>
+                        }) :
+                            <div>
+                                <ThreeDots
+                                    height="40"
+                                    width="30"
+                                    radius="9"
+                                    color="black"
+                                    ariaLabel="three-dots-loading"
+                                    wrapperStyle={{}}
+                                    wrapperClass=""
+                                    visible={true}
+                                />
+                            </div>
                     }
                 </div>
                 <img className={statData.length > 8 ? s.activeRightArrow : s.rightArrow} src={rightArrow} alt='right'/>
@@ -72,7 +85,7 @@ export default function ResultsPage() {
             </div>
             <div className={s.articleCardWrapper}>
                 {
-                    articles.map(article => {
+                    articles && articles.map(article => {
                         return <ArticleCard ok={article.ok} />
                     })
                 }
