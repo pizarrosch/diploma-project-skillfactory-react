@@ -1,6 +1,6 @@
 import s from "../ResultsPage/ResultsPage.module.scss";
 import st from '../Main/Main.module.scss';
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import woman from '../../assets/woman-with-magnifying-glass.svg';
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/arrow-right.svg";
@@ -31,10 +31,16 @@ function StatsCard({range, total, risks}: TStatResults) {
 }
 
 export default function ResultsPage() {
+    const [maxResultsNumber, setMaxResultsNumber] = useState(10);
 
     const stats: TSearchResults = useAppSelector((state: RootState) => state.stats);
     const articles: TArticle[] = useAppSelector((state: RootState) => state.articles);
-    console.log(articles)
+
+    let slicedArticles = articles.slice(0, maxResultsNumber);
+
+    function getMoreArticles() {
+        setMaxResultsNumber(prev => prev + 10)
+    }
 
     return (
         <div>
@@ -85,13 +91,13 @@ export default function ResultsPage() {
             </div>
             <div className={s.articleCardWrapper}>
                 {
-                    articles && articles.map(article => {
+                    slicedArticles && slicedArticles.map(article => {
                         return <ArticleCard ok={article.ok} />
                     })
                 }
             </div>
             <div className={s.buttonContainer}>
-                <button className={st.showMoreButton}>Показать больше</button>
+                {slicedArticles.length === articles.length ? '' : <button className={st.showMoreButton} onClick={getMoreArticles}>Показать больше</button>}
             </div>
         </div>
     )

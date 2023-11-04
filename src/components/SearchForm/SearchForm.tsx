@@ -68,7 +68,7 @@ export default function SearchForm() {
             tonality: "any",
             onlyWithRiskFactors: checkboxOptions[3].status,
         },
-        sortDirectionType: "desc",
+        sortDirectionType: "asc",
         sortType: "issueDate",
         issueDateInterval: {
             startDate: startDate, //&& date.toISOString().slice(0, -5) + '+03:00'
