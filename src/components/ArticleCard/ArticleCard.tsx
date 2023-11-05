@@ -4,16 +4,20 @@ import st from '../Main/Main.module.scss';
 import {TArticle} from "../../types";
 import {Link} from 'react-router-dom';
 
-export default function ArticleCard({ok}: TArticle) {
+type TProps = {
+    id: number
+} & TArticle
+
+export default function ArticleCard({ok, id}: TProps) {
 
     const xmlString = ok.content.markup;
     const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlString, 'text/html');
+    const doc = parser.parseFromString(xmlString, 'text/xml');
 
     const date = new Date(ok.issueDate);
 
     let paragraph = '';
-    const paragraphTags = doc!.documentElement!.textContent!.split("\n");
+    const paragraphTags = doc!.documentElement!.textContent!;
 
     for (let i = 0; i < paragraphTags.length; i++) {
         const newText = paragraphTags[i]
@@ -42,7 +46,7 @@ export default function ArticleCard({ok}: TArticle) {
             <p className={s.paragraph}>{clearText}</p>
             <div className={s.cardFooter}>
                 <button className={st.readSourceButton}>
-                    <Link to={ok.url}>
+                    <Link to={ok.url} target="_blank">
                         Читать в источнике
                     </Link>
                 </button>

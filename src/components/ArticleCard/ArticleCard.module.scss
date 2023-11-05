@@ -16,12 +16,22 @@
 
     .source {
       text-decoration: underline;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
     }
   }
 
   .title {
     font-size: 26px;
     font-weight: 500;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
   }
 
   .categoryContainer {
@@ -53,11 +63,8 @@
   .paragraph {
     font-size: 16px;
     opacity: 50%;
-    //width: 581px;
-    //height: 228px;
     text-overflow: ellipsis;
     overflow: hidden;
-    //white-space: nowrap;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 15;
     display: -webkit-box;

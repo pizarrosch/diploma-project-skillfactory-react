@@ -8,6 +8,7 @@ import {RootState} from "../../../redux/store";
 import {TEventFiltersInfo} from "../../../types";
 import {getLimitInfo} from "../../../redux/slices/eventFiltersSlice";
 import {ThreeDots} from "react-loader-spinner";
+import menuCake from '../../../assets/options-cake.svg';
 
 export default function NavigationAuthorized() {
 
@@ -35,10 +36,11 @@ export default function NavigationAuthorized() {
                     <li className={s['navigation-list__item']}>FAQ</li>
                 </ul>
             </nav>
-            <div className={s.stats}>
-                <div className={s.usedCompaniesWrapper}>
-                    <span className={s.usedCompanies}>Использовано компаний</span>
-                    <span className={s.usedCompaniesAmount}>
+            <div className={s.menuWrapper}>
+                <div className={s.stats}>
+                    <div className={s.usedCompaniesWrapper}>
+                        <span className={s.usedCompanies}>Использовано компаний</span>
+                        <span className={s.usedCompaniesAmount}>
                                 {(tariffLimits?.eventFiltersInfo?.usedCompanyCount ? tariffLimits?.eventFiltersInfo?.usedCompanyCount : '0') ||
                                   <div className={s.loading}>
                                     <ThreeDots
@@ -54,10 +56,10 @@ export default function NavigationAuthorized() {
                                   </div>
                                 }
                             </span>
-                </div>
-                <div className={s.companiesLimitWrapper}>
-                    <span className={s.companiesLimit}>Лимит по компаниям</span>
-                    <span className={s.limitAmount}>
+                    </div>
+                    <div className={s.companiesLimitWrapper}>
+                        <span className={s.companiesLimit}>Лимит по компаниям</span>
+                        <span className={s.limitAmount}>
                                  {tariffLimits?.eventFiltersInfo?.companyLimit ||
                                    <div className={s.loading}>
                                      <ThreeDots
@@ -73,29 +75,31 @@ export default function NavigationAuthorized() {
                                    </div>
                                  }
                             </span>
+                    </div>
                 </div>
-            </div>
-            <div className={s.loginMenu}>
-                <div className={s.userNameWrapper}>
-                    <span className={s.userName}>Zaur S.</span>
-                    <span className={s.logOut} onClick={() => {
-                        dispatch(authorize({
-                            accessToken: '',
-                            expire: ''
-                        }));
+                <div className={s.loginMenu}>
+                    <div className={s.userNameWrapper}>
+                        <span className={s.userName}>Zaur S.</span>
+                        <span className={s.logOut} onClick={() => {
+                            dispatch(authorize({
+                                accessToken: '',
+                                expire: ''
+                            }));
 
-                        // Временно обнуляющая функция. Будет обнулятсья позже по истечении срока действия токена
-                        dispatch(getLimitInfo({
-                            eventFiltersInfo: {
-                                usedCompanyCount: 0,
-                                companyLimit: 0
-                            }
-                        }))
-                    }}>Выйти</span>
+                            // Временно обнуляющая функция. Будет обнулятсья позже по истечении срока действия токена
+                            dispatch(getLimitInfo({
+                                eventFiltersInfo: {
+                                    usedCompanyCount: 0,
+                                    companyLimit: 0
+                                }
+                            }))
+                        }}>Выйти</span>
+                    </div>
+                    <div>
+                        <img src={avatar} alt='avatar'/>
+                    </div>
                 </div>
-                <div>
-                    <img src={avatar} alt='avatar'/>
-                </div>
+                <img className={s.menuCake} src={menuCake} alt=''/>
             </div>
         </div>
     )

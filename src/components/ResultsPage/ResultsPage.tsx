@@ -91,8 +91,8 @@ export default function ResultsPage() {
             </div>
             <div className={s.articleCardWrapper}>
                 {
-                    slicedArticles && slicedArticles.map(article => {
-                        return <ArticleCard ok={article.ok} />
+                    slicedArticles && slicedArticles.map((article, id) => {
+                        return <ArticleCard ok={article.ok} id={id}/>
                     })
                 }
             </div>

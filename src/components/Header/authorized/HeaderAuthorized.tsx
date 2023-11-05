@@ -7,7 +7,7 @@ export default function HeaderAuthorized() {
     return (
         <header className={s.header}>
             <a href='/'>
-                <img src={headerLogo} alt='company logo'/>
+                <img className={s.headerLogo} src={headerLogo} alt='company logo'/>
             </a>
             <NavigationAuthorized/>
         </header>

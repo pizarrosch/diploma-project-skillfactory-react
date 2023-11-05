@@ -7,7 +7,7 @@ export default function Header() {
     return (
         <header className={s.header}>
             <a href='/'>
-                <img src={headerLogo} alt='company logo'/>
+                <img className={s.headerLogo} src={headerLogo} alt='company logo'/>
             </a>
             <Navigation/>
         </header>

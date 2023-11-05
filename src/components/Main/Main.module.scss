@@ -142,5 +142,19 @@
   color: black;
 }
 
+@media all and (max-width: 400px) {
+  .root {
+    margin: 0 10px;
+
+    .publicationSearchContainer {
+      flex-direction: column;
+    }
+
+    .paragraph {
+      font-size: 28px;
+    }
+  }
+}
+
 
 

@@ -4,6 +4,11 @@
   gap: 140px;
   margin-right: 50px;
 
+  .menuWrapper {
+    display: flex;
+    gap: 140px;
+  }
+
   .navigation {
     display: flex;
     justify-content: space-between;
@@ -110,6 +115,55 @@
       .loading {
         margin: 0 auto;
       }
+    }
+  }
+}
+
+.menuCake {
+  display: none;
+}
+
+@media all and (max-width: 400px){
+  .root {
+    margin-right: 10px;
+
+    .menuWrapper {
+      display: flex;
+      gap: 40px;
+
+      .menuCake {
+        display: block;
+      }
+    }
+
+    .stats {
+      width: 132px;
+      height: 75px;
+      padding: 20px 5px;
+      box-sizing: border-box;
+
+      .usedCompaniesWrapper,
+      .companiesLimitWrapper
+      {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0 10px;
+        gap: 5px;
+      }
+
+      .usedCompanies,
+      .companiesLimit
+      {
+        font-size: 8px;
+        color: rgb(166, 166, 166);
+      }
+    }
+
+    .navigation,
+    .loginMenu
+    {
+      display: none;
     }
   }
 }
