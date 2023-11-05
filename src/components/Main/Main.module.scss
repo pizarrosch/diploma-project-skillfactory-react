@@ -45,17 +45,23 @@
   overflow: hidden;
   z-index: 0;
 
-  .rightArrow {
+  .rightArrow,
+  {
     position: absolute;
-    background-color: green;
-    right: -25px;
-    z-index: 1;
+    right: 10px;
+  }
+
+  .leftArrow,
+  {
+    position: absolute;
+    left: 2px;
   }
 
   .sliderContainer {
     display: flex;
     //gap: 25px;
     align-items: center;
+    margin-bottom: 50px;
 
     .cardsContainer {
       display: flex;
@@ -155,19 +161,29 @@
 
     .publicationSearchContainer {
       flex-direction: column;
-      margin-top: -60px;
     }
 
     .paragraph,
     .ourTariffs
     {
       font-size: 28px;
+      margin-top: 30px;
+      width: 280px
+    }
+
+    .paragraph {
+      width: 375px;
+    }
+
+    .sliderContainer {
+      margin-bottom: 20px;
     }
 
     .sittingManImg {
       width: 891px;
       height: 392px;
       margin-top: 50px;
+      margin-bottom: 30px;
     }
 
     .tariffCardsContainer {
@@ -181,6 +197,10 @@
       width: 287px;
       font-size: 18px;
       margin: 40px 23px;
+    }
+
+    .getDataByInnButton {
+      margin-top: 20px;
     }
   }
 }

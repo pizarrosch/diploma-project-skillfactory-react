@@ -98,7 +98,7 @@ export default function MainPage() {
                         keyBoardControl
                         minimumTouchDrag={80}
                         pauseOnHover
-                        renderArrowsWhenDisabled={true}
+                        renderArrowsWhenDisabled={false}
                         renderButtonGroupOutside={false}
                         renderDotsOutside={false}
                         responsive={{
@@ -112,7 +112,7 @@ export default function MainPage() {
                             },
                             mobile: {
                                 breakpoint: {
-                                    max: 464,
+                                    max: 400,
                                     min: 0
                                 },
                                 items: 1,
@@ -133,7 +133,7 @@ export default function MainPage() {
                         shouldResetAutoplay
                         showDots={false}
                         sliderClass=""
-                        slidesToSlide={3}
+                        slidesToSlide={1}
                         swipeable
                     >
                         {cardContents.map((cardContent: ImgSource) => {
