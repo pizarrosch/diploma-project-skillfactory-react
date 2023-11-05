@@ -9,3 +9,10 @@
   font-size: 18px;
   resize: none;
 }
+
+@media all and (max-width: 400px) {
+  .root {
+    width: 298px;
+    min-width: 298px;
+  }
+}

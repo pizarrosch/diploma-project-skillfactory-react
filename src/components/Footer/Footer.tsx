@@ -5,7 +5,7 @@ import s from './Footer.module.scss';
 export default function Footer() {
     return (
         <footer className={s.footer}>
-            <img src={footerLogo} alt='company logo'/>
+            <img className={s.footerLogo} src={footerLogo} alt='company logo'/>
             <div className={s.contactsDataContainer}>
                 <div className={s.contactsData}>
                     <span>г. Москва, Цветной б-р, 40</span>

@@ -5,7 +5,7 @@ import React from "react";
 export default function Card({src, text}: ImgSource) {
     return (
         <div className={s.root}>
-            <img src={src} alt='' />
+            <img className={s.card} src={src} alt='' />
             <p>{text}</p>
         </div>
     )

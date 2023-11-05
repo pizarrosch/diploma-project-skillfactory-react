@@ -7,8 +7,17 @@
   margin-bottom: 100px;
   margin-top: 70px;
 
-  .eighteen-px-text {
+  .eighteen-px-text,
+  .monthlyRate
+  {
     font-size: 18px;
+  }
+
+  .monthlyRate p {
+    padding-left: 30px;
+    margin-bottom: 0;
+    margin-top: 0;
+    height: 22px;
   }
 
   .tariff-title {
@@ -77,11 +86,78 @@
   .tariff-options {
     padding-left: 30px;
 
+    .tariffIncludes {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 10px
+    }
+
     .tariff-options__option {
       display: flex;
       gap: 10px;
       align-items: center;
       margin-bottom: 5px;
+    }
+  }
+}
+
+@media all and (max-width: 400px) {
+  .root {
+    width: 335px;
+    height: 512px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+
+    .eighteen-px-text {
+      font-size: 16px;
+    }
+
+    .tariff-title {
+      position: relative;
+
+      .tariff-title__title {
+        font-size: 20px;
+        width: 300px;
+        margin-bottom: 25px;
+        margin-left: -10px;
+      }
+
+      .tariff-title__image {
+        position: absolute;
+        width: 59px;
+        height: 53px;
+        right: 5px;
+        top: 10px;
+      }
+
+      .tariff-title__description {
+        margin-left: -10px;
+      }
+    }
+
+    .tariff-details-container {
+
+      .monthlyRate p {
+        margin: 0 0 0 -10px;
+        width: 273px;
+      }
+
+      .current-tariff-icon {
+        display: none;
+      }
+
+      .price-container {
+        margin-left: -10px;
+        margin-top: -10px;
+      }
+    }
+
+    .tariff-options {
+      margin-left: -10px;
+
+      .tariffIncludes {
+        font-size: 18px;
+      }
     }
   }
 }

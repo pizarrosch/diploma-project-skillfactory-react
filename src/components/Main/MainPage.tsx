@@ -78,7 +78,7 @@ export default function MainPage() {
                 <img src={bgImage1} alt='man pointing at the screen'/>
             </div>
             <div className={s.sliderContainerWrapper}>
-                <p style={{fontSize: '45px'}} className={s.paragraph}>Почему именно мы</p>
+                <p className={s.ourTariffs}>Почему именно мы</p>
                 <div className={s.sliderContainer}>
                     <Carousel
                         additionalTransfrom={0}
@@ -142,9 +142,9 @@ export default function MainPage() {
                     </Carousel>
                 </div>
             </div>
-            <img src={sittingMan} alt='sittingMan'/>
+            <img className={s.sittingManImg} src={sittingMan} alt='sittingMan'/>
             <div>
-                <p style={{fontSize: '45px'}} className={s.paragraph}>Наши тарифы</p>
+                <p className={s.ourTariffs}>Наши тарифы</p>
                 <div className={s.tariffCardsContainer}>
                     {
                         tariffCardContents.map((tariffCard: TTariffCard) => {
