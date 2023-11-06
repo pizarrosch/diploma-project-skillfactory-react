@@ -7,13 +7,13 @@ import Card from "../Card/Card";
 import {ImgSource, TTariffCard} from "../../types";
 import TariffCard from "../TariffCard/TariffCard";
 import {cardContents, checkboxData, tariffCardContents} from '../../data';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Link} from "react-router-dom";
 import {RootState} from "../../redux/store";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import {checkOptions, checkStatus, initializeOptions, initializeStatus} from "../../redux/slices/checkboxSlice";
+import {initializeOptions, initializeStatus} from "../../redux/slices/checkboxSlice";
 
 // @ts-ignore
 export function LeftArrow({onClick, ...rest}) {

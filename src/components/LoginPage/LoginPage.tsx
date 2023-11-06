@@ -16,9 +16,6 @@ import {getLimitInfo} from "../../redux/slices/eventFiltersSlice";
 import axios from "axios";
 import {TEventFiltersInfo} from "../../types";
 
-const LOGIN = process.env.USER_LOGIN as string;
-const PASSWORD = process.env.USER_PASSWORD as string;
-
 export default function LoginPage() {
 
     const [login, setLogin] = useState('');

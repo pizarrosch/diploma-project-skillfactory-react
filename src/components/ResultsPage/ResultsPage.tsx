@@ -1,12 +1,12 @@
 import s from "../ResultsPage/ResultsPage.module.scss";
 import st from '../Main/Main.module.scss';
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import woman from '../../assets/woman-with-magnifying-glass.svg';
 import leftArrow from "../../assets/left-arrow.svg";
 import rightArrow from "../../assets/arrow-right.svg";
 import {statData} from "../../data";
 import {
-    TArticle, TEncodedIdObject, TEncodedIds, TSearchData,
+    TArticle,
     TSearchResults,
     TStatResults,
     TTotalDocsResult,
