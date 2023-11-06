@@ -51,7 +51,7 @@ export default function ResultsPage() {
                         <p className={s.text}>Поиск может занять некоторое время, <br/> просим сохранять терпение.</p>
                     </div>
                 </div>
-                <img src={woman} alt='woman'/>
+                <img className={s.woman} src={woman} alt='woman'/>
             </div>
             <div className={s.statsContainer}>
                 <span className={s.stats}>Общая сводка</span>

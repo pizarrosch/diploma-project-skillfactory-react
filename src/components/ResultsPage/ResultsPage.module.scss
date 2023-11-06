@@ -116,4 +116,40 @@
   flex-wrap: wrap;
 }
 
+@media all and (max-width: 400px) {
+    .firstBlock {
+
+      .woman {
+        position: absolute;
+        width: 350px;
+        height: 233px;
+        top: 340px;
+      }
+
+      .paragraphContainer {
+        width: 344px;
+        margin: 0 0 300px 10px;
+
+        .paragraph {
+          font-size: 28px;
+        }
+
+        .text {
+          font-size: 18px;
+          width: 344px;
+        }
+      }
+    }
+
+  .slider {
+
+    .cardsContainer {
+      flex-direction: column;
+
+      .statNameContainer {
+        flex-direction: row;
+      }
+    }
+  }
+  }
 

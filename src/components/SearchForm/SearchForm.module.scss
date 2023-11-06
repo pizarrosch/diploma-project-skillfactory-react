@@ -55,7 +55,10 @@
           bottom: -20px;
         }
 
-        .dropdown-arrow {
+        .dropdown-arrow,
+        .startDateDropdown,
+        .endDateDropdown
+        {
           position: absolute;
           border-top: 10px solid rgba(217, 217, 217, 1);
           border-right: 10px solid transparent;
@@ -65,12 +68,19 @@
           top: 55px;
           right: 155px;
         }
+
+        .startDateDropdown {
+          right: 210px;
+        }
+
+        .endDateDropdown {
+          right: 8px;
+        }
       }
 
       .input,
       .date-input,
-      .inputError
-      {
+      .inputError {
         width: 242px;
         height: 43px;
         border-radius: 5px;
@@ -151,6 +161,10 @@
         }
       }
     }
+
+    .button-container-mobile {
+      display: none;
+    }
   }
 
   .image-container {
@@ -168,3 +182,105 @@
   }
 }
 
+@media all and (max-width: 400px) {
+  .root {
+
+    .paragraph-container {
+      margin: 0 10px;
+
+      .paragraph {
+        font-size: 28px;
+      }
+
+      .text {
+        font-size: 18px;
+        width: 297px;
+      }
+    }
+
+    .container {
+      width: 375px;
+      height: 688px;
+      margin: 15px 0 460px ;
+      flex-direction: column;
+      align-items: center;
+
+      .form-container {
+        margin: 0 auto;
+
+        .date-range-container {
+          display: flex;
+          flex-direction: column;
+
+          .dropdown-arrow {
+            right: 20px;
+          }
+
+          .date-input {
+            width: 335px;
+            height: 43px;
+          }
+        }
+
+        .input-container {
+
+          .dropdown-arrow,
+          .startDateDropdown,
+          .endDateDropdown
+          {
+            right: 20px;
+          }
+
+          .endDateDropdown {
+            top: 120px;
+          }
+        }
+
+        .input,
+        .inputError
+        {
+          width: 335px;
+          height: 43px;
+        }
+      }
+
+      .checkbox-button-container {
+        display: none;
+      }
+
+      .button-container-mobile {
+        display: flex;
+        flex-direction: column;
+        align-self: start;
+        position: relative;
+        margin-bottom: 20px;
+        margin-left: 15px;
+      }
+    }
+
+    .image-container {
+      width: 0;
+      height: 0;
+
+      .document {
+        position: absolute;
+        right: 40px;
+        top: 260px;
+        width: 58px;
+        height: 71px;
+      }
+
+      .folders {
+        display: none;
+      }
+
+      .manLookingOut {
+        position: absolute;
+        left: 25px;
+        bottom: 160px;
+        width: 380px;
+        height: 403px;
+      }
+    }
+  }
+}

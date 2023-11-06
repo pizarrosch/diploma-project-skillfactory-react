@@ -340,10 +340,10 @@ export default function SearchForm() {
                                 <div className={s['date-range-container']}>
                                     <input type='text' className={s['date-input']} placeholder='Дата начала'
                                            onFocus={focus} onChange={getStartDate}/>
-                                    <div style={{right: '210px'}} className={s['dropdown-arrow']}></div>
+                                    <div className={s.startDateDropdown}></div>
                                     <input type='text' className={s['date-input']} placeholder='Дата конца'
                                            onFocus={focus} onChange={getEndDate}/>
-                                    <div style={{right: '8px'}} className={s['dropdown-arrow']}></div>
+                                    <div className={s.endDateDropdown}></div>
                                     {
                                         !startDateIsValid && <span className={s.innError}>
                                       Начальная дата не может быть позже конечной!
@@ -382,15 +382,27 @@ export default function SearchForm() {
                                 поля</p>
                         </div>
                     </div>
+                    <div className={s['button-container-mobile']}>
+                        <Link to={'/results'}>
+                            <button className={isDisabled ? st.searchButton : st.searchButtonActive}
+                                    onClick={sendData} disabled={isDisabled}>
+                                Поиск
+                            </button>
+                        </Link>
+                        {tariffInfo.usedCompanyCount === tariffInfo.companyLimit &&
+                          <span className={s.submitError}>Ваш дневной лимит исчерпан. Возвращайтесь завтра.</span>}
+                        <p style={{fontSize: '14px', color: 'rgba(148, 148, 148, 1)'}}>* Обязательные к заполнению
+                            поля</p>
+                    </div>
                 </div>
             </div>
             <div className={s['image-container']}>
                 <div className={s['image-container__images-on-the-top']}>
-                    <img src={document} alt='document'/>
-                    <img src={folders} alt='folders'/>
+                    <img className={s.document} src={document} alt='document'/>
+                    <img className={s.folders} src={folders} alt='folders'/>
                 </div>
                 <div style={{marginLeft: '60px'}}>
-                    <img src={manLookingOut} alt='manLookingOut'/>
+                    <img className={s.manLookingOut} src={manLookingOut} alt='manLookingOut'/>
                 </div>
             </div>
         </div>

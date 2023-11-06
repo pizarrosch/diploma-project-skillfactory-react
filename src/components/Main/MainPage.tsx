@@ -16,14 +16,14 @@ import 'react-multi-carousel/lib/styles.css';
 import {checkOptions, checkStatus, initializeOptions, initializeStatus} from "../../redux/slices/checkboxSlice";
 
 // @ts-ignore
-function LeftArrow({onClick, ...rest}) {
+export function LeftArrow({onClick, ...rest}) {
     return (
         <img onClick={() => onClick()} className={s.leftArrow} src={leftArrow} alt='right'/>
     )
 }
 
 // @ts-ignore
-function RightArrow({onClick, ...rest}) {
+export function RightArrow({onClick, ...rest}) {
     return (
         <img onClick={() => onClick()} className={s.rightArrow} src={rightArrow} alt='right'/>
     )
