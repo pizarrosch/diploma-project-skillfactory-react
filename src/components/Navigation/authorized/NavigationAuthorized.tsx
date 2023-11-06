@@ -38,44 +38,35 @@ export default function NavigationAuthorized() {
             </nav>
             <div className={s.menuWrapper}>
                 <div className={s.stats}>
-                    <div className={s.usedCompaniesWrapper}>
-                        <span className={s.usedCompanies}>Использовано компаний</span>
-                        <span className={s.usedCompaniesAmount}>
-                                {(tariffLimits?.eventFiltersInfo?.usedCompanyCount ? tariffLimits?.eventFiltersInfo?.usedCompanyCount : '0') ||
-                                  <div className={s.loading}>
-                                    <ThreeDots
-                                      height="15"
-                                      width="15"
-                                      radius="9"
-                                      color="black"
-                                      ariaLabel="three-dots-loading"
-                                      wrapperStyle={{}}
-                                      wrapperClass=""
-                                      visible={true}
-                                    />
-                                  </div>
-                                }
-                            </span>
-                    </div>
-                    <div className={s.companiesLimitWrapper}>
-                        <span className={s.companiesLimit}>Лимит по компаниям</span>
-                        <span className={s.limitAmount}>
-                                 {tariffLimits?.eventFiltersInfo?.companyLimit ||
-                                   <div className={s.loading}>
-                                     <ThreeDots
-                                       height="15"
-                                       width="15"
-                                       radius="9"
-                                       color="#4fa94d"
-                                       ariaLabel="three-dots-loading"
-                                       wrapperStyle={{}}
-                                       wrapperClass=""
-                                       visible={true}
-                                     />
-                                   </div>
-                                 }
-                            </span>
-                    </div>
+                    {
+                        tariffLimits.eventFiltersInfo.companyLimit ?
+                            <>
+                                <div className={s.usedCompaniesWrapper}>
+                                    <span className={s.usedCompanies}>Использовано компаний</span>
+                                    <span className={s.usedCompaniesAmount}>
+                                {tariffLimits && tariffLimits?.eventFiltersInfo?.usedCompanyCount}</span>
+                                </div>
+                                <div className={s.companiesLimitWrapper}>
+                                    <span className={s.companiesLimit}>Лимит по компаниям</span>
+                                    <span
+                                        className={s.limitAmount}>{tariffLimits && tariffLimits?.eventFiltersInfo?.companyLimit}</span>
+                                </div>
+                            </>
+                            :
+                            <div className={s.loading}>
+                                <ThreeDots
+                                    height="50"
+                                    width="50"
+                                    radius="9"
+                                    color="#4fa94d"
+                                    ariaLabel="three-dots-loading"
+                                    wrapperStyle={{}}
+                                    wrapperClass=""
+                                    visible={true}
+                                />
+                            </div>
+                    }
+
                 </div>
                 <div className={s.loginMenu}>
                     <div className={s.userNameWrapper}>

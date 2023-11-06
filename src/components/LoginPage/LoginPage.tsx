@@ -18,14 +18,13 @@ import {TEventFiltersInfo} from "../../types";
 
 const LOGIN = process.env.USER_LOGIN as string;
 const PASSWORD = process.env.USER_PASSWORD as string;
-console.log(LOGIN, PASSWORD)
 
 export default function LoginPage() {
 
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-    const [isLoginValid, setIsLoginValid] = useState(true);
-    const [isPasswordValid, setIsPasswordValid] = useState(true);
+    const [isLoginValid, setIsLoginValid] = useState(false);
+    const [isPasswordValid, setIsPasswordValid] = useState(false);
 
     const dispatch = useAppDispatch();
     const authorized = useAppSelector((state: RootState) => state.authorization);
@@ -47,17 +46,40 @@ export default function LoginPage() {
                     companyLimit: data.data.eventFiltersInfo.companyLimit
                 }
             })))
+
+        login.length === 0 && setIsLoginValid(false);
+        password.length === 0 && setIsPasswordValid(false);
     }
 
-    function handleEmailInput(e: React.ChangeEvent) {
+    useEffect(() => {
+        validateLogin();
+        validatePassword();
+    }, [login, password]);
+
+    function handleEmailInput(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
         setLogin(target.value);
     }
 
-    function handlePasswordInput(e: React.ChangeEvent) {
+    function handlePasswordInput(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
         setPassword(target.value);
-        !password && setIsPasswordValid(false);
+    }
+
+    function validatePassword() {
+        if (password.length < 6) {
+            setIsPasswordValid(false)
+        } else {
+            setIsPasswordValid(true);
+        }
+    }
+
+    function validateLogin() {
+        if (login.length < 6) {
+            setIsLoginValid(false)
+        } else {
+            setIsLoginValid(true)
+        }
     }
 
     useEffect(() => {
@@ -75,7 +97,6 @@ export default function LoginPage() {
                 // @ts-ignore
                 expire: expirationDate
             }))
-            // await getInfo();
         } else {
             alert('Your login or password are incorrect')
         }
@@ -100,14 +121,14 @@ export default function LoginPage() {
                     <form className={s['form-container__form']}>
                         <div className={s['form__email-input-container']}>
                             <label htmlFor='input'>Логин или номер телефона:</label>
-                            <input className={isPasswordValid ? s['form__input'] : s['form__input_error']} type="email" id="input" value={login}
-                                   onChange={handleEmailInput}/>
+                            <input className={isLoginValid ? s['form__input'] : s['form__input_error']} type="email" id="input" value={login}
+                                   onInput={handleEmailInput}/>
                             {!isLoginValid && <span className={s.errorMessage}>Пожалуйста, введите правильный логин</span>}
                         </div>
                         <div className={s['form__password-input-container']}>
                             <label htmlFor='password'>Пароль</label>
                             <input className={isPasswordValid ? s['form__input'] : s['form__input_error']} type="password" id="password" value={password}
-                                   onChange={handlePasswordInput}/>
+                                   onInput={handlePasswordInput}/>
                             {!isPasswordValid && <span className={s.errorMessage}>Пожалуйста, введите правильный пароль</span>}
                         </div>
                     </form>

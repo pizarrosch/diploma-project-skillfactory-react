@@ -43,36 +43,39 @@
 .sliderContainerWrapper {
   position: relative;
   overflow: hidden;
-  z-index: 0;
-
-  .rightArrow,
-  {
-    position: absolute;
-    right: 10px;
-  }
-
-  .leftArrow,
-  {
-    position: absolute;
-    left: 2px;
-  }
 
   .sliderContainer {
     display: flex;
-    //gap: 25px;
     align-items: center;
     margin-bottom: 50px;
 
     .cardsContainer {
       display: flex;
       gap: 30px;
-      width: 1260px;
+      width: 1250px;
       padding: 10px 10px;
-    }
-  }
+      z-index: 0;
 
-  .sliderContainer::after {
-    content: selector-append('.rightArrow');
+      .rightArrow,
+      {
+        position: absolute;
+        right: 10px;
+        top: 95px;
+        cursor: pointer;
+        user-select: none;
+        z-index: 1;
+      }
+
+      .leftArrow,
+      {
+        position: absolute;
+        top: 95px;
+        margin-left: -8px;
+        cursor: pointer;
+        user-select: none;
+        z-index: 1;
+      }
+    }
   }
 }
 
@@ -177,6 +180,19 @@
 
     .sliderContainer {
       margin-bottom: 20px;
+
+      .cardsContainer {
+        margin-left: 20px;
+
+        .rightArrow {
+          right: 15px;
+        }
+
+        .leftArrow {
+          left: 7px;
+          z-index: 1;
+        }
+      }
     }
 
     .sittingManImg {
@@ -202,6 +218,11 @@
     .getDataByInnButton {
       margin-top: 20px;
     }
+  }
+
+  .loginButton {
+    width: 305px;
+    font-size: 20px;
   }
 }
 

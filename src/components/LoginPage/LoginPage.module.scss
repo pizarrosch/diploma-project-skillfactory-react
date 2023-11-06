@@ -129,3 +129,80 @@
     }
   }
 }
+
+@media all and (max-width: 400px) {
+  .root {
+    flex-direction: column;
+    margin: 0 10px;
+
+    .paragraph {
+      font-size: 22px;
+      width: 383px;
+      margin-top: 40px;
+    }
+
+    .key-lock {
+      top: 185px;
+      left: 70px;
+    }
+
+    .key-carriers-img {
+      position: absolute;
+      bottom: 50px;
+      left: -100px;
+      width: 335px;
+      height: 356px;
+    }
+
+    .login-form-container {
+      width: 335px;
+      height: 504px;
+      margin-top: 20px;
+      margin-bottom: 450px;
+
+      .login-signup-container {
+
+        .login-signup-container__login {
+          width: 103px;
+        }
+
+        .login-signup-container__signup {
+          width: 182px;
+        }
+      }
+
+      .alternative-login {
+        margin: 25px auto 0;
+
+        .account-name-container {
+          gap: 5px;
+        }
+    }
+
+    .form-container {
+
+      .form-container__form {
+
+        .form__email-input-container {
+          gap: 10px;
+
+          .form__input,
+          .form__input_error,
+          {
+            width: 305px;
+          }
+        }
+
+        .form__password-input-container {
+          gap: 10px;
+
+          .form__input,
+          .form__input_error {
+            width: 305px;
+          }
+        }
+      }
+    }
+  }
+  }
+}
