@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import s from '../Navigation.module.scss';
 import {Link} from "react-router-dom";
 import {authorize} from "../../../redux/slices/authSlice";
@@ -13,15 +13,7 @@ import menuCake from '../../../assets/options-cake.svg';
 export default function NavigationAuthorized() {
 
     const dispatch = useAppDispatch();
-    const authorized = useAppSelector((state: RootState) => state.authorization);
     const tariffLimits: TEventFiltersInfo = useAppSelector((state: RootState) => state.tariffLimits)
-    const [usedLimit, setUsedLimit] = useState(0);
-    const [companyLimit, setCompanyLimit] = useState(0);
-
-
-    // useEffect(() => {
-    //      setTimeout(() => setUsedLimit(tariffLimits.eventFiltersInfo.usedCompanyCount), 2000) ;
-    // }, [tariffLimits.eventFiltersInfo.usedCompanyCount]);
 
     return (
         <div className={s.root}>
@@ -39,7 +31,7 @@ export default function NavigationAuthorized() {
             <div className={s.menuWrapper}>
                 <div className={s.stats}>
                     {
-                        tariffLimits.eventFiltersInfo.companyLimit ?
+                        tariffLimits?.eventFiltersInfo?.companyLimit ?
                             <>
                                 <div className={s.usedCompaniesWrapper}>
                                     <span className={s.usedCompanies}>Использовано компаний</span>
@@ -77,7 +69,6 @@ export default function NavigationAuthorized() {
                                 expire: ''
                             }));
 
-                            // Временно обнуляющая функция. Будет обнулятсья позже по истечении срока действия токена
                             dispatch(getLimitInfo({
                                 eventFiltersInfo: {
                                     usedCompanyCount: 0,

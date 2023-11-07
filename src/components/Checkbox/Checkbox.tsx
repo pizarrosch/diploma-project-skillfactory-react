@@ -1,8 +1,6 @@
 import s from "../SearchForm/SearchForm.module.scss";
 import checkmark from "../../assets/checkmark.svg";
 import React from "react";
-import {useAppSelector} from "../../hooks/hooks";
-import {RootState} from "../../redux/store";
 
 type TCheckboxProps = {
     children: string,
@@ -12,8 +10,6 @@ type TCheckboxProps = {
 }
 
 export default function Checkbox({children, id, onClick, isChecked}: TCheckboxProps) {
-
-    const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
 
     return (
         <div className={s['checkbox-options-container__option']} id={id.toString()} onClick={onClick}>

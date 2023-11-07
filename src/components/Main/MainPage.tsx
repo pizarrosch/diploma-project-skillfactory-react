@@ -36,14 +36,14 @@ export default function MainPage() {
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus)
     const dispatch = useAppDispatch();
 
-       function addDefaultStatus() {
-         checkboxData.map(status => {
-           checkboxStatus.length === 0 && dispatch(initializeStatus({
+    function addDefaultStatus() {
+        checkboxData.map(status => {
+            checkboxStatus.length === 0 && dispatch(initializeStatus({
                 active: false,
                 id: status.id
             }));
 
-             checkboxOptions.length === 0 && dispatch(initializeOptions({
+            checkboxOptions.length === 0 && dispatch(initializeOptions({
                 id: status.id,
                 option: status.english,
                 status: status.status
@@ -67,7 +67,7 @@ export default function MainPage() {
                         onClick={() => {
                             addDefaultStatus();
                         }
-                      }
+                        }
                       >
                         <Link to={'/searchForm'}>
                           Запросить данные

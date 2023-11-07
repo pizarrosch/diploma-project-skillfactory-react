@@ -68,8 +68,9 @@ export default function ResultsPage() {
                     {
                         stats.length === 0 ? 'В данном промежутке времени информация отсутствует' : stats ? stats[0].data?.map((stat: TTotalDocsResult, id) => {
                                 const date = new Date(stat.date);
-                                return <StatsCard range={date.toLocaleDateString('ru-Ru')} total={stats[0].data[id]?.value!} risks={stats[1].data[id]?.value!}/>
-                        }) :
+                                return <StatsCard range={date.toLocaleDateString('ru-Ru')} total={stats[0].data[id]?.value!}
+                                                  risks={stats[1].data[id]?.value!}/>
+                            }) :
                             <div>
                                 <ThreeDots
                                     height="40"
@@ -97,7 +98,8 @@ export default function ResultsPage() {
                 }
             </div>
             <div className={s.buttonContainer}>
-                {slicedArticles.length === articles.length ? '' : <button className={st.showMoreButton} onClick={getMoreArticles}>Показать больше</button>}
+                {slicedArticles.length === articles.length ? '' :
+                    <button className={st.showMoreButton} onClick={getMoreArticles}>Показать больше</button>}
             </div>
         </div>
     )

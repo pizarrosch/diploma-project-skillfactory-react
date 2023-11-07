@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import s from './SearchForm.module.scss';
 import st from '../Main/Main.module.scss';
 import document from '../../assets/Document.svg';
@@ -6,7 +6,7 @@ import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
 import {Link} from "react-router-dom";
 import axios from "axios";
-import {TArticle, TEncodedIdObject, TEncodedIds, TObjectItems, TSearchData, TSearchResults} from "../../types";
+import {TArticle, TEncodedIdObject, TEncodedIds, TSearchData, TSearchResults} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import {RootState} from "../../redux/store";
 import localStorage from "redux-persist/es/storage";
@@ -71,8 +71,8 @@ export default function SearchForm() {
         sortDirectionType: "asc",
         sortType: "issueDate",
         issueDateInterval: {
-            startDate: startDate, //&& date.toISOString().slice(0, -5) + '+03:00'
-            endDate: endDate //&& date.toISOString().slice(0, -5) + '+03:00'
+            startDate: startDate,
+            endDate: endDate
         }
     }
 
