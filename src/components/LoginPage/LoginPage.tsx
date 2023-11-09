@@ -6,61 +6,94 @@ import googleSign from '../../assets/google-sign.png';
 import facebookSign from '../../assets/facebook-sign.png';
 import yandexSign from '../../assets/yandex-sign.png';
 import React, {useEffect, useState} from "react";
-import {verifyRequisites} from "../../api/auth";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import localStorage from "redux-persist/es/storage";
 import {authorize} from "../../redux/slices/authSlice";
-import {RootState} from "../../redux/store";
 import {Link} from "react-router-dom";
 import {getLimitInfo} from "../../redux/slices/eventFiltersSlice";
-import axios from "axios";
-import {TEventFiltersInfo} from "../../types";
+import {IAuthCredentials} from "../../types";
+import api from "../../api/http";
+import {RootState} from "../../redux/store";
 
 export default function LoginPage() {
 
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-    const [isLoginValid, setIsLoginValid] = useState(false);
-    const [isPasswordValid, setIsPasswordValid] = useState(false);
+    const [isLoginValid, setIsLoginValid] = useState(true);
+    const [isPasswordValid, setIsPasswordValid] = useState(true);
+    const [error, setError] = useState({
+        state: false,
+        message: false
+    });
 
     const dispatch = useAppDispatch();
-    const authorized = useAppSelector((state: RootState) => state.authorization);
+    const token = useAppSelector((state: RootState) => state.authorization.accessToken);
+
+     async function verifyRequisites(
+        credentials: IAuthCredentials,
+    ): Promise<void> {
+        try {
+            await api.post(
+                `/api/v1/account/login`,
+                credentials
+            )
+                .then((response) => {
+                    localStorage.setItem('token', response.data.accessToken);
+                    localStorage.setItem('expire', response.data.expire!);
+                    dispatch(authorize({
+                        accessToken: `Bearer ${response.data.accessToken!}`,
+                        expire: response.data.expire!
+                    }))
+                })
+        } catch (e: any) {
+            console.log(e.message);
+            setError({state: true, message: false});
+        }
+    }
 
     async function getInfo() {
-        await getVerificationStatus();
-        const token = await localStorage.getItem('token');
-        axios.get("https://gateway.scan-interfax.ru/api/v1/account/info", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token!}`
-            },
-        })
-
-            .then((data: axios.AxiosResponse<TEventFiltersInfo>) => dispatch(getLimitInfo({
+        await verifyRequisites({login: login!, password: password!});
+        api.get("/api/v1/account/info")
+            .then((data) => dispatch(getLimitInfo({
                 eventFiltersInfo: {
                     usedCompanyCount: data.data.eventFiltersInfo.usedCompanyCount,
                     companyLimit: data.data.eventFiltersInfo.companyLimit
                 }
             })))
 
-        login.length === 0 && setIsLoginValid(false);
-        password.length === 0 && setIsPasswordValid(false);
-    }
-
-    useEffect(() => {
+        // login.length === 0 && setIsLoginValid(false);
+        // password.length === 0 && setIsPasswordValid(false);
         validateLogin();
         validatePassword();
-    }, [login, password]);
+        if(!token && login === '' && password === '') {
+            setError({state: false, message: false});
+        } else if (!token && error.state) {
+            setError({state: false, message: true})
+        }
+    }
+
+    // useEffect(() => {
+    //     validateLogin();
+    //     validatePassword();
+    //     console.log(login, password)
+    // }, [login, password]);
 
     function handleEmailInput(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
         setLogin(target.value);
+        if (error) {
+            setIsLoginValid(true);
+            setIsPasswordValid(true);
+        }
     }
 
     function handlePasswordInput(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
         setPassword(target.value);
+        if (error) {
+            setIsLoginValid(true);
+            setIsPasswordValid(true);
+        }
     }
 
     function validatePassword() {
@@ -79,25 +112,21 @@ export default function LoginPage() {
         }
     }
 
-    useEffect(() => {
-        !login && setIsLoginValid(false);
-    }, [login]);
-
-    async function getVerificationStatus() {
-        if (login === 'sf_student9' && password === 'DTdEwAn') {
-            await verifyRequisites({login: `${login}`, password: `${password}`});
-            const token = await localStorage.getItem('token');
-            const expirationDate = await localStorage.getItem('expire');
-
-            dispatch(authorize({
-                accessToken: `Bearer ${token!}`,
-                // @ts-ignore
-                expire: expirationDate
-            }))
-        } else {
-            alert('Your login or password are incorrect')
-        }
-    }
+    // async function getVerificationStatus() {
+    //     if (login === 'sf_student9' && password === 'DTdEwAn') {
+    //         await verifyRequisites({login: `${login}`, password: `${password}`});
+    //         const token = await localStorage.getItem('token');
+    //         const expirationDate = await localStorage.getItem('expire');
+    //
+    //         dispatch(authorize({
+    //             accessToken: `Bearer ${token!}`,
+    //             // @ts-ignore
+    //             expire: expirationDate
+    //         }))
+    //     } else {
+    //         alert('Your login or password are incorrect')
+    //     }
+    // }
 
     return (
         <div className={s.root}>
@@ -127,10 +156,11 @@ export default function LoginPage() {
                             <input className={isPasswordValid ? s['form__input'] : s['form__input_error']} type="password" id="password" value={password}
                                    onInput={handlePasswordInput}/>
                             {!isPasswordValid && <span className={s.errorMessage}>Пожалуйста, введите правильный пароль</span>}
+                            {error.message && <span className={s.errorMessage}>Неправильный логин или пароль</span>}
                         </div>
                     </form>
                 </div>
-                <Link to={login ? '/dashboard' : '/login'}>
+                <Link to={!isLoginValid && !isPasswordValid ? '/dashboard' : '/login'}>
                     <button type='submit' className={st.loginButton} onClick={getInfo}>
                         Войти
                     </button>
