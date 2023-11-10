@@ -5,7 +5,7 @@ import keyLock from '../../assets/key-lock.svg';
 import googleSign from '../../assets/google-sign.png';
 import facebookSign from '../../assets/facebook-sign.png';
 import yandexSign from '../../assets/yandex-sign.png';
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import localStorage from "redux-persist/es/storage";
 import {authorize} from "../../redux/slices/authSlice";
@@ -29,7 +29,7 @@ export default function LoginPage() {
     const dispatch = useAppDispatch();
     const token = useAppSelector((state: RootState) => state.authorization.accessToken);
 
-     async function verifyRequisites(
+    async function verifyRequisites(
         credentials: IAuthCredentials,
     ): Promise<void> {
         try {
@@ -61,22 +61,21 @@ export default function LoginPage() {
                 }
             })))
 
-        // login.length === 0 && setIsLoginValid(false);
-        // password.length === 0 && setIsPasswordValid(false);
         validateLogin();
         validatePassword();
-        if(!token && login === '' && password === '') {
+        if (!token && login === '' && password === '') {
             setError({state: false, message: false});
         } else if (!token && error.state) {
-            setError({state: false, message: true})
+            setError({state: false, message: true});
+        }
+
+        const localStorageToken = await localStorage.getItem('token') as string;
+
+    if (localStorageToken) {
+            setIsLoginValid(true);
+            setIsPasswordValid(true);
         }
     }
-
-    // useEffect(() => {
-    //     validateLogin();
-    //     validatePassword();
-    //     console.log(login, password)
-    // }, [login, password]);
 
     function handleEmailInput(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
@@ -112,22 +111,6 @@ export default function LoginPage() {
         }
     }
 
-    // async function getVerificationStatus() {
-    //     if (login === 'sf_student9' && password === 'DTdEwAn') {
-    //         await verifyRequisites({login: `${login}`, password: `${password}`});
-    //         const token = await localStorage.getItem('token');
-    //         const expirationDate = await localStorage.getItem('expire');
-    //
-    //         dispatch(authorize({
-    //             accessToken: `Bearer ${token!}`,
-    //             // @ts-ignore
-    //             expire: expirationDate
-    //         }))
-    //     } else {
-    //         alert('Your login or password are incorrect')
-    //     }
-    // }
-
     return (
         <div className={s.root}>
             <div>
@@ -147,15 +130,19 @@ export default function LoginPage() {
                     <form className={s['form-container__form']}>
                         <div className={s['form__email-input-container']}>
                             <label htmlFor='input'>Логин или номер телефона:</label>
-                            <input className={isLoginValid ? s['form__input'] : s['form__input_error']} type="email" id="input" value={login}
+                            <input className={isLoginValid ? s['form__input'] : s['form__input_error']} type="email"
+                                   id="input" value={login}
                                    onInput={handleEmailInput}/>
-                            {!isLoginValid && <span className={s.errorMessage}>Пожалуйста, введите правильный логин</span>}
+                            {!isLoginValid &&
+                              <span className={s.errorMessage}>Пожалуйста, введите правильный логин</span>}
                         </div>
                         <div className={s['form__password-input-container']}>
                             <label htmlFor='password'>Пароль</label>
-                            <input className={isPasswordValid ? s['form__input'] : s['form__input_error']} type="password" id="password" value={password}
+                            <input className={isPasswordValid ? s['form__input'] : s['form__input_error']}
+                                   type="password" id="password" value={password}
                                    onInput={handlePasswordInput}/>
-                            {!isPasswordValid && <span className={s.errorMessage}>Пожалуйста, введите правильный пароль</span>}
+                            {!isPasswordValid &&
+                              <span className={s.errorMessage}>Пожалуйста, введите правильный пароль</span>}
                             {error.message && <span className={s.errorMessage}>Неправильный логин или пароль</span>}
                         </div>
                     </form>

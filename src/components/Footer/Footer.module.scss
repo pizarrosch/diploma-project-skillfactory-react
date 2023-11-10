@@ -6,7 +6,9 @@
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
+  width: 100vw;
+  gap: 350px;
 
   .contactsDataContainer {
     display: flex;

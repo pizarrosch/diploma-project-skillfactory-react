@@ -1,11 +1,11 @@
 import axios from 'axios';
-// import localStorage from "redux-persist/es/storage";
 
-export const API_URL = process.env.BASE_URL;
+export const API_URL = process.env.REACT_APP_BASE_URL;
+console.log(API_URL)
 
 const api = axios.create({
     withCredentials: false,
-    baseURL: 'https://gateway.scan-interfax.ru',
+    baseURL: API_URL,
     headers: {
         "Content-Type": 'application/json'
     }

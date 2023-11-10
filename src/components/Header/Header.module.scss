@@ -1,9 +1,12 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   height: 93px;
   margin: 0 40px;
+  width: 100vw;
+  padding: 0 200px;
+  box-sizing: border-box;
 }
 
 @media all and (max-width: 400px) {
