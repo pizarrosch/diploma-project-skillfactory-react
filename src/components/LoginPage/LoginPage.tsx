@@ -26,8 +26,6 @@ export default function LoginPage() {
         login: '',
         password: ''
     })
-    // const [login, setLogin] = useState('');
-    // const [password, setPassword] = useState('');
     const [isLoginValid, setIsLoginValid] = useState(false);
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [error, setError] = useState({
@@ -38,11 +36,6 @@ export default function LoginPage() {
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state: RootState) => state.authorization);
 
-    useEffect(() => {
-        console.log(form.login);
-        console.log(form.password)
-    }, [form.login,form.password]);
-
     async function verifyRequisites(
         credentials: IAuthCredentials,
     ): Promise<void> {
@@ -52,43 +45,50 @@ export default function LoginPage() {
                 credentials
             )
                 .then((response) => {
-                    localStorage.setItem('token', response.data.accessToken);
-                    localStorage.setItem('expire', response.data.expire!);
-                    dispatch(authorize({
-                        accessToken: `Bearer ${response.data.accessToken!}`,
-                        expire: response.data.expire!
-                    }))
+                    if (response.status === 200) {
+                        localStorage.setItem('token', response.data.accessToken);
+                        localStorage.setItem('expire', response.data.expire!);
+                        dispatch(authorize({
+                            accessToken: `Bearer ${response.data.accessToken!}`,
+                            expire: response.data.expire!
+                        }))
+                    } else return;
                 })
         } catch (e: any) {
             console.log(e.message);
-            setError({state: true, message: false});
         }
     }
 
     async function getInfo() {
-        await verifyRequisites({login: form.login!, password: form.password!});
-        api.get("/api/v1/account/info")
-            .then((data) => dispatch(getLimitInfo({
-                eventFiltersInfo: {
-                    usedCompanyCount: data.data.eventFiltersInfo.usedCompanyCount,
-                    companyLimit: data.data.eventFiltersInfo.companyLimit
-                }
-            })))
+        try{
+            await verifyRequisites({login: form.login!, password: form.password!});
 
-        validateLogin();
-        validatePassword();
-        if (!auth.accessToken && form.login === '' && form.password === '') {
-            setError({state: false, message: false});
-        } else if (!auth.accessToken && error.state) {
-            setError({state: false, message: true});
+            const token = await localStorage.getItem('token');
+
+            if (token) {
+                api.get("/api/v1/account/info")
+                    .then((data) => dispatch(getLimitInfo({
+                        eventFiltersInfo: {
+                            usedCompanyCount: data.data.eventFiltersInfo.usedCompanyCount,
+                            companyLimit: data.data.eventFiltersInfo.companyLimit
+                        }
+                    })))
+            }
+
+            validateLogin();
+            validatePassword();
+            if (!auth.accessToken && form.login === '') {
+                setError({state: true, message: false});
+                setIsLoginValid(false);
+            } else if (!auth.accessToken && form.password === '') {
+                setError({state: true, message: false});
+                setIsPasswordValid(false);
+            } else if (!auth.accessToken) {
+                setError({state: true, message: true});
+            }
+        } catch (e: any) {
+            console.log(e.message);
         }
-    //
-    //     const localStorageToken = await localStorage.getItem('token') as string;
-    //
-    // if (localStorageToken) {
-    //         setIsLoginValid(true);
-    //         setIsPasswordValid(true);
-    //     }
     }
 
     function handleFormInput(e: React.FormEvent) {
@@ -109,32 +109,13 @@ export default function LoginPage() {
         }
 
         if (error.state) {
-                setIsLoginValid(true);
-                setIsPasswordValid(true);
+                setError({state: false, message: false})
             }
-
-        // setForm({
-        //     login: target.type === 'login' && target.value,
-        //     password: target.type === 'password' && target.value
-        // });
-        // if (error.state) {
-        //     setIsLoginValid(true);
-        //     setIsPasswordValid(true);
-        // }
     }
-
-    // function handlePasswordInput(e: React.FormEvent) {
-    //     const target = e.target as HTMLInputElement;
-    //     setPassword(target.value);
-    //     if (error.state) {
-    //         setIsLoginValid(true);
-    //         setIsPasswordValid(true);
-    //     }
-    // }
 
     function validatePassword() {
         if (form.password!.length < 6) {
-            setIsPasswordValid(false)
+            setIsPasswordValid(false);
         } else {
             setIsPasswordValid(true);
         }
@@ -142,9 +123,9 @@ export default function LoginPage() {
 
     function validateLogin() {
         if (form.login!.length < 6) {
-            setIsLoginValid(false)
+            setIsLoginValid(false);
         } else {
-            setIsLoginValid(true)
+            setIsLoginValid(true);
         }
     }
 
@@ -167,24 +148,24 @@ export default function LoginPage() {
                     <form className={s['form-container__form']}>
                         <div className={s['form__email-input-container']}>
                             <label htmlFor='input'>Логин или номер телефона:</label>
-                            <input className={isLoginValid ? s['form__input'] : s['form__input_error']} type="email"
+                            <input className={!error.state ? s['form__input'] : s['form__input_error']} type="email"
                                    id="input" value={form.login}
                                    onInput={handleFormInput}/>
                             {!isLoginValid && error.state &&
-                              <span className={s.errorMessage}>Пожалуйста, введите правильный логин</span>}
+                              <span className={s.errorMessage}>Введено меньше 6 символов</span>}
                         </div>
                         <div className={s['form__password-input-container']}>
                             <label htmlFor='password'>Пароль</label>
-                            <input className={isPasswordValid ? s['form__input'] : s['form__input_error']}
+                            <input className={!error.state  ? s['form__input'] : s['form__input_error']}
                                    type="password" id="password" value={form.password}
                                    onInput={handleFormInput}/>
                             {!isPasswordValid && error.state &&
-                              <span className={s.errorMessage}>Пожалуйста, введите правильный пароль</span>}
-                            {error.state && <span className={s.errorMessage}>Неправильный логин или пароль</span>}
+                              <span className={s.errorMessage}>Введено меньше 6 символов</span>}
+                            {error.message && <span className={s.errorMessage}>Неправильный логин или пароль</span>}
                         </div>
                     </form>
                 </div>
-                <Link to={isLoginValid && isPasswordValid ? '/dashboard' : '/login'}>
+                <Link to={isLoginValid && isPasswordValid && form.login && form.password && !error.state && !error.message ? '/dashboard' : '/login'}>
                     <button type='submit' className={st.loginButton} onClick={getInfo}>
                         Войти
                     </button>
