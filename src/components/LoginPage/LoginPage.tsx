@@ -5,7 +5,7 @@ import keyLock from '../../assets/key-lock.svg';
 import googleSign from '../../assets/google-sign.png';
 import facebookSign from '../../assets/facebook-sign.png';
 import yandexSign from '../../assets/yandex-sign.png';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import localStorage from "redux-persist/es/storage";
 import {authorize} from "../../redux/slices/authSlice";
@@ -15,19 +15,33 @@ import {IAuthCredentials} from "../../types";
 import api from "../../api/http";
 import {RootState} from "../../redux/store";
 
+type TInputForm = {
+    login?: string,
+    password?: string
+}
+
 export default function LoginPage() {
 
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
-    const [isLoginValid, setIsLoginValid] = useState(true);
-    const [isPasswordValid, setIsPasswordValid] = useState(true);
+    const [form, setForm] = useState<TInputForm>({
+        login: '',
+        password: ''
+    })
+    // const [login, setLogin] = useState('');
+    // const [password, setPassword] = useState('');
+    const [isLoginValid, setIsLoginValid] = useState(false);
+    const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [error, setError] = useState({
         state: false,
         message: false
     });
 
     const dispatch = useAppDispatch();
-    const token = useAppSelector((state: RootState) => state.authorization.accessToken);
+    const auth = useAppSelector((state: RootState) => state.authorization);
+
+    useEffect(() => {
+        console.log(form.login);
+        console.log(form.password)
+    }, [form.login,form.password]);
 
     async function verifyRequisites(
         credentials: IAuthCredentials,
@@ -52,7 +66,7 @@ export default function LoginPage() {
     }
 
     async function getInfo() {
-        await verifyRequisites({login: login!, password: password!});
+        await verifyRequisites({login: form.login!, password: form.password!});
         api.get("/api/v1/account/info")
             .then((data) => dispatch(getLimitInfo({
                 eventFiltersInfo: {
@@ -63,40 +77,63 @@ export default function LoginPage() {
 
         validateLogin();
         validatePassword();
-        if (!token && login === '' && password === '') {
+        if (!auth.accessToken && form.login === '' && form.password === '') {
             setError({state: false, message: false});
-        } else if (!token && error.state) {
+        } else if (!auth.accessToken && error.state) {
             setError({state: false, message: true});
         }
-
-        const localStorageToken = await localStorage.getItem('token') as string;
-
-    if (localStorageToken) {
-            setIsLoginValid(true);
-            setIsPasswordValid(true);
-        }
+    //
+    //     const localStorageToken = await localStorage.getItem('token') as string;
+    //
+    // if (localStorageToken) {
+    //         setIsLoginValid(true);
+    //         setIsPasswordValid(true);
+    //     }
     }
 
-    function handleEmailInput(e: React.FormEvent) {
+    function handleFormInput(e: React.FormEvent) {
         const target = e.target as HTMLInputElement;
-        setLogin(target.value);
-        if (error) {
-            setIsLoginValid(true);
-            setIsPasswordValid(true);
+
+        if (target.type === 'email') {
+            setForm({
+                login: target.value,
+                password: form.password
+            })
         }
+
+        if (target.type === 'password') {
+            setForm({
+                login: form.login,
+                password: target.value
+            })
+        }
+
+        if (error.state) {
+                setIsLoginValid(true);
+                setIsPasswordValid(true);
+            }
+
+        // setForm({
+        //     login: target.type === 'login' && target.value,
+        //     password: target.type === 'password' && target.value
+        // });
+        // if (error.state) {
+        //     setIsLoginValid(true);
+        //     setIsPasswordValid(true);
+        // }
     }
 
-    function handlePasswordInput(e: React.FormEvent) {
-        const target = e.target as HTMLInputElement;
-        setPassword(target.value);
-        if (error) {
-            setIsLoginValid(true);
-            setIsPasswordValid(true);
-        }
-    }
+    // function handlePasswordInput(e: React.FormEvent) {
+    //     const target = e.target as HTMLInputElement;
+    //     setPassword(target.value);
+    //     if (error.state) {
+    //         setIsLoginValid(true);
+    //         setIsPasswordValid(true);
+    //     }
+    // }
 
     function validatePassword() {
-        if (password.length < 6) {
+        if (form.password!.length < 6) {
             setIsPasswordValid(false)
         } else {
             setIsPasswordValid(true);
@@ -104,7 +141,7 @@ export default function LoginPage() {
     }
 
     function validateLogin() {
-        if (login.length < 6) {
+        if (form.login!.length < 6) {
             setIsLoginValid(false)
         } else {
             setIsLoginValid(true)
@@ -131,23 +168,23 @@ export default function LoginPage() {
                         <div className={s['form__email-input-container']}>
                             <label htmlFor='input'>Логин или номер телефона:</label>
                             <input className={isLoginValid ? s['form__input'] : s['form__input_error']} type="email"
-                                   id="input" value={login}
-                                   onInput={handleEmailInput}/>
-                            {!isLoginValid &&
+                                   id="input" value={form.login}
+                                   onInput={handleFormInput}/>
+                            {!isLoginValid && error.state &&
                               <span className={s.errorMessage}>Пожалуйста, введите правильный логин</span>}
                         </div>
                         <div className={s['form__password-input-container']}>
                             <label htmlFor='password'>Пароль</label>
                             <input className={isPasswordValid ? s['form__input'] : s['form__input_error']}
-                                   type="password" id="password" value={password}
-                                   onInput={handlePasswordInput}/>
-                            {!isPasswordValid &&
+                                   type="password" id="password" value={form.password}
+                                   onInput={handleFormInput}/>
+                            {!isPasswordValid && error.state &&
                               <span className={s.errorMessage}>Пожалуйста, введите правильный пароль</span>}
-                            {error.message && <span className={s.errorMessage}>Неправильный логин или пароль</span>}
+                            {error.state && <span className={s.errorMessage}>Неправильный логин или пароль</span>}
                         </div>
                     </form>
                 </div>
-                <Link to={!isLoginValid && !isPasswordValid ? '/dashboard' : '/login'}>
+                <Link to={isLoginValid && isPasswordValid ? '/dashboard' : '/login'}>
                     <button type='submit' className={st.loginButton} onClick={getInfo}>
                         Войти
                     </button>

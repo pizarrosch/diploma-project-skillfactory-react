@@ -16,7 +16,7 @@ export default function NavigationAuthorized() {
     const tariffLimits: TEventFiltersInfo = useAppSelector((state: RootState) => state.tariffLimits)
 
     return (
-        <div className={s.root}>
+        <div className={s.rootAuth}>
             <nav className={s.navigation}>
                 <ul className={s['navigation-list']}>
                     <li className={s['navigation-list__item']}>

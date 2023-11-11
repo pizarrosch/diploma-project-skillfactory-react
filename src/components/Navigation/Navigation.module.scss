@@ -1,8 +1,15 @@
-.root {
+.rootUnauth,
+.rootAuth
+{
   display: flex;
   align-items: center;
-  gap: 140px;
+  gap: 300px;
   margin-right: 50px;
+}
+
+.rootAuth {
+  gap: 140px;
+}
 
   .menuWrapper {
     display: flex;
@@ -117,7 +124,6 @@
       margin: 0 auto;
     }
   }
-}
 
 .menuCake {
   display: none;

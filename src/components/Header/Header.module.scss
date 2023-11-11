@@ -1,12 +1,13 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  //justify-content: space-between;
   height: 93px;
+  gap: 350px;
   margin: 0 40px;
-  width: 100vw;
-  padding: 0 200px;
-  box-sizing: border-box;
+  width: 1440px;
+  //padding: 0 100px;
+  //box-sizing: border-box;
 }
 
 @media all and (max-width: 400px) {

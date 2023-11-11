@@ -4,7 +4,7 @@ import st from '../Main/Main.module.scss';
 import document from '../../assets/Document.svg';
 import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
-import {Link} from "react-router-dom";
+import {Link, redirect} from "react-router-dom";
 import axios from "axios";
 import {TArticle, TEncodedIdObject, TEncodedIds, TSearchData, TSearchResults} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
@@ -17,6 +17,7 @@ import {count} from "../../redux/slices/eventFiltersSlice";
 import {checkboxData} from "../../data";
 import Checkbox from "../Checkbox/Checkbox";
 import {checkOptions, checkStatus} from "../../redux/slices/checkboxSlice";
+import api from "../../api/http";
 
 export default function SearchForm() {
 
@@ -79,7 +80,7 @@ export default function SearchForm() {
     async function searchDocs(searchData: TSearchData) {
         const token = await localStorage.getItem('token');
         try {
-            await axios.post('https://gateway.scan-interfax.ru/api/v1/objectsearch/histograms',
+            await api.post('/api/v1/objectsearch/histograms',
                 searchData,
                 {
                     headers: {
@@ -91,14 +92,16 @@ export default function SearchForm() {
                     dispatch(getStats(response.data.data.map((resultData: TSearchResults[]) => resultData)));
                 });
         } catch (err: any) {
-            alert(err.message)
+           if (err.status === 401) {
+               redirect('/login');
+           }
         }
     }
 
     async function searchObjects(searchData: TSearchData) {
         const token = await localStorage.getItem('token');
         try {
-            const response = await axios.post('https://gateway.scan-interfax.ru/api/v1/objectsearch',
+            const response = await api.post('/api/v1/objectsearch',
                 searchData,
                 {
                     headers: {
@@ -117,7 +120,7 @@ export default function SearchForm() {
     async function getDocs(ids: TEncodedIds) {
         const token = await localStorage.getItem('token');
         try {
-            const response = await axios.post('https://gateway.scan-interfax.ru/api/v1/documents',
+            const response = await api.post('/api/v1/documents',
                 ids,
                 {
                     headers: {

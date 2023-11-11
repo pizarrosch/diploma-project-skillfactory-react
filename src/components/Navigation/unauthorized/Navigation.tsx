@@ -6,7 +6,7 @@ import menuCake from "../../../assets/options-cake.svg";
 export default function Navigation() {
 
     return (
-        <div className={s.root}>
+        <div className={s.rootUnauth}>
             <nav className={s.navigation}>
                 <ul className={s['navigation-list']}>
                         <li className={s['navigation-list__item']}>
