@@ -61,9 +61,9 @@ export default function LoginPage() {
 
     async function getInfo() {
         try{
-            await verifyRequisites({login: form.login!, password: form.password!});
+            await verifyRequisites({login: form.login!, password: form.password!})
 
-            const token = await localStorage.getItem('token');
+            const token = await localStorage.getItem('token') as string;
 
             if (token) {
                 api.get("/api/v1/account/info")
@@ -77,13 +77,13 @@ export default function LoginPage() {
 
             validateLogin();
             validatePassword();
-            if (!auth.accessToken && form.login === '') {
+            if (!token && form.login === '') {
                 setError({state: true, message: false});
                 setIsLoginValid(false);
-            } else if (!auth.accessToken && form.password === '') {
+            } else if (!token && form.password === '') {
                 setError({state: true, message: false});
                 setIsPasswordValid(false);
-            } else if (!auth.accessToken) {
+            } else if (!token) {
                 setError({state: true, message: true});
             }
         } catch (e: any) {
@@ -165,7 +165,7 @@ export default function LoginPage() {
                         </div>
                     </form>
                 </div>
-                <Link to={isLoginValid && isPasswordValid && form.login && form.password && !error.state && !error.message ? '/dashboard' : '/login'}>
+                <Link to={!error.state && !error.message ? '/dashboard' : '/login'}>
                     <button type='submit' className={st.loginButton} onClick={getInfo}>
                         Войти
                     </button>

@@ -9,6 +9,7 @@ import {TEventFiltersInfo} from "../../../types";
 import {getLimitInfo} from "../../../redux/slices/eventFiltersSlice";
 import {ThreeDots} from "react-loader-spinner";
 import menuCake from '../../../assets/options-cake.svg';
+import localStorage from "redux-persist/es/storage";
 
 export default function NavigationAuthorized() {
 
@@ -75,6 +76,9 @@ export default function NavigationAuthorized() {
                                     companyLimit: 0
                                 }
                             }))
+
+                             localStorage.removeItem('token');
+                             localStorage.removeItem('expire');
                         }}>Выйти</span>
                     </div>
                     <div>
