@@ -5,7 +5,6 @@ import document from '../../assets/Document.svg';
 import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
 import {Link, redirect} from "react-router-dom";
-import axios from "axios";
 import {TArticle, TEncodedIdObject, TEncodedIds, TSearchData, TSearchResults} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import {RootState} from "../../redux/store";
@@ -18,11 +17,12 @@ import {checkboxData} from "../../data";
 import Checkbox from "../Checkbox/Checkbox";
 import {checkOptions, checkStatus} from "../../redux/slices/checkboxSlice";
 import api from "../../api/http";
+import {TIsError} from "../../searchFormTypes";
 
 export default function SearchForm() {
 
     const [innValue, setInnValue] = useState('');
-    const [innIsValid, setInnIsValid] = useState(true);
+    const [innIsValid, setInnIsValid] = useState(false);
     const [innIsEmpty, setInnIsEmpty] = useState(true);
 
     const [docsAmount, setDocsAmount] = useState('');
@@ -32,12 +32,16 @@ export default function SearchForm() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [isDisabled, setIsDisabled] = useState(true);
-    const [startDateIsValid, setStartDateIsValid] = useState(false);
-    const [endDateIsValid, setEndDateIsValid] = useState(false);
+    const [startDateIsValid, setStartDateIsValid] = useState(true);
+    const [endDateIsValid, setEndDateIsValid] = useState(true);
+
+    const [isError, setIsError] = useState(false);
 
     const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
     const tariffInfo = useAppSelector((state: RootState) => state.tariffLimits.eventFiltersInfo);
+
+    const [isCLicked, setIsClicked] = useState(false);
 
     const dispatch = useAppDispatch();
 
@@ -120,16 +124,15 @@ export default function SearchForm() {
     async function getDocs(ids: TEncodedIds) {
         const token = await localStorage.getItem('token');
         try {
-            const response = await api.post('/api/v1/documents',
-                ids,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+                const response = await api.post('/api/v1/documents',
+                    ids,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
                     }
-                }
-            )
-            console.log(response.data)
-            return response.data;
+                )
+                return response.data;
         } catch (err: any) {
             alert(err.message)
         }
@@ -138,17 +141,57 @@ export default function SearchForm() {
     useEffect(() => {
         if (tariffInfo.usedCompanyCount === tariffInfo.companyLimit) return;
         innValue && docsAmount && startDate && endDate && setIsDisabled(false);
-        validateInn(innValue);
-        validateAmount();
         validateDate();
-    }, [innValue, docsAmount, startDate, endDate, tariffInfo.usedCompanyCount, tariffInfo.companyLimit]);
+        if (isError) {
+            validateData();
+        }
+    }, [
+        innValue,
+        docsAmount,
+        startDate,
+        endDate,
+        tariffInfo.usedCompanyCount,
+        tariffInfo.companyLimit,
+    ]);
 
     async function sendData() {
-        await searchDocs(SEARCH_DATA)
-        const responseIds = await searchObjects(SEARCH_DATA) as string[];
-        const responseArticles = await getDocs({ids: responseIds}) as TArticle[];
-        dispatch(getArticles(responseArticles));
-        dispatch(count());
+         validateData();
+         if (!innIsEmpty && !amountIsEmpty && innIsValid && amountIsValid && startDateIsValid && endDateIsValid) {
+             await searchDocs(SEARCH_DATA)
+             const responseIds = await searchObjects(SEARCH_DATA) as string[];
+             const responseArticles = await getDocs({ids: responseIds}) as TArticle[];
+             dispatch(getArticles(responseArticles));
+             dispatch(count());
+         }
+
+        // if (innValue === '' && docsAmount === '') {
+        //     setIsError({
+        //         empty: true
+        //     });
+        // } else if (docsAmount === '') {
+        //     setIsError({
+        //         empty: true
+        //     });
+        // } else if (innValue === '') {
+        //     setIsError({
+        //         empty: true
+        //     });
+        // } else {
+        //     setIsError({
+        //         empty: false
+        //     })
+        // }
+
+
+        // else if (isError.incorrect) {
+        //     setIsError({
+        //         incorrect: true
+        //     });
+        // } else if (isError.empty) {
+        //     setIsError({
+        //         empty: true
+        //     });
+        // }
     }
 
     function handleCheck(e: React.MouseEvent) {
@@ -208,17 +251,25 @@ export default function SearchForm() {
         setInnValue(target.value);
     }
 
-    function validateInn(inn: string) {
+     function validateData() {
+          validateInn(innValue);
+          validateAmount();
+    }
+
+      function validateInn(inn: string) {
         const innString = inn.toString();
 
-        if (!innString.length) {
+        if (innString === '') {
             setInnIsEmpty(true);
-            setInnIsValid(true);
+            setIsError(true);
         } else if (/[^0-9]/.test(innString)) {
             setInnIsValid(false);
             setInnIsEmpty(false);
+            setIsError(true);
+
         } else if ([10].indexOf(innString.length) === -1) {
             setInnIsValid(false);
+            setIsError(true);
             setInnIsEmpty(false);
         } else {
             let checkDigit = function (inn: string, coefficients: number[]) {
@@ -233,27 +284,31 @@ export default function SearchForm() {
                 if (n10 === parseInt(innString[9])) {
                     setInnIsValid(true);
                     setInnIsEmpty(false);
+                    setIsError(false);
+                } else {
+                    setInnIsValid(false);
+                    setIsError(true);
+                    setInnIsEmpty(false);
                 }
             }
         }
     }
 
-    function validateAmount() {
-        if (Number(docsAmount) < 1 || Number(docsAmount) > 1000) {
-            setAmountIsValid(false)
+      function validateAmount() {
+        if ((Number(docsAmount) < 1 || Number(docsAmount) > 1000) && docsAmount !== '') {
+            setAmountIsValid(false);
             setAmountIsEmpty(false);
-        } else {
-            setAmountIsValid(true);
-            setAmountIsEmpty(false);
-        }
-
-        if (docsAmount.length === 0) {
+            setIsError(true);
+        } else if (docsAmount === "") {
+            setAmountIsValid(false);
             setAmountIsEmpty(true);
+            setIsError(true);
+        } else {
             setAmountIsValid(true);
         }
     }
 
-    function validateDate() {
+      function validateDate() {
         const date = new Date(endDate);
         const UTCHours = date.setUTCHours(-1);
         const adjustedDate = new Date(UTCHours);
@@ -307,15 +362,15 @@ export default function SearchForm() {
                             <div className={s['input-container']}>
                                 <label htmlFor='inn'>ИНН компании*</label>
                                 <input
-                                    className={innIsValid ? s.input : s.inputError}
+                                    className={isError && !innIsValid ? s.inputError : s.input}
                                     type='number'
                                     placeholder='10 цифр'
                                     maxLength={10} id='inn'
                                     value={innValue}
                                     onInput={handleInnValue}
                                 />
-                                {!innIsValid && <span className={s.innError}>Введите корректный ИНН</span>}
-                                {innIsEmpty && <span className={s.innError}>Обязательное поле!</span>}
+                                {!innIsValid && !innIsEmpty && isError && <span className={s.innError}>Введите корректный ИНН</span>}
+                                {innIsEmpty && isError && !innIsValid && <span className={s.innError}>Обязательное поле!</span>}
                             </div>
                             <div className={s['input-container']}>
                                 <label htmlFor='selectTon'>Тональность</label>
@@ -328,15 +383,15 @@ export default function SearchForm() {
                             <div className={s['input-container']}>
                                 <label htmlFor='amount'>Количество документов в выдаче*</label>
                                 <input
-                                    className={amountIsValid ? s.input : s.inputError}
+                                    className={isError && !amountIsValid ? s.inputError : s.input}
                                     type="number" max={1000}
                                     id='amount'
                                     placeholder='От 1 до 1000'
                                     value={docsAmount}
                                     onInput={handleDocsAmount}
                                 />
-                                {!amountIsValid && <span className={s.innError}>Введите корректные данные</span>}
-                                {amountIsEmpty && <span className={s.innError}>Обязательное поле!</span>}
+                                {!amountIsEmpty && isError && !amountIsValid && <span className={s.innError}>Введите корректные данные</span>}
+                                {amountIsEmpty && isError && !amountIsValid && <span className={s.innError}>Обязательное поле!</span>}
                             </div>
                             <div style={{marginTop: '14px'}} className={s['input-container']}>
                                 <label htmlFor='range'>Диапазон поиска*</label>
@@ -373,7 +428,7 @@ export default function SearchForm() {
                             })}
                         </div>
                         <div className={s['button-container']}>
-                            <Link to={'/results'}>
+                            <Link to={!amountIsEmpty && !innIsEmpty && innIsValid && amountIsValid && startDateIsValid && endDateIsValid ? '/results' : '/searchForm'}>
                                 <button className={isDisabled ? st.searchButton : st.searchButtonActive}
                                         onClick={sendData} disabled={isDisabled}>
                                     Поиск
@@ -387,8 +442,8 @@ export default function SearchForm() {
                     </div>
                     <div className={s['button-container-mobile']}>
                         <Link to={'/results'}>
-                            <button className={isDisabled ? st.searchButton : st.searchButtonActive}
-                                    onClick={sendData} disabled={isDisabled}>
+                            <button type={"submit"} className={isDisabled ? st.searchButton : st.searchButtonActive}
+                                    onClick={sendData}>
                                 Поиск
                             </button>
                         </Link>

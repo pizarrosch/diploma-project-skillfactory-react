@@ -5,15 +5,14 @@ import keyLock from '../../assets/key-lock.svg';
 import googleSign from '../../assets/google-sign.png';
 import facebookSign from '../../assets/facebook-sign.png';
 import yandexSign from '../../assets/yandex-sign.png';
-import React, {useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
+import React, {useState} from "react";
+import {useAppDispatch} from "../../hooks/hooks";
 import localStorage from "redux-persist/es/storage";
 import {authorize} from "../../redux/slices/authSlice";
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {getLimitInfo} from "../../redux/slices/eventFiltersSlice";
 import {IAuthCredentials} from "../../types";
 import api from "../../api/http";
-import {RootState} from "../../redux/store";
 
 type TInputForm = {
     login?: string,
@@ -26,6 +25,7 @@ export default function LoginPage() {
         login: '',
         password: ''
     })
+
     const [isLoginValid, setIsLoginValid] = useState(false);
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [error, setError] = useState({
@@ -33,8 +33,9 @@ export default function LoginPage() {
         message: false
     });
 
+    const navigate = useNavigate();
+
     const dispatch = useAppDispatch();
-    const auth = useAppSelector((state: RootState) => state.authorization);
 
     async function verifyRequisites(
         credentials: IAuthCredentials,
@@ -60,12 +61,16 @@ export default function LoginPage() {
     }
 
     async function getInfo() {
-        try{
+        try {
             await verifyRequisites({login: form.login!, password: form.password!})
 
             const token = await localStorage.getItem('token') as string;
 
+            await validateLogin();
+            await validatePassword();
+
             if (token) {
+                navigate('/dashboard');
                 api.get("/api/v1/account/info")
                     .then((data) => dispatch(getLimitInfo({
                         eventFiltersInfo: {
@@ -73,21 +78,15 @@ export default function LoginPage() {
                             companyLimit: data.data.eventFiltersInfo.companyLimit
                         }
                     })))
+            } else {
+                setError({state: true, message: false})
             }
 
-            validateLogin();
-            validatePassword();
-            if (!token && form.login === '') {
-                setError({state: true, message: false});
-                setIsLoginValid(false);
-            } else if (!token && form.password === '') {
-                setError({state: true, message: false});
-                setIsPasswordValid(false);
-            } else if (!token) {
+            if (error.state) {
                 setError({state: true, message: true});
             }
         } catch (e: any) {
-            console.log(e.message);
+            console.log(e.message)
         }
     }
 
@@ -107,23 +106,21 @@ export default function LoginPage() {
                 password: target.value
             })
         }
-
-        if (error.state) {
-                setError({state: false, message: false})
-            }
     }
 
-    function validatePassword() {
+    async function validatePassword() {
         if (form.password!.length < 6) {
             setIsPasswordValid(false);
+            setError({state: true, message: false})
         } else {
             setIsPasswordValid(true);
         }
     }
 
-    function validateLogin() {
+    async function validateLogin() {
         if (form.login!.length < 6) {
             setIsLoginValid(false);
+            setError({state: true, message: false})
         } else {
             setIsLoginValid(true);
         }
@@ -151,25 +148,24 @@ export default function LoginPage() {
                             <input className={!error.state ? s['form__input'] : s['form__input_error']} type="email"
                                    id="input" value={form.login}
                                    onInput={handleFormInput}/>
-                            {!isLoginValid && error.state &&
+                            {!isLoginValid && error.state && !error.message &&
                               <span className={s.errorMessage}>Введено меньше 6 символов</span>}
                         </div>
                         <div className={s['form__password-input-container']}>
                             <label htmlFor='password'>Пароль</label>
-                            <input className={!error.state  ? s['form__input'] : s['form__input_error']}
+                            <input className={!error.state ? s['form__input'] : s['form__input_error']}
                                    type="password" id="password" value={form.password}
                                    onInput={handleFormInput}/>
-                            {!isPasswordValid && error.state &&
+                            {!isPasswordValid && error.state && !error.message &&
                               <span className={s.errorMessage}>Введено меньше 6 символов</span>}
-                            {error.message && <span className={s.errorMessage}>Неправильный логин или пароль</span>}
+                            {isLoginValid && isPasswordValid && error.message &&
+                              <span className={s.errorMessage}>Неправильный логин или пароль</span>}
                         </div>
                     </form>
                 </div>
-                <Link to={!error.state && !error.message ? '/dashboard' : '/login'}>
-                    <button type='submit' className={st.loginButton} onClick={getInfo}>
-                        Войти
-                    </button>
-                </Link>
+                <button type='submit' className={st.loginButton} onClick={getInfo}>
+                    Войти
+                </button>
                 <span><a href='/login' style={
                     {
                         textDecoration: 'underline',
