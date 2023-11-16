@@ -4,7 +4,7 @@ import st from '../Main/Main.module.scss';
 import document from '../../assets/Document.svg';
 import folders from '../../assets/Folders.svg';
 import manLookingOut from '../../assets/man-looking-out.svg';
-import {Link, redirect} from "react-router-dom";
+import {Link, redirect, useNavigate} from "react-router-dom";
 import {TArticle, TEncodedIdObject, TEncodedIds, TSearchData, TSearchResults} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../hooks/hooks";
 import {RootState} from "../../redux/store";
@@ -17,9 +17,10 @@ import {checkboxData} from "../../data";
 import Checkbox from "../Checkbox/Checkbox";
 import {checkOptions, checkStatus} from "../../redux/slices/checkboxSlice";
 import api from "../../api/http";
-import {TIsError} from "../../searchFormTypes";
 
 export default function SearchForm() {
+
+    const [formIsValid, setFormIsValid] = useState(false);
 
     const [innValue, setInnValue] = useState('');
     const [innIsValid, setInnIsValid] = useState(false);
@@ -40,8 +41,9 @@ export default function SearchForm() {
     const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
     const tariffInfo = useAppSelector((state: RootState) => state.tariffLimits.eventFiltersInfo);
+    const articleInfo = useAppSelector((state: RootState) => state.articles);
 
-    const [isCLicked, setIsClicked] = useState(false);
+    const navigate = useNavigate();
 
     const dispatch = useAppDispatch();
 
@@ -132,6 +134,7 @@ export default function SearchForm() {
                         }
                     }
                 )
+
                 return response.data;
         } catch (err: any) {
             alert(err.message)
@@ -142,27 +145,44 @@ export default function SearchForm() {
         if (tariffInfo.usedCompanyCount === tariffInfo.companyLimit) return;
         innValue && docsAmount && startDate && endDate && setIsDisabled(false);
         validateDate();
+
         if (isError) {
             validateData();
         }
+
+        if (innIsValid && amountIsValid && startDateIsValid && endDateIsValid) {
+            setFormIsValid(true);
+        } else {
+            setFormIsValid(false);
+        }
+
     }, [
+        isError,
         innValue,
         docsAmount,
         startDate,
         endDate,
         tariffInfo.usedCompanyCount,
         tariffInfo.companyLimit,
+        innIsValid,
+        amountIsValid,
+        startDateIsValid,
+        endDateIsValid
     ]);
 
     async function sendData() {
-         validateData();
-         if (!innIsEmpty && !amountIsEmpty && innIsValid && amountIsValid && startDateIsValid && endDateIsValid) {
-             await searchDocs(SEARCH_DATA)
-             const responseIds = await searchObjects(SEARCH_DATA) as string[];
-             const responseArticles = await getDocs({ids: responseIds}) as TArticle[];
-             dispatch(getArticles(responseArticles));
-             dispatch(count());
-         }
+            await validateData();
+
+            if (formIsValid) {
+                navigate('/results');
+                await searchDocs(SEARCH_DATA)
+                const responseIds = await searchObjects(SEARCH_DATA) as string[];
+                const responseArticles = await getDocs({ids: responseIds}) as TArticle[];
+                dispatch(getArticles(responseArticles));
+                dispatch(count());
+            }
+
+
 
         // if (innValue === '' && docsAmount === '') {
         //     setIsError({
@@ -251,12 +271,12 @@ export default function SearchForm() {
         setInnValue(target.value);
     }
 
-     function validateData() {
-          validateInn(innValue);
-          validateAmount();
+     async function validateData() {
+          await validateInn(innValue);
+          await validateAmount();
     }
 
-      function validateInn(inn: string) {
+      async function validateInn(inn: string) {
         const innString = inn.toString();
 
         if (innString === '') {
@@ -294,7 +314,7 @@ export default function SearchForm() {
         }
     }
 
-      function validateAmount() {
+      async function validateAmount() {
         if ((Number(docsAmount) < 1 || Number(docsAmount) > 1000) && docsAmount !== '') {
             setAmountIsValid(false);
             setAmountIsEmpty(false);
@@ -308,7 +328,7 @@ export default function SearchForm() {
         }
     }
 
-      function validateDate() {
+      async function validateDate() {
         const date = new Date(endDate);
         const UTCHours = date.setUTCHours(-1);
         const adjustedDate = new Date(UTCHours);
@@ -428,12 +448,12 @@ export default function SearchForm() {
                             })}
                         </div>
                         <div className={s['button-container']}>
-                            <Link to={!amountIsEmpty && !innIsEmpty && innIsValid && amountIsValid && startDateIsValid && endDateIsValid ? '/results' : '/searchForm'}>
+                            {/*<Link to={innIsValid && amountIsValid && startDateIsValid && endDateIsValid ? '/results' : '/searchForm'}>*/}
                                 <button className={isDisabled ? st.searchButton : st.searchButtonActive}
                                         onClick={sendData} disabled={isDisabled}>
                                     Поиск
                                 </button>
-                            </Link>
+                            {/*</Link>*/}
                             {tariffInfo.usedCompanyCount === tariffInfo.companyLimit &&
                               <span className={s.submitError}>Ваш дневной лимит исчерпан. Возвращайтесь завтра.</span>}
                             <p style={{fontSize: '14px', color: 'rgba(148, 148, 148, 1)'}}>* Обязательные к заполнению
