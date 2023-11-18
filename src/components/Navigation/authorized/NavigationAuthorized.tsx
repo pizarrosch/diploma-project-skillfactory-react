@@ -77,8 +77,8 @@ export default function NavigationAuthorized() {
                                 }
                             }))
 
-                             localStorage.removeItem('token');
-                             localStorage.removeItem('expire');
+                            localStorage.removeItem('token');
+                            localStorage.removeItem('expire');
                         }}>Выйти</span>
                     </div>
                     <div>

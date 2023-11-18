@@ -1,14 +1,13 @@
 .footer {
   height: 137px;
   background-color: rgba(2, 148, 145, 1);
-  margin: 0;
   padding: 0 40px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100vw;
-  gap: 350px;
+  width: 100em;
+  overflow: visible;
 
   .contactsDataContainer {
     display: flex;
@@ -27,6 +26,7 @@
 @media all and (max-width: 400px) {
   .footer {
     padding: 0 15px 0 10px;
+    width: 100%;
 
     .footerLogo {
       width: 111px;

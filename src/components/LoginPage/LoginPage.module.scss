@@ -47,8 +47,7 @@
       padding-top: 20px;
 
       .login-signup-container__login,
-      .login-signup-container__signup
-      {
+      .login-signup-container__signup {
         font-size: 16px;
         text-align: center;
         padding-bottom: 5px;
@@ -104,7 +103,6 @@
       .form__password-input-container {
         display: flex;
         flex-direction: column;
-        //gap: 10px;
 
         .errorMessage {
           font-size: 14px;
@@ -112,8 +110,7 @@
         }
 
         .form__input,
-        .form__input_error
-        {
+        .form__input_error {
           width: 379px;
           max-width: 379px;
           height: 43px;
@@ -177,32 +174,32 @@
         .account-name-container {
           gap: 5px;
         }
-    }
+      }
 
-    .form-container {
+      .form-container {
 
-      .form-container__form {
+        .form-container__form {
 
-        .form__email-input-container {
-          gap: 10px;
+          .form__email-input-container {
+            gap: 10px;
 
-          .form__input,
-          .form__input_error,
-          {
-            width: 305px;
+            .form__input,
+            .form__input_error,
+            {
+              width: 305px;
+            }
           }
-        }
 
-        .form__password-input-container {
-          gap: 10px;
+          .form__password-input-container {
+            gap: 10px;
 
-          .form__input,
-          .form__input_error {
-            width: 305px;
+            .form__input,
+            .form__input_error {
+              width: 305px;
+            }
           }
         }
       }
     }
-  }
   }
 }

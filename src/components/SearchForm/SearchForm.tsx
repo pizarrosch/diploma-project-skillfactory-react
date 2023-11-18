@@ -97,9 +97,9 @@ export default function SearchForm() {
                     dispatch(getStats(response.data.data.map((resultData: TSearchResults[]) => resultData)));
                 });
         } catch (err: any) {
-           if (err.status === 401) {
-               redirect('/login');
-           }
+            if (err.status === 401) {
+                redirect('/login');
+            }
         }
     }
 
@@ -125,16 +125,16 @@ export default function SearchForm() {
     async function getDocs(ids: TEncodedIds) {
         const token = await localStorage.getItem('token');
         try {
-                const response = await api.post('/api/v1/documents',
-                    ids,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
+            const response = await api.post('/api/v1/documents',
+                ids,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
-                )
+                }
+            )
 
-                return response.data;
+            return response.data;
         } catch (err: any) {
             alert(err.message)
         }
@@ -148,14 +148,6 @@ export default function SearchForm() {
         if (isError) {
             validateData();
         }
-        //
-        //
-        // if (!innIsValid && !amountIsValid && !startDateIsValid && !endDateIsValid) {
-        //     setFormIsValid(false);
-        // } else {
-        //     setFormIsValid(true);
-        // }
-
     }, [
         isError,
         innValue,
@@ -172,14 +164,14 @@ export default function SearchForm() {
 
     function handleInnFocusOut() {
         validateInn(innValue);
-        if(!isError) {
+        if (!isError) {
             setFormIsValid(true);
         }
     }
 
     function handleAmountFocusOut() {
         validateAmount();
-        if(!isError) {
+        if (!isError) {
             setFormIsValid(true);
         }
     }
@@ -191,42 +183,9 @@ export default function SearchForm() {
         dispatch(getArticles(responseArticles));
         dispatch(count());
 
-            if (formIsValid) {
-                navigate('/results');
-            }
-
-
-
-
-
-        // if (innValue === '' && docsAmount === '') {
-        //     setIsError({
-        //         empty: true
-        //     });
-        // } else if (docsAmount === '') {
-        //     setIsError({
-        //         empty: true
-        //     });
-        // } else if (innValue === '') {
-        //     setIsError({
-        //         empty: true
-        //     });
-        // } else {
-        //     setIsError({
-        //         empty: false
-        //     })
-        // }
-
-
-        // else if (isError.incorrect) {
-        //     setIsError({
-        //         incorrect: true
-        //     });
-        // } else if (isError.empty) {
-        //     setIsError({
-        //         empty: true
-        //     });
-        // }
+        if (formIsValid) {
+            navigate('/results');
+        }
     }
 
     function handleCheck(e: React.MouseEvent) {
@@ -286,12 +245,12 @@ export default function SearchForm() {
         setInnValue(target.value);
     }
 
-     async function validateData() {
-          await validateInn(innValue);
-          await validateAmount();
+    async function validateData() {
+        await validateInn(innValue);
+        await validateAmount();
     }
 
-      async function validateInn(inn: string) {
+    async function validateInn(inn: string) {
         const innString = inn.toString();
 
         if (innString === '') {
@@ -329,7 +288,7 @@ export default function SearchForm() {
         }
     }
 
-      async function validateAmount() {
+    async function validateAmount() {
         if ((Number(docsAmount) < 1 || Number(docsAmount) > 1000) && docsAmount !== '') {
             setAmountIsValid(false);
             setAmountIsEmpty(false);
@@ -343,7 +302,7 @@ export default function SearchForm() {
         }
     }
 
-      async function validateDate() {
+    async function validateDate() {
         const date = new Date(endDate);
         const UTCHours = date.setUTCHours(-1);
         const adjustedDate = new Date(UTCHours);
@@ -405,8 +364,10 @@ export default function SearchForm() {
                                     onInput={handleInnValue}
                                     onBlur={handleInnFocusOut}
                                 />
-                                {!innIsValid && !innIsEmpty && isError && <span className={s.innError}>Введите корректный ИНН</span>}
-                                {innIsEmpty && isError && !innIsValid && <span className={s.innError}>Обязательное поле!</span>}
+                                {!innIsValid && !innIsEmpty && isError &&
+                                  <span className={s.innError}>Введите корректный ИНН</span>}
+                                {innIsEmpty && isError && !innIsValid &&
+                                  <span className={s.innError}>Обязательное поле!</span>}
                             </div>
                             <div className={s['input-container']}>
                                 <label htmlFor='selectTon'>Тональность</label>
@@ -427,8 +388,10 @@ export default function SearchForm() {
                                     onInput={handleDocsAmount}
                                     onBlur={handleAmountFocusOut}
                                 />
-                                {!amountIsEmpty && isError && !amountIsValid && <span className={s.innError}>Введите корректные данные</span>}
-                                {amountIsEmpty && isError && !amountIsValid && <span className={s.innError}>Обязательное поле!</span>}
+                                {!amountIsEmpty && isError && !amountIsValid &&
+                                  <span className={s.innError}>Введите корректные данные</span>}
+                                {amountIsEmpty && isError && !amountIsValid &&
+                                  <span className={s.innError}>Обязательное поле!</span>}
                             </div>
                             <div style={{marginTop: '14px'}} className={s['input-container']}>
                                 <label htmlFor='range'>Диапазон поиска*</label>
@@ -465,11 +428,10 @@ export default function SearchForm() {
                             })}
                         </div>
                         <div className={s['button-container']}>
-                            {/*<Link to={innIsValid && amountIsValid && startDateIsValid && endDateIsValid ? '/results' : '/searchForm'}>*/}
-                                <button className={isDisabled ? st.searchButton : st.searchButtonActive}
-                                        onClick={sendData} disabled={isDisabled}>
-                                    Поиск
-                                </button>
+                            <button className={isDisabled ? st.searchButton : st.searchButtonActive}
+                                    onClick={sendData} disabled={isDisabled}>
+                                Поиск
+                            </button>
                             {/*</Link>*/}
                             {tariffInfo.usedCompanyCount === tariffInfo.companyLimit &&
                               <span className={s.submitError}>Ваш дневной лимит исчерпан. Возвращайтесь завтра.</span>}

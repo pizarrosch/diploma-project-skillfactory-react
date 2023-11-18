@@ -13,7 +13,7 @@ export default function Checkbox({children, id, onClick, isChecked}: TCheckboxPr
 
     return (
         <div className={s['checkbox-options-container__option']} id={id.toString()} onClick={onClick}>
-            <div className={s['checkbox-input']} >
+            <div className={s['checkbox-input']}>
                 {
                     isChecked ? <img className={s.checkmark} src={checkmark} alt='checkmark'/> : ''
                 }

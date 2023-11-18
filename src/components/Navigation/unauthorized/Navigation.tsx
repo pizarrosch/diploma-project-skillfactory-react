@@ -9,11 +9,11 @@ export default function Navigation() {
         <div className={s.rootUnauth}>
             <nav className={s.navigation}>
                 <ul className={s['navigation-list']}>
-                        <li className={s['navigation-list__item']}>
-                            <Link to={'/dashboard'}>
+                    <li className={s['navigation-list__item']}>
+                        <Link to={'/dashboard'}>
                             Главная
-                            </Link>
-                        </li>
+                        </Link>
+                    </li>
                     <li className={s['navigation-list__item']}>Тарифы</li>
                     <li className={s['navigation-list__item']}>FAQ</li>
                 </ul>

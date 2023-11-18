@@ -57,8 +57,7 @@
 
         .dropdown-arrow,
         .startDateDropdown,
-        .endDateDropdown
-        {
+        .endDateDropdown {
           position: absolute;
           border-top: 10px solid rgba(217, 217, 217, 1);
           border-right: 10px solid transparent;
@@ -201,7 +200,7 @@
     .container {
       width: 375px;
       height: 688px;
-      margin: 15px 0 460px ;
+      margin: 15px 0 460px;
       flex-direction: column;
       align-items: center;
 
@@ -226,8 +225,7 @@
 
           .dropdown-arrow,
           .startDateDropdown,
-          .endDateDropdown
-          {
+          .endDateDropdown {
             right: 20px;
           }
 
@@ -237,8 +235,7 @@
         }
 
         .input,
-        .inputError
-        {
+        .inputError {
           width: 335px;
           height: 43px;
         }

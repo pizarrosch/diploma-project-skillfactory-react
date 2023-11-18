@@ -117,39 +117,55 @@
 }
 
 @media all and (max-width: 400px) {
-    .firstBlock {
+  .firstBlock {
 
-      .woman {
-        position: absolute;
-        width: 350px;
-        height: 233px;
-        top: 340px;
+    .woman {
+      position: absolute;
+      width: 350px;
+      height: 233px;
+      top: 340px;
+    }
+
+    .paragraphContainer {
+      width: 335px;
+      margin: 0 0 300px 10px;
+
+      .paragraph {
+        font-size: 28px;
       }
 
-      .paragraphContainer {
+      .text {
+        font-size: 18px;
         width: 344px;
-        margin: 0 0 300px 10px;
-
-        .paragraph {
-          font-size: 28px;
-        }
-
-        .text {
-          font-size: 18px;
-          width: 344px;
-        }
       }
     }
+  }
 
   .slider {
 
     .cardsContainer {
       flex-direction: column;
+      height: 150px;
+
+      .statsWrapper {
+        flex-direction: row;
+        justify-content: flex-start;
+        margin-left: 10px;
+        gap: 40px;
+      }
 
       .statNameContainer {
         flex-direction: row;
+        height: 75px;
+        min-height: 75px;
+        box-sizing: border-box;
+        justify-content: space-around;
       }
     }
   }
+
+  .statsContainer {
+    margin-left: 10px;
   }
+}
 

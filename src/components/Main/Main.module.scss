@@ -13,8 +13,7 @@
   }
 
   .paragraph,
-  .ourTariffs
-  {
+  .ourTariffs {
     font-family: 'Ferry Black', sans-serif;
     font-size: 60px;
     font-weight: 900;
@@ -105,8 +104,7 @@
 }
 
 .seeDetailsButton,
-.activatedTariff
-{
+.activatedTariff {
   width: 355px;
   margin-left: 30px;
   margin-top: 60px;
@@ -125,8 +123,7 @@
 
 .searchButton,
 .searchButtonActive,
-.blockedButton
-{
+.blockedButton {
   width: 305px;
   opacity: 50%;
 }
@@ -167,8 +164,7 @@
     }
 
     .paragraph,
-    .ourTariffs
-    {
+    .ourTariffs {
       font-size: 28px;
       margin-top: 30px;
       width: 280px
@@ -208,8 +204,7 @@
     }
 
     .activatedTariff,
-    .seeDetailsButton
-    {
+    .seeDetailsButton {
       width: 287px;
       font-size: 18px;
       margin: 40px 23px;
@@ -226,8 +221,7 @@
   }
 
   .searchButton,
-  .searchButtonActive
-  {
+  .searchButtonActive {
     display: block;
     margin-top: 30px;
   }

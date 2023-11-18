@@ -1,12 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {TAttributeFilters} from '../../types';
-
-type TCheckBoxFilter = {
-    maxFullness: boolean,
-    onlyWithRiskFactors: boolean,
-    onlyMainRole: boolean,
-    inBusinessNews: boolean,
-} & TAttributeFilters
 
 type TCheckboxStatus = {
     active: boolean,
@@ -61,5 +53,5 @@ export const checkboxOptionsSlice = createSlice({
     }
 })
 
-export const {initializeStatus, checkStatus, deleteStatus   } = checkboxStatusSlice.actions;
+export const {initializeStatus, checkStatus, deleteStatus} = checkboxStatusSlice.actions;
 export const {initializeOptions, checkOptions} = checkboxOptionsSlice.actions;

@@ -31,27 +31,27 @@ function App() {
 
     return (
         <div className={s.root}>
-            {authorized.accessToken ? <HeaderAuthorized /> : <Header/>}
+            {authorized.accessToken ? <HeaderAuthorized/> : <Header/>}
             <Routes>
-                <Route path='/' element={<Navigate to='/dashboard' />} />
+                <Route path='/' element={<Navigate to='/dashboard'/>}/>
                 <Route
-                path='/dashboard'
-                element={<MainPage/>}
+                    path='/dashboard'
+                    element={<MainPage/>}
                 />
                 <Route
-                path='/login'
-                element={<LoginPage />}
+                    path='/login'
+                    element={<LoginPage/>}
                 />
                 <Route
                     path='/searchForm'
-                    element={<SearchForm />}
+                    element={<SearchForm/>}
                 />
                 <Route
                     path='/results'
-                    element={<ResultsPage />}
+                    element={<ResultsPage/>}
                 />
             </Routes>
-            <Footer />
+            <Footer/>
         </div>
     );
 }

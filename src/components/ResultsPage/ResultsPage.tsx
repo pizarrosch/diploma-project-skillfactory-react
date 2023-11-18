@@ -34,6 +34,7 @@ export default function ResultsPage() {
     const [maxResultsNumber, setMaxResultsNumber] = useState(10);
 
     const stats: TSearchResults = useAppSelector((state: RootState) => state.stats);
+    const articlesIDs = useAppSelector((state: RootState) => state.objects);
     const articles: TArticle[] = useAppSelector((state: RootState) => state.articles);
 
     let slicedArticles = articles.slice(0, maxResultsNumber);
@@ -60,29 +61,35 @@ export default function ResultsPage() {
             <div className={s.slider}>
                 <img className={s.leftArrow} src={leftArrow} alt='left'/>
                 <div className={s.cardsContainer}>
+
                     <div className={s.statNameContainer}>
                         <span>Период</span>
                         <span>Всего</span>
                         <span>Риски</span>
                     </div>
                     {
-                        stats.length === 0 ? 'В данном промежутке времени информация отсутствует' : stats ? stats[0].data?.map((stat: TTotalDocsResult, id) => {
-                                const date = new Date(stat.date);
-                                return <StatsCard range={date.toLocaleDateString('ru-Ru')} total={stats[0].data[id]?.value!}
-                                                  risks={stats[1].data[id]?.value!}/>
-                            }) :
-                            <div>
-                                <ThreeDots
-                                    height="40"
-                                    width="30"
-                                    radius="9"
-                                    color="black"
-                                    ariaLabel="three-dots-loading"
-                                    wrapperStyle={{}}
-                                    wrapperClass=""
-                                    visible={true}
-                                />
-                            </div>
+                        stats.length === 0 ?
+                            'В данном промежутке времени информация отсутствует' :
+                            stats ?
+                                stats[0].data?.map((stat: TTotalDocsResult, id) => {
+                                    const date = new Date(stat.date);
+                                    return <StatsCard range={date.toLocaleDateString('ru-Ru')}
+                                                      total={stats[0].data[id]?.value!}
+                                                      risks={stats[1].data[id]?.value!}/>
+                                })
+                                :
+                                <div>
+                                    <ThreeDots
+                                        height="40"
+                                        width="30"
+                                        radius="9"
+                                        color="black"
+                                        ariaLabel="three-dots-loading"
+                                        wrapperStyle={{}}
+                                        wrapperClass=""
+                                        visible={true}
+                                    />
+                                </div>
                     }
                 </div>
                 <img className={statData.length > 8 ? s.activeRightArrow : s.rightArrow} src={rightArrow} alt='right'/>
@@ -92,9 +99,9 @@ export default function ResultsPage() {
             </div>
             <div className={s.articleCardWrapper}>
                 {
-                    slicedArticles && slicedArticles.map((article, id) => {
+                    articlesIDs ? slicedArticles.map((article, id) => {
                         return <ArticleCard ok={article.ok} id={id}/>
-                    })
+                    }) : 'В заданный период времени нет ни одной статьи по данной компании'
                 }
             </div>
             <div className={s.buttonContainer}>
