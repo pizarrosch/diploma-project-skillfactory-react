@@ -41,7 +41,6 @@ export default function SearchForm() {
     const checkboxOptions = useAppSelector((state: RootState) => state.checkboxOptions);
     const checkboxStatus = useAppSelector((state: RootState) => state.checkboxStatus);
     const tariffInfo = useAppSelector((state: RootState) => state.tariffLimits.eventFiltersInfo);
-    const articleInfo = useAppSelector((state: RootState) => state.articles);
 
     const navigate = useNavigate();
 
@@ -143,18 +142,19 @@ export default function SearchForm() {
 
     useEffect(() => {
         if (tariffInfo.usedCompanyCount === tariffInfo.companyLimit) return;
-        innValue && docsAmount && startDate && endDate && setIsDisabled(false);
+        innIsValid && amountIsValid && startDateIsValid && endDateIsValid && setIsDisabled(false);
         validateDate();
 
         if (isError) {
             validateData();
         }
-
-        if (innIsValid && amountIsValid && startDateIsValid && endDateIsValid) {
-            setFormIsValid(true);
-        } else {
-            setFormIsValid(false);
-        }
+        //
+        //
+        // if (!innIsValid && !amountIsValid && !startDateIsValid && !endDateIsValid) {
+        //     setFormIsValid(false);
+        // } else {
+        //     setFormIsValid(true);
+        // }
 
     }, [
         isError,
@@ -170,17 +170,32 @@ export default function SearchForm() {
         endDateIsValid
     ]);
 
+    function handleInnFocusOut() {
+        validateInn(innValue);
+        if(!isError) {
+            setFormIsValid(true);
+        }
+    }
+
+    function handleAmountFocusOut() {
+        validateAmount();
+        if(!isError) {
+            setFormIsValid(true);
+        }
+    }
+
     async function sendData() {
-            await validateData();
+        await searchDocs(SEARCH_DATA)
+        const responseIds = await searchObjects(SEARCH_DATA) as string[];
+        const responseArticles = await getDocs({ids: responseIds}) as TArticle[];
+        dispatch(getArticles(responseArticles));
+        dispatch(count());
 
             if (formIsValid) {
                 navigate('/results');
-                await searchDocs(SEARCH_DATA)
-                const responseIds = await searchObjects(SEARCH_DATA) as string[];
-                const responseArticles = await getDocs({ids: responseIds}) as TArticle[];
-                dispatch(getArticles(responseArticles));
-                dispatch(count());
             }
+
+
 
 
 
@@ -388,6 +403,7 @@ export default function SearchForm() {
                                     maxLength={10} id='inn'
                                     value={innValue}
                                     onInput={handleInnValue}
+                                    onBlur={handleInnFocusOut}
                                 />
                                 {!innIsValid && !innIsEmpty && isError && <span className={s.innError}>Введите корректный ИНН</span>}
                                 {innIsEmpty && isError && !innIsValid && <span className={s.innError}>Обязательное поле!</span>}
@@ -409,6 +425,7 @@ export default function SearchForm() {
                                     placeholder='От 1 до 1000'
                                     value={docsAmount}
                                     onInput={handleDocsAmount}
+                                    onBlur={handleAmountFocusOut}
                                 />
                                 {!amountIsEmpty && isError && !amountIsValid && <span className={s.innError}>Введите корректные данные</span>}
                                 {amountIsEmpty && isError && !amountIsValid && <span className={s.innError}>Обязательное поле!</span>}

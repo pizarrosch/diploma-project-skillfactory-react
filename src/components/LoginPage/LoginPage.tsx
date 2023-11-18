@@ -148,7 +148,7 @@ export default function LoginPage() {
                             <input className={!error.state ? s['form__input'] : s['form__input_error']} type="email"
                                    id="input" value={form.login}
                                    onInput={handleFormInput}/>
-                            {!isLoginValid  &&
+                            {!isLoginValid && error.state &&
                               <span className={s.errorMessage}>Введено меньше 6 символов</span>}
                         </div>
                         <div className={s['form__password-input-container']}>
@@ -156,7 +156,7 @@ export default function LoginPage() {
                             <input className={!error.state ? s['form__input'] : s['form__input_error']}
                                    type="password" id="password" value={form.password}
                                    onInput={handleFormInput}/>
-                            {!isPasswordValid  &&
+                            {!isPasswordValid && error.state  &&
                               <span className={s.errorMessage}>Введено меньше 6 символов</span>}
                             {isLoginValid && isPasswordValid && error.message &&
                               <span className={s.errorMessage}>Неправильный логин или пароль</span>}
