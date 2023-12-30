@@ -56,10 +56,10 @@ export default function MainPage() {
             <div className={s.publicationSearchContainer}>
                 <div>
                     <div>
-                        <p className={s.paragraph}>сервис по поиску <br/> публикаций <br/> о компании <br/> по его ИНН
+                        <p className={s.paragraph}>search platform <br/> for articles <br/> about a company <br/> with its tin
                         </p>
-                        <p style={{fontSize: '20px'}}>Комплексный анализ публикаций, получение данных <br/> в формате
-                            PDF на электронную почту.</p>
+                        <p style={{fontSize: '20px'}}>The complex articles analysis, getting data <br/> in a
+                            PDF format on your email.</p>
                     </div>
                     {authorized.accessToken &&
                       <button
@@ -78,7 +78,7 @@ export default function MainPage() {
                 <img src={bgImage1} alt='man pointing at the screen'/>
             </div>
             <div className={s.sliderContainerWrapper}>
-                <p className={s.ourTariffs}>Почему именно мы</p>
+                <p className={s.ourTariffs}>Why choosing us?</p>
                 <div className={s.sliderContainer}>
                     <Carousel
                         additionalTransfrom={0}
@@ -144,7 +144,7 @@ export default function MainPage() {
             </div>
             <img className={s.sittingManImg} src={sittingMan} alt='sittingMan'/>
             <div>
-                <p className={s.ourTariffs}>Наши тарифы</p>
+                <p className={s.ourTariffs}>Our tariffs</p>
                 <div className={s.tariffCardsContainer}>
                     {
                         tariffCardContents.map((tariffCard: TTariffCard) => {

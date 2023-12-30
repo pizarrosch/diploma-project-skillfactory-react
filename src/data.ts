@@ -8,27 +8,27 @@ import laptop from './assets/laptop.svg';
 export const cardContents = [
     {
         src: stopWatch,
-        text: 'Высокая и оперативная скорость \n обработки заявки'
+        text: 'Extremely fast \n application processing'
     },
     {
         src: stopWatch,
-        text: 'Молниеносное нахождение нужной \n компании'
+        text: 'Immediate finding of  \n a company looked for'
     },
     {
         src: magnifyingGlass,
-        text: 'Огромная комплексная база \n данных, обеспечивающая\n объективный ответ на запрос'
+        text: 'Vast database which makes it possible to get a detailed information'
     },
     {
         src: magnifyingGlass,
-        text: 'Нахождение компаний по всей \n России и округам'
+        text: 'Find all companies on the territory of the Russian Federation'
     },
     {
         src: shield,
-        text: 'Защита конфеденциальных сведений, \n не подлежащих разглашению по \n федеральному законодательству'
+        text: 'Protection of private data according to the federal law'
     },
     {
         src: shield,
-        text: 'Защита Ваших денег'
+        text: 'Protection of your money'
     }
 ]
 
