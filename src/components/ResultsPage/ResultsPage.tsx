@@ -48,24 +48,24 @@ export default function ResultsPage() {
             <div className={s.firstBlock}>
                 <div className={s.paragraphContainer}>
                     <div>
-                        <p className={s.paragraph}>Ищем. Скоро <br/> будут результаты</p>
-                        <p className={s.text}>Поиск может занять некоторое время, <br/> просим сохранять терпение.</p>
+                        <p className={s.paragraph}>Searching. Wait for results</p>
+                        <p className={s.text}>Search can take some time, we ask for your patience.</p>
                     </div>
                 </div>
                 <img className={s.woman} src={woman} alt='woman'/>
             </div>
             <div className={s.statsContainer}>
-                <span className={s.stats}>Общая сводка</span>
-                <span className={s.foundItems}>Найдено {stats[0]?.data?.length} вариантов</span>
+                <span className={s.stats}>General summary</span>
+                <span className={s.foundItems}>{stats[0]?.data?.length} data found</span>
             </div>
             <div className={s.slider}>
                 <img className={s.leftArrow} src={leftArrow} alt='left'/>
                 <div className={s.cardsContainer}>
 
                     <div className={s.statNameContainer}>
-                        <span>Период</span>
-                        <span>Всего</span>
-                        <span>Риски</span>
+                        <span>Range</span>
+                        <span>Total</span>
+                        <span>Risks</span>
                     </div>
                     {
                         stats.length === 0 ?
@@ -95,18 +95,18 @@ export default function ResultsPage() {
                 <img className={statData.length > 8 ? s.activeRightArrow : s.rightArrow} src={rightArrow} alt='right'/>
             </div>
             <div className={s.statsContainer}>
-                <span className={s.stats}>Список документов</span>
+                <span className={s.stats}>List of documents</span>
             </div>
             <div className={s.articleCardWrapper}>
                 {
                     articlesIDs ? slicedArticles.map((article, id) => {
                         return <ArticleCard ok={article.ok} id={id}/>
-                    }) : 'В заданный период времени нет ни одной статьи по данной компании'
+                    }) : 'No articles found in the given time range'
                 }
             </div>
             <div className={s.buttonContainer}>
                 {slicedArticles.length === articles.length ? '' :
-                    <button className={st.showMoreButton} onClick={getMoreArticles}>Показать больше</button>}
+                    <button className={st.showMoreButton} onClick={getMoreArticles}>Show more</button>}
             </div>
         </div>
     )

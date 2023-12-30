@@ -35,10 +35,10 @@ export default function ArticleCard({ok, id}: TProps) {
             <h2 className={s.title}>{ok.title.text}</h2>
             <div className={s.categoryContainer}>
                             <span className={s.category}>
-                                {ok.attributes.isTechNews ? 'Технические новости' :
-                                    ok.attributes.isDigest ? 'Анонс' :
-                                        ok.attributes.isAnnouncement ? 'Сводка новостей' :
-                                            'Разное'
+                                {ok.attributes.isTechNews ? 'Tech news' :
+                                    ok.attributes.isDigest ? 'Announcement' :
+                                        ok.attributes.isAnnouncement ? 'Digest' :
+                                            'Miscellaneous'
                                 }
                             </span>
             </div>
@@ -47,10 +47,10 @@ export default function ArticleCard({ok, id}: TProps) {
             <div className={s.cardFooter}>
                 <button className={st.readSourceButton}>
                     <Link to={ok.url} target="_blank">
-                        Читать в источнике
+                        Go to the source
                     </Link>
                 </button>
-                <span className={s.wordCount}>{ok.attributes.wordCount} слов</span>
+                <span className={s.wordCount}>{ok.attributes.wordCount} words</span>
             </div>
         </div>
     )
