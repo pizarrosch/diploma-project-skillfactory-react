@@ -346,70 +346,70 @@ export default function SearchForm() {
             <div>
                 <div className={s['paragraph-container']}>
                     <div>
-                        <p className={s.paragraph}>Найдите необходимые <br/> данные в пару кликов.</p>
-                        <p className={s.text}>Задайте параметры поиска. <br/> Чем больше заполните, тем точнее поиск</p>
+                        <p className={s.paragraph}>Find important <br/> data just in couple of clicks.</p>
+                        <p className={s.text}>Set search parameters. <br/> The more fields you fill, the more detailed your result</p>
                     </div>
                 </div>
                 <div className={s.container}>
                     <div>
                         <form className={s['form-container']}>
                             <div className={s['input-container']}>
-                                <label htmlFor='inn'>ИНН компании*</label>
+                                <label htmlFor='inn'>Company TIN (Taxpayer information number)*</label>
                                 <input
                                     className={isError && !innIsValid ? s.inputError : s.input}
                                     type='number'
-                                    placeholder='10 цифр'
+                                    placeholder='10 digits'
                                     maxLength={10} id='inn'
                                     value={innValue}
                                     onInput={handleInnValue}
                                     onBlur={handleInnFocusOut}
                                 />
                                 {!innIsValid && !innIsEmpty && isError &&
-                                  <span className={s.innError}>Введите корректный ИНН</span>}
+                                  <span className={s.innError}>The TIN is incorrect</span>}
                                 {innIsEmpty && isError && !innIsValid &&
-                                  <span className={s.innError}>Обязательное поле!</span>}
+                                  <span className={s.innError}>Required field!</span>}
                             </div>
                             <div className={s['input-container']}>
-                                <label htmlFor='selectTon'>Тональность</label>
+                                <label htmlFor='selectTon'>Tonality</label>
                                 <select style={{appearance: 'none', paddingLeft: '15px'}} className={s.input}
                                         id='selectTon'>
-                                    <option>Любая</option>
+                                    <option>Any</option>
                                 </select>
                                 <div className={s['dropdown-arrow']}></div>
                             </div>
                             <div className={s['input-container']}>
-                                <label htmlFor='amount'>Количество документов в выдаче*</label>
+                                <label htmlFor='amount'>Amount of shown documents*</label>
                                 <input
                                     className={isError && !amountIsValid ? s.inputError : s.input}
                                     type="number" max={1000}
                                     id='amount'
-                                    placeholder='От 1 до 1000'
+                                    placeholder='From 1 to 1000'
                                     value={docsAmount}
                                     onInput={handleDocsAmount}
                                     onBlur={handleAmountFocusOut}
                                 />
                                 {!amountIsEmpty && isError && !amountIsValid &&
-                                  <span className={s.innError}>Введите корректные данные</span>}
+                                  <span className={s.innError}>Provide correct data</span>}
                                 {amountIsEmpty && isError && !amountIsValid &&
-                                  <span className={s.innError}>Обязательное поле!</span>}
+                                  <span className={s.innError}>Required field!</span>}
                             </div>
                             <div style={{marginTop: '14px'}} className={s['input-container']}>
-                                <label htmlFor='range'>Диапазон поиска*</label>
+                                <label htmlFor='range'>Search range*</label>
                                 <div className={s['date-range-container']}>
-                                    <input type='text' className={s['date-input']} placeholder='Дата начала'
+                                    <input type='text' className={s['date-input']} placeholder='Start date'
                                            onFocus={focus} onChange={getStartDate}/>
                                     <div className={s.startDateDropdown}></div>
-                                    <input type='text' className={s['date-input']} placeholder='Дата конца'
+                                    <input type='text' className={s['date-input']} placeholder='End date'
                                            onFocus={focus} onChange={getEndDate}/>
                                     <div className={s.endDateDropdown}></div>
                                     {
                                         !startDateIsValid && <span className={s.innError}>
-                                      Начальная дата не может быть позже конечной!
+                                      The start date may not be later than the end date!
                                     </span>
                                     }
                                     {
                                         !endDateIsValid && <span className={s.innError}>
-                                      Дата не может быть позже актуальной
+                                      The date may not be later than the actual date
                                     </span>
                                     }
                                 </div>
@@ -430,26 +430,24 @@ export default function SearchForm() {
                         <div className={s['button-container']}>
                             <button className={isDisabled ? st.searchButton : st.searchButtonActive}
                                     onClick={sendData} disabled={isDisabled}>
-                                Поиск
+                                Search
                             </button>
                             {/*</Link>*/}
                             {tariffInfo.usedCompanyCount === tariffInfo.companyLimit &&
-                              <span className={s.submitError}>Ваш дневной лимит исчерпан. Возвращайтесь завтра.</span>}
-                            <p style={{fontSize: '14px', color: 'rgba(148, 148, 148, 1)'}}>* Обязательные к заполнению
-                                поля</p>
+                              <span className={s.submitError}>You reached your daily limit. Come back tomorrow.</span>}
+                            <p style={{fontSize: '14px', color: 'rgba(148, 148, 148, 1)'}}>* Required fields</p>
                         </div>
                     </div>
                     <div className={s['button-container-mobile']}>
                         <Link to={'/results'}>
                             <button type={"submit"} className={isDisabled ? st.searchButton : st.searchButtonActive}
                                     onClick={sendData}>
-                                Поиск
+                                Search
                             </button>
                         </Link>
                         {tariffInfo.usedCompanyCount === tariffInfo.companyLimit &&
-                          <span className={s.submitError}>Ваш дневной лимит исчерпан. Возвращайтесь завтра.</span>}
-                        <p style={{fontSize: '14px', color: 'rgba(148, 148, 148, 1)'}}>* Обязательные к заполнению
-                            поля</p>
+                          <span className={s.submitError}>You reached your daily limit. Come back tomorrow.</span>}
+                        <p style={{fontSize: '14px', color: 'rgba(148, 148, 148, 1)'}}>* Required fields</p>
                     </div>
                 </div>
             </div>

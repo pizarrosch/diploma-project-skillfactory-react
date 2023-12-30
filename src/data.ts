@@ -83,43 +83,43 @@ export const tariffCardContents = [
 
 export const checkboxData = [
     {
-        russian: 'Признак максимальной полноты',
+        russian: 'Maximal fullness',
         english: 'maxFullness',
         status: false,
         id: 0
     },
     {
-        russian: 'Упоминания в бизнес-контексте',
+        russian: 'Mentioned in business context',
         english: 'inBusinessNews',
         status: false,
         id: 1
     },
     {
-        russian: 'Главная роль в публикации',
+        russian: 'Main role in the article',
         english: 'onlyMainRole',
         status: false,
         id: 2
     },
     {
-        russian: 'Публикации только с риск-факторами',
+        russian: 'Only with risk factors',
         english: 'onlyWithRiskFactors',
         status: false,
         id: 3
     },
     {
-        russian: 'Включать технические новости рынков',
+        russian: 'Include tech news',
         english: 'excludeTechNews',
         status: true,
         id: 4
     },
     {
-        russian: 'Включать анонсы и календари',
+        russian: 'Include announcements',
         english: 'excludeAnnouncements',
         status: true,
         id: 5
     },
     {
-        russian: 'Включать сводки новостей',
+        russian: 'Include digests',
         english: 'excludeDigests',
         status: true,
         id: 6
