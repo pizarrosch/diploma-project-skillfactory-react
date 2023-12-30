@@ -70,7 +70,7 @@ export default function MainPage() {
                         }
                       >
                         <Link to={'/searchForm'}>
-                          Запросить данные
+                          Get information
                         </Link>
                       </button>
                     }

@@ -130,41 +130,41 @@ export default function LoginPage() {
         <div className={s.root}>
             <div>
                 <div>
-                    <p className={s.paragraph}>Для оформления подписки <br/> на тариф,
-                        необходимо <br/> авторизоваться.</p>
+                    <p className={s.paragraph}>please log in to subscribe <br/> to your
+                        tariff </p>
                     <img className={s['key-carriers-img']} src={keyCarriers} alt='keyCarriers'/>
                 </div>
             </div>
             <img className={s['key-lock']} src={keyLock} alt='key lock'/>
             <div className={s['login-form-container']}>
                 <div className={s['login-signup-container']}>
-                    <span className={s['login-signup-container__login']}>Войти</span>
-                    <span className={s['login-signup-container__signup']}>Зарегистрироваться</span>
+                    <span className={s['login-signup-container__login']}>Log In</span>
+                    <span className={s['login-signup-container__signup']}>Register</span>
                 </div>
                 <div className={s['form-container']}>
                     <form className={s['form-container__form']}>
                         <div className={s['form__email-input-container']}>
-                            <label htmlFor='input'>Логин или номер телефона:</label>
+                            <label htmlFor='input'>Login or phone number:</label>
                             <input className={!error.state ? s['form__input'] : s['form__input_error']} type="email"
                                    id="input" value={form.login}
                                    onInput={handleFormInput}/>
                             {!isLoginValid && error.state &&
-                              <span className={s.errorMessage}>Введено меньше 6 символов</span>}
+                              <span className={s.errorMessage}>The minimum of 6 symbols required</span>}
                         </div>
                         <div className={s['form__password-input-container']}>
-                            <label htmlFor='password'>Пароль</label>
+                            <label htmlFor='password'>Password</label>
                             <input className={!error.state ? s['form__input'] : s['form__input_error']}
                                    type="password" id="password" value={form.password}
                                    onInput={handleFormInput}/>
                             {!isPasswordValid && error.state &&
-                              <span className={s.errorMessage}>Введено меньше 6 символов</span>}
+                              <span className={s.errorMessage}>The minimum of 6 symbols required</span>}
                             {isLoginValid && isPasswordValid && error.message &&
-                              <span className={s.errorMessage}>Неправильный логин или пароль</span>}
+                              <span className={s.errorMessage}>Wrong login or password</span>}
                         </div>
                     </form>
                 </div>
                 <button type='submit' className={st.loginButton} onClick={getInfo}>
-                    Войти
+                    Log In
                 </button>
                 <span><a href='/login' style={
                     {
@@ -173,9 +173,9 @@ export default function LoginPage() {
                         cursor: 'pointer',
                         userSelect: 'none'
                     }
-                }>Восстановить пароль</a></span>
+                }>Restore password</a></span>
                 <div className={s['alternative-login']}>
-                    <span style={{fontSize: '16px', color: 'rgba(148, 148, 148, 1)'}}>Войти через:</span>
+                    <span style={{fontSize: '16px', color: 'rgba(148, 148, 148, 1)'}}>Log in via:</span>
                     <div className={s['account-name-container']}>
                         <div className={s['account-name']}>
                             <img src={googleSign} alt='google'/>
