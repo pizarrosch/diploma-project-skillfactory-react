@@ -79,7 +79,7 @@ export default function NavigationAuthorized() {
 
                             localStorage.removeItem('token');
                             localStorage.removeItem('expire');
-                        }}>Выйти</span>
+                        }}>Log out</span>
                     </div>
                     <div>
                         <img src={avatar} alt='avatar'/>

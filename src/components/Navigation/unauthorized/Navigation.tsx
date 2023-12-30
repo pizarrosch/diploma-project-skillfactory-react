@@ -11,20 +11,20 @@ export default function Navigation() {
                 <ul className={s['navigation-list']}>
                     <li className={s['navigation-list__item']}>
                         <Link to={'/dashboard'}>
-                            Главная
+                            Main page
                         </Link>
                     </li>
-                    <li className={s['navigation-list__item']}>Тарифы</li>
+                    <li className={s['navigation-list__item']}>Tariffs</li>
                     <li className={s['navigation-list__item']}>FAQ</li>
                 </ul>
             </nav>
             <div className={s.menuWrapper}>
                 <div className={s.loginMenu}>
-                    <span className={s.register}>Зарегистрироваться</span>
+                    <span className={s.register}>Register</span>
                     <span className={s.separator}>|</span>
                     <button className={s.loginButton}>
                         <Link to={'/login'}>
-                            Войти
+                            Log In
                         </Link>
                     </button>
                 </div>
