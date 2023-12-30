@@ -22,10 +22,10 @@ export default function NavigationAuthorized() {
                 <ul className={s['navigation-list']}>
                     <li className={s['navigation-list__item']}>
                         <Link to={'/dashboard'}>
-                            Главная
+                            Main page
                         </Link>
                     </li>
-                    <li className={s['navigation-list__item']}>Тарифы</li>
+                    <li className={s['navigation-list__item']}>Tariffs</li>
                     <li className={s['navigation-list__item']}>FAQ</li>
                 </ul>
             </nav>
@@ -35,12 +35,12 @@ export default function NavigationAuthorized() {
                         tariffLimits?.eventFiltersInfo?.companyLimit ?
                             <>
                                 <div className={s.usedCompaniesWrapper}>
-                                    <span className={s.usedCompanies}>Использовано компаний</span>
+                                    <span className={s.usedCompanies}>Companies looked for</span>
                                     <span className={s.usedCompaniesAmount}>
                                 {tariffLimits && tariffLimits?.eventFiltersInfo?.usedCompanyCount}</span>
                                 </div>
                                 <div className={s.companiesLimitWrapper}>
-                                    <span className={s.companiesLimit}>Лимит по компаниям</span>
+                                    <span className={s.companiesLimit}>Companies amount limit</span>
                                     <span
                                         className={s.limitAmount}>{tariffLimits && tariffLimits?.eventFiltersInfo?.companyLimit}</span>
                                 </div>
