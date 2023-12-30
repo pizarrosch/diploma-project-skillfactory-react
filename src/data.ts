@@ -35,14 +35,14 @@ export const cardContents = [
 export const tariffCardContents = [
     {
         tariffTitle: 'Beginner',
-        tariffDescription: 'Для небольшого исследования',
+        tariffDescription: 'For small research',
         actualPrice: '799 ₽',
         oldPrice: '1200 ₽',
-        monthlyRate: 'или 150 ₽/мес. при рассрочке на 24 мес.',
+        monthlyRate: 'or 150 ₽/month on a 24 months rate',
         tariffOptions: {
-            firstOption: 'Безлимитная история запросов',
-            secondOption: 'Безопасная сделка',
-            thirdOption: 'Поддержка 24/7'
+            firstOption: 'Unlimited search history',
+            secondOption: 'Safe deal',
+            thirdOption: 'A 24/7 support'
         },
         backgroundColor: 'rgba(255, 182, 79, 1)',
         color: '',
@@ -51,14 +51,14 @@ export const tariffCardContents = [
     },
     {
         tariffTitle: 'Pro',
-        tariffDescription: 'Для HR и фрилансеров',
+        tariffDescription: 'For HR and freelancers',
         actualPrice: '1299 ₽',
         oldPrice: '2600 ₽',
-        monthlyRate: 'или 279 ₽/мес. при рассрочке на 24 мес.',
+        monthlyRate: 'or 279 ₽/month on a 24 months rate',
         tariffOptions: {
-            firstOption: 'Все пункты тарифа Beginner',
-            secondOption: 'Экспорт истории',
-            thirdOption: 'Рекомендации по приоритетам'
+            firstOption: 'All features of the Beginner tariff',
+            secondOption: 'Search history export',
+            thirdOption: 'Priority recommendations'
         },
         backgroundColor: 'rgba(124, 227, 225, 1)',
         color: '',
@@ -66,14 +66,14 @@ export const tariffCardContents = [
     },
     {
         tariffTitle: 'Business',
-        tariffDescription: 'Для корпоративных клиентов',
+        tariffDescription: 'For corporate clients',
         actualPrice: '2379 ₽',
         oldPrice: '3700 ₽',
         monthlyRate: '',
         tariffOptions: {
-            firstOption: 'Все пункты тарифа Pro',
-            secondOption: 'Безлимитное количество запросов',
-            thirdOption: 'Приоритетная поддержка'
+            firstOption: 'All features of the Pro tariff',
+            secondOption: 'Unlimited searching amount',
+            thirdOption: 'Prioritized support'
         },
         backgroundColor: 'rgba(0, 0, 0, 1)',
         color: 'white',
