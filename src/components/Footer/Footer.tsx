@@ -8,7 +8,7 @@ export default function Footer() {
             <img className={s.footerLogo} src={footerLogo} alt='company logo'/>
             <div className={s.contactsDataContainer}>
                 <div className={s.contactsData}>
-                    <span>г. Москва, Цветной б-р, 40</span>
+                    <span>Moscow, Tsvetnoy blvd., 40</span>
                     <span>+7 495 771 21 11</span>
                     <span>info@skan.ru</span>
                 </div>
